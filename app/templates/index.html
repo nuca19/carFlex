@@ -1,32 +1,35 @@
 <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<script>
+  function fetchAnuncios() {
+    event.preventDefault();
+    fetch('/list_anuncios')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        let table = '<table><thead><tr><th>Marca</th><th>Modelo</th><th>Cavalos</th><th>KM</th></tr></thead><tbody>';
+        data.forEach(item => {
+          table += `<tr><td>${item.marca}</td><td>${item.modelo}</td><td>${item.cavalos}</td><td>${item.km}</td></tr>`;
+        });
+        table += '</tbody></table>';
+        document.getElementById('anuncios').innerHTML = table;
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+</script>
 <link rel="stylesheet" href="../static/style.css">
-<h1>SQL Server Connection Test</h1>
+<div id="navbar">
+    <a href="/">CarFlex</a>
+    <a href="/sobre">Sobre</a>
+    <a href="/comprar">Comprar</a>
+    <a href="/vender">Vender</a>
+  </div>
 <form>
-    <label for="connection_string">Connection String:</label><br>
-    <input type="text" id="connection_string" name="connection_string" size="100"><br><br>
-
-    <label for="database_name">Database:</label><br>
-    <input type="text" id="database_name" name="database_name"><br><br>
-
-    <label for="user">User:</label><br>
-    <input type="text" id="user" name="user"><br><br>
-
-    <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password"><br><br>
-
-    <!-- Button to test connection -->
-    <button type="button" hx-post="/test_connection" hx-trigger="click" hx-target="#test_connection_result">Test Connection <span class="htmx-indicator">... plz wait</span></button>
-    <div id="test_connection_result">
-    </div>
-    <button type="button" hx-post="/test_connection_local" hx-trigger="click" hx-target="#test_connection_result_local">Test Connection local<span class="htmx-indicator">... plz wait</span></button>
-    <div id="test_connection_result_local"></div>
-    <br><br>
-
-    <!-- Button to show hello table -->
-    <button type="button" hx-post="/hello" hx-trigger="click" hx-target="#hello_table_result">Show Hello Table</button>
-    <div id="hello_table_result"></div>
-
-    <button type="button" hx-post="/cars" hx-trigger="click" hx-target="#cars_res">Show cars</button>
-    <div id="cars_res"></div>
+  <div class="content">
+    <h1> CARFLEX</h1>
+    <button onclick="fetchAnuncios(event)">Fetch Anuncios</button>
+    <div id="anuncios"></div>
+  </div>
 </form>
 

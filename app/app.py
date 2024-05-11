@@ -1,5 +1,6 @@
 import pyodbc
-from flask import Flask, render_template, request, render_template_string
+from flask import Flask, jsonify, render_template, request, render_template_string
+from persistence import Anuncios
 
 app = Flask(__name__)
 
@@ -8,24 +9,16 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/comprar')
+def comprar():
+    return render_template('comprar.html')
 
-@app.route('/test_connection', methods=['POST'])
-def test_connection():
-    # Get form data
-    server_addr = request.form['connection_string']
-    db_name = request.form['database_name']
-    user = request.form['user']
-    password = request.form['password']
+@app.route('/list_anuncios', methods=['GET'])
+def get_anuncios():
+    anuncios = Anuncios.list_anuncios()
+    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]  # Convert to dictionaries
+    return jsonify(anuncios_dict)  # Convert to JSON and return
 
-    try:
-        with create_connection(server_addr, db_name, user, password) as conn:
-            message = "Connection successful!"
-            colour = "green"
-    except pyodbc.Error as e:
-        message = f"Connection failed: {str(e)}"
-        colour = "red"
-
-    return f'<label style="color: {colour};">{message}</label>'
 
 @app.route('/test_connection_local', methods=['POST'])
 def test_connection_local():
@@ -47,27 +40,6 @@ def test_connection_local():
     return f'<label style="color: {colour};">{message}</label>'
 
 
-@app.route('/hello', methods=['POST'])
-def print_hello_table():
-    # Get form data
-    server_addr = request.form['connection_string']
-    db_name = request.form['database_name']
-    user = request.form['user']
-    password = request.form['password']
-
-    # Fetch the hello table
-    with create_connection(server_addr, db_name, user, password) as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Hello;")
-        messages = list(cursor)
-
-    return render_template_string("""
-        <h1>Hello Table</h1>
-        {% for x in messages %}
-        <p>{{ x }}</p>
-        {% endfor %}
-        """, messages=messages)
-
 @app.route('/cars', methods=['POST'])
 def print_cars():
     # Get form data
@@ -76,7 +48,11 @@ def print_cars():
     # Fetch the hello table
     with create_connection_local(db_name) as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM rentacar.cliente;")
+        cursor.execute("""
+            SELECT marca, modelo, cavalos
+            FROM Veiculo 
+            JOIN Automovel ON Veiculo.automovel_codigo = Automovel.codigo
+        """)
         messages = list(cursor)
 
     return render_template_string("""
@@ -86,11 +62,6 @@ def print_cars():
         {% endfor %}
         """, messages=messages)
 
-
-def create_connection(server_addr, db_name, user, password):
-    connection_string = f"DRIVER={{SQL Server}};SERVER={server_addr};DATABASE={db_name}"
-    conn = pyodbc.connect(connection_string, user=user, password=password)
-    return conn
 
 def create_connection_local(db_name):
     DRIVER_NAME = 'SQL Server Native Client 11.0'
