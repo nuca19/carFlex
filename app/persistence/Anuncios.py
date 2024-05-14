@@ -1,9 +1,10 @@
 import random
 import string
 from typing import NamedTuple
-
+from decimal import Decimal
+import random
+import string
 from pyodbc import IntegrityError
-
 from persistence.session import create_connection
 
 
@@ -39,18 +40,75 @@ class AnuncioVenda(NamedTuple):
     codigo_veiculo: int
     id_vendedor: int
 
+
+
 class AnuncioVeiculo(NamedTuple):
+    numero: int
     marca: str
     modelo: str
     cavalos: int
     km: int
+    preco: Decimal
+
+
+
+
+
+class Automovel(NamedTuple):
+    segmento: str
+    num_portas: int
+    num_lugares: int
+    cavalos: int
+
+class Veiculo(NamedTuple):
+    ano: int
+    marca: str
+    modelo: str
+    km: int
+    combustivel: str
+    estado: str
+    tipo_caixa: str
+
+class AnuncioVendaForm(NamedTuple):
+    preco: Decimal
 
 
 def list_anuncios():
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("""SELECT marca, modelo, cavalos, km
-                            FROM (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo)""")
-
+        cursor.execute("""SELECT numero, marca, modelo, cavalos, km, preco
+                        FROM Anuncio_venda JOIN (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo) ON Anuncio_venda.codigo_veiculo=Veiculo.codigo""")
         return [AnuncioVeiculo(*row) for row in cursor.fetchall()]
+    
+def createAnuncioVenda(automovel: Automovel, veiculo: Veiculo, anuncio_venda: AnuncioVendaForm):
+    with create_connection() as conn:
+            automovel_codigo = generate_codigo()
+            codigo = automovel_codigo
+            numero = generate_4dignumber()
+            id_vendedor = 1
+            cursor = conn.cursor()
+            cursor.execute(f"""
+                INSERT INTO Automovel (codigo, segmento, num_portas, num_lugares, cavalos)
+                VALUES (?, ?, ?, ?, ?)
+            """, (codigo, *automovel))
+            
+            cursor.execute(f"""
+                INSERT INTO Veiculo (codigo, automovel_codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (codigo, automovel_codigo , *veiculo))
 
+            cursor.execute(f"""
+                INSERT INTO Anuncio_venda (numero, data_venda, preco, codigo_veiculo, id_vendedor)
+                VALUES (?, GETDATE(), ?, ?, ?)
+            """, (numero, anuncio_venda.preco, codigo, id_vendedor))
+            conn.commit()
+            return
+
+
+def generate_codigo(length=8):
+    chars = string.ascii_letters + string.digits
+    codigo = ''.join(random.choice(chars) for _ in range(length))
+    return codigo
+
+def generate_4dignumber():
+    return random.randint(1000, 9999)

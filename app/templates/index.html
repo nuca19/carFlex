@@ -6,9 +6,9 @@
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        let table = '<table><thead><tr><th>Marca</th><th>Modelo</th><th>Cavalos</th><th>KM</th></tr></thead><tbody>';
+        let table = '<table><thead><tr><th>Numero</th><th>Marca</th><th>Modelo</th><th>Cavalos</th><th>KM</th><th>Preco</th></tr></thead><tbody>';
         data.forEach(item => {
-          table += `<tr><td>${item.marca}</td><td>${item.modelo}</td><td>${item.cavalos}</td><td>${item.km}</td></tr>`;
+          table += `<tr><td>${item.numero}</td><td>${item.marca}</td><td>${item.modelo}</td><td>${item.cavalos}</td><td>${item.km}</td><td>${item.preco}</td></tr>`;
         });
         table += '</tbody></table>';
         document.getElementById('anuncios').innerHTML = table;

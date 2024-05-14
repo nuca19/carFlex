@@ -1,31 +1,32 @@
 <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 <script>
-  function fetchAnuncios() {
-    fetch('/list_anuncios')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        let cards = '<div style="display: flex; flex-wrap: wrap;">';
-        data.forEach(item => {
-        cards += `
-            <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
-            <h2>${item.marca} ${item.modelo}</h2>
-            <p>Cavalos: ${item.cavalos}</p>
-            <p>KM: ${item.km}</p>
-            </div>
-        `;
+    function fetchAnuncios() {
+      fetch('/list_anuncios')
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          let cards = '<div style="display: flex; flex-wrap: wrap;">';
+          data.forEach(item => {
+          cards += `
+              <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+              <h2>${item.marca} ${item.modelo}</h2>
+              <p>Cavalos: ${item.cavalos}</p>
+              <p>KM: ${item.km}</p>
+              <p>Preço: ${item.preco}</p>
+              </div>
+          `;
+          });
+          cards += '</div>';
+
+          document.getElementById('anuncios').innerHTML = cards;
+        })
+        .catch((error) => {
+          console.error('Error:', error);
         });
-        cards += '</div>';
+    }
 
-        document.getElementById('anuncios').innerHTML = cards;
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }
-
-  // Call fetchAnuncios immediately when the script is loaded
-  fetchAnuncios();
+    // Call fetchAnuncios immediately when the script is loaded
+    fetchAnuncios();
 </script>
 <link rel="stylesheet" href="../static/style.css">
 <div id="navbar">

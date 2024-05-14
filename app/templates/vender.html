@@ -1,0 +1,34 @@
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<script>
+</script>
+<link rel="stylesheet" href="../static/style.css">
+<div id="navbar">
+    <a href="/">CarFlex</a>
+    <a href="/sobre">Sobre</a>
+    <a href="/comprar">Comprar</a>
+    <a href="/vender">Vender</a>
+  </div>
+  <h1>Vender</h1>
+  <form action="/submitVenda" method="post">
+    <h2>Automovel</h2>
+    <input type="text" name="segmento" placeholder="Segmento">
+    <input type="number" name="num_portas" placeholder="Numero de Portas">
+    <input type="number" name="num_lugares" placeholder="Numero de Lugares">
+    <input type="number" name="cavalos" placeholder="Cavalos">
+
+    <h2>Veiculo</h2>
+    <input type="number" name="ano" placeholder="Ano">
+    <input type="text" name="marca" placeholder="Marca">
+    <input type="text" name="modelo" placeholder="Modelo">
+    <input type="number" name="km" placeholder="KM">
+    <input type="text" name="combustivel" placeholder="Combustivel">
+    <input type="text" name="estado" placeholder="Estado">
+    <input type="text" name="tipo_caixa" placeholder="Tipo de Caixa">
+
+    <h2>Anuncio Venda</h2>
+    <input type="number" name="preco" placeholder="Preco">
+
+    <input type="submit" value="Submit">
+</form>
+<div class="content"></div>
+  

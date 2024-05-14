@@ -1,6 +1,7 @@
 import pyodbc
 from flask import Flask, jsonify, render_template, request, render_template_string
 from persistence import Anuncios
+from persistence.Anuncios import *
 
 app = Flask(__name__)
 
@@ -12,6 +13,14 @@ def index():
 @app.route('/comprar')
 def comprar():
     return render_template('comprar.html')
+
+@app.route('/vender')
+def vender():
+    return render_template('vender.html')
+
+@app.route('/sobre')
+def sobre():
+    return render_template('sobre.html')
 
 @app.route('/list_anuncios', methods=['GET'])
 def get_anuncios():
@@ -61,6 +70,29 @@ def print_cars():
         <p>{{ x }}</p>
         {% endfor %}
         """, messages=messages)
+
+
+@app.route('/submitVenda', methods=['POST'])
+def submitVenda():
+# Extract Automovel data
+    automovel_details = {field: request.form.get(field) for field in Automovel._fields}
+    automovel = Automovel(**automovel_details)
+
+    # Extract Veiculo data
+    veiculo_details = {field: request.form.get(field) for field in Veiculo._fields}
+    veiculo = Veiculo(**veiculo_details)
+
+    # Extract AnuncioVendaForm data
+    anuncio_venda_details = {field: request.form.get(field) for field in AnuncioVendaForm._fields}
+    # Convert preco to Decimal
+    anuncio_venda_details['preco'] = Decimal(anuncio_venda_details['preco'])
+    anuncio_venda = AnuncioVendaForm(**anuncio_venda_details)
+
+    Anuncios.createAnuncioVenda(automovel, veiculo, anuncio_venda)
+
+    return render_template('vender.html')
+
+
 
 
 def create_connection_local(db_name):
