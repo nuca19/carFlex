@@ -8,27 +8,79 @@
     <a href="/comprar">Comprar</a>
     <a href="/vender">Vender</a>
   </div>
+
+<div class="container">
   <h1>Vender</h1>
+
   <form action="/submitVenda" method="post">
-    <h2>Automovel</h2>
-    <input type="text" name="segmento" placeholder="Segmento">
-    <input type="number" name="num_portas" placeholder="Numero de Portas">
-    <input type="number" name="num_lugares" placeholder="Numero de Lugares">
-    <input type="number" name="cavalos" placeholder="Cavalos">
+    <h2>Criar anuncio de venda para Automovel</h2>
 
-    <h2>Veiculo</h2>
-    <input type="number" name="ano" placeholder="Ano">
-    <input type="text" name="marca" placeholder="Marca">
-    <input type="text" name="modelo" placeholder="Modelo">
-    <input type="number" name="km" placeholder="KM">
-    <input type="text" name="combustivel" placeholder="Combustivel">
-    <input type="text" name="estado" placeholder="Estado">
-    <input type="text" name="tipo_caixa" placeholder="Tipo de Caixa">
+    <label for="marca">Marca
+      <select name="marca" id="marca" required> 
+          <option value="Audi">Audi</option>
+          <option value="BMW">BMW</option>
+          <option value="Citroen">Citroën</option>
+          <option value="Fiat">Fiat</option>
+          <option value="Ford">Ford</option>
+          <option value="Mercedes">Mercedes-Benz</option>
+          <option value="Peugeot">Peugeot</option>
+          <option value="Renault">Renault</option>
+          <option value="Volkswagen">Volkswagen</option>
+      </select>
+    </label>
 
-    <h2>Anuncio Venda</h2>
-    <input type="number" name="preco" placeholder="Preco">
+    <input type="text" name="modelo" placeholder="Modelo" required>
+    <label for="segmento">Segmento
+      <select name="segmento" id="segmento">
+          <option value="carros_citadinos">Carros Citadinos</option>
+          <option value="utilitarios">Utilitários</option>
+          <option value="familiares_compactos">Familiares Compactos</option>
+          <option value="familiares_medios_executivos_medios">Familiares Médios/ Executivos Médios</option>
+          <option value="familiares_grandes_executivos_grandes">Familiares Grandes/ Executivos Grandes</option>
+          <option value="luxo">Luxo</option>
+      </select>
+    </label>
+    <p></p>
+    <input type="number" name="ano" placeholder="Ano" min="1950" max="2024" required>
+    <input type="number" name="km" placeholder="KM" min="0" max="500000" required>
+    <input type="number" name="cavalos" placeholder="Cavalos" required>
+    <p></p>
+    <input type="number" name="num_portas" placeholder="Numero de Portas" required>
+    <input type="number" name="num_lugares" placeholder="Numero de Lugares" required>
 
-    <input type="submit" value="Submit">
+    
+    <div class="vei-flex">
+    <label for="combustivel">Combustível
+      <select name="combustivel" id="combustivel">
+        <option value="diesel">Diesel</option>
+        <option value="gasolina">Gasolina</option>
+        <option value="eletrico">Elétrico</option>
+    </select>
+  </label>
+
+    <label for="estado">Estado
+      <select name="estado" id="estado">
+        <option value="usado">Usado</option>
+        <option value="novo">Novo</option>
+    </select>
+  </label>
+
+    <label for="tipo_caixa">Tipo de Caixa
+    <select name="tipo_caixa" id="tipo_caixa">
+        <option value="manual">Manual</option>
+        <option value="automatico">Automático</option>
+    </select>
+  </label>
+  </div>
+
+  <label for="preco">Preço
+    <input id="preco" type="number" name="preco" placeholder="Preco" min="1" max="1000000" required>
+  </label>
+
+  <div class="btn-place">
+    <button type="submit">Criar Anuncio</button>
+</div>
 </form>
 <div class="content"></div>
+</div>
   

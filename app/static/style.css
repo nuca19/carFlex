@@ -71,3 +71,26 @@ button[aria-busy="true"] .htmx-indicator {
     margin-top: 50px;
     padding: 20px;
 }
+
+.vei-flex{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.btn-place{
+    display: flex;
+    justify-content: center;
+    margin: 0 10px;
+}
+.btn-place button{
+    padding: 5px 10px;
+    font-size: 1.5em; 
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}

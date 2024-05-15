@@ -78,13 +78,10 @@ def submitVenda():
     automovel_details = {field: request.form.get(field) for field in Automovel._fields}
     automovel = Automovel(**automovel_details)
 
-    # Extract Veiculo data
     veiculo_details = {field: request.form.get(field) for field in Veiculo._fields}
     veiculo = Veiculo(**veiculo_details)
 
-    # Extract AnuncioVendaForm data
     anuncio_venda_details = {field: request.form.get(field) for field in AnuncioVendaForm._fields}
-    # Convert preco to Decimal
     anuncio_venda_details['preco'] = Decimal(anuncio_venda_details['preco'])
     anuncio_venda = AnuncioVendaForm(**anuncio_venda_details)
 
