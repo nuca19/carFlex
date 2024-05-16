@@ -5,15 +5,27 @@ CREATE TABLE Utilizador(
 	nif INT,
 	nome VARCHAR(50),
 	endereco VARCHAR(50),
-    vendedor_id INT,
     PRIMARY KEY(id)
 );
 
+
+CREATE TABLE Veiculo(
+    codigo VARCHAR(8),
+    ano INT,
+    marca VARCHAR(50),
+    modelo VARCHAR(50),
+    km INT,
+    combustivel VARCHAR(50),
+    estado VARCHAR(50),
+    tipo_caixa VARCHAR(50),
+    PRIMARY KEY(codigo),
+);
 
 CREATE TABLE Motociclo(
     codigo VARCHAR(8),
     segmento VARCHAR(50),
     cilindrada INT,
+    FOREIGN KEY(codigo) REFERENCES Veiculo(codigo),
     PRIMARY KEY(codigo)
 );
 
@@ -23,28 +35,10 @@ CREATE TABLE Automovel(
     num_portas INT,
     num_lugares INT,
     cavalos INT,
+    FOREIGN KEY(codigo) REFERENCES Veiculo(codigo),
     PRIMARY KEY(codigo)
 );
 
-CREATE TABLE Veiculo(
-    codigo VARCHAR(8),
-    automovel_codigo VARCHAR(8),
-    motociclo_codigo VARCHAR(8),
-    ano INT,
-    marca VARCHAR(50),
-    modelo VARCHAR(50),
-    km INT,
-    combustivel VARCHAR(50),
-    estado VARCHAR(50),
-    tipo_caixa VARCHAR(50),
-    PRIMARY KEY(codigo),
-    FOREIGN KEY (automovel_codigo) REFERENCES Automovel(codigo) ON DELETE CASCADE,
-    FOREIGN KEY (motociclo_codigo) REFERENCES motociclo(codigo) ON DELETE CASCADE,
-    CONSTRAINT fk_veiculo_codigo CHECK (
-        (automovel_codigo IS NOT NULL AND motociclo_codigo IS NULL AND codigo = automovel_codigo) OR
-        (automovel_codigo IS NULL AND motociclo_codigo IS NOT NULL AND codigo = motociclo_codigo)
-    )
-);
 
 CREATE TABLE Anuncio_venda(
     numero INT,

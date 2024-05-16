@@ -23,8 +23,6 @@ class Automovel(NamedTuple):
 
 class Veiculo(NamedTuple):
     codigo: int
-    automovel_codigo: int
-    motociclo_codigo: int
     ano: int
     marca: str
     modelo: str
@@ -82,20 +80,20 @@ def list_anuncios():
     
 def createAnuncioVenda(automovel: Automovel, veiculo: Veiculo, anuncio_venda: AnuncioVendaForm):
     with create_connection() as conn:
-            automovel_codigo = generate_codigo()
-            codigo = automovel_codigo
-            numero = generate_4dignumber()
-            id_vendedor = 1
+            codigo = generate_codigo()
+            numero = generate_5dig()
+            id_vendedor = 103
             cursor = conn.cursor()
+            print(*veiculo)
+            cursor.execute(f"""
+                INSERT INTO Veiculo (codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (codigo, *veiculo))
+
             cursor.execute(f"""
                 INSERT INTO Automovel (codigo, segmento, num_portas, num_lugares, cavalos)
                 VALUES (?, ?, ?, ?, ?)
             """, (codigo, *automovel))
-            
-            cursor.execute(f"""
-                INSERT INTO Veiculo (codigo, automovel_codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (codigo, automovel_codigo , *veiculo))
 
             cursor.execute(f"""
                 INSERT INTO Anuncio_venda (numero, data_venda, preco, codigo_veiculo, id_vendedor)
@@ -110,5 +108,5 @@ def generate_codigo(length=8):
     codigo = ''.join(random.choice(chars) for _ in range(length))
     return codigo
 
-def generate_4dignumber():
-    return random.randint(1000, 9999)
+def generate_5dig():
+    return random.randint(10000, 99999)
