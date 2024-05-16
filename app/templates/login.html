@@ -1,0 +1,22 @@
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<script>
+</script>
+<link rel="stylesheet" href="../static/style.css">
+<div id="navbar">
+    <a href="/">CarFlex</a>
+    <a href="/sobre">Sobre</a>
+    <a href="/comprar">Comprar</a>
+    <a href="/vender">Vender</a>
+  </div>
+<div class="container">
+  <h1>Login</h1>
+  <div class="login-form">
+    <form action="/submitLogin" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <input type="submit" value="Login">
+    </form>
+    </div>
+</div>

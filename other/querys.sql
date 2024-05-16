@@ -11,9 +11,9 @@ VALUES ('a3f5b2c1', 'Sedan', 4, 5, 70),
        ('d4e6g7h8', 'normal', 5, 7, 200);
 
 --create users id(100-999 4digits)
-INSERT INTO Utilizador(id, nif, nome, endereco)
-VALUES (103, 123456789, 'User 1', 'Address 1'),
-       (104, 987654321, 'User 2', 'Address 2');
+INSERT INTO Utilizador(id, nif, nome, endereco, username, pass_word)
+VALUES (103, 123456789, 'User 1', 'Address 1', 'Joao', '1234'),
+       (104, 987654321, 'User 2', 'Address 2', 'Andre', '1234');
 
 --create anuncios (5digits)
 INSERT INTO Anuncio_venda(numero, data_venda, preco, codigo_veiculo, id_vendedor)

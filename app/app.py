@@ -1,26 +1,70 @@
 import pyodbc
-from flask import Flask, jsonify, render_template, request, render_template_string
+from flask import Flask, jsonify, render_template, request, session, redirect, render_template_string
 from persistence import Anuncios
 from persistence.Anuncios import *
 
 app = Flask(__name__)
 
+app.secret_key = 'your secret key'  # Set a secret key
+session = {}
+session["auth"]=False
+
+@app.route('/submitLogin', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = validate_user(username, password)
+        if user:
+            session["auth"] = True
+            session['userID'] = user[0]
+        else:
+            return render_template('login.html')
+    return redirect('/')
+
+def validate_user(username, password):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT id FROM Utilizador WHERE username = ? AND pass_word = ?', (username, password))
+        res = cursor.fetchone()
+        print(res)
+        return res
+
+
+@app.route('/logout')
+def logout():
+    if session["auth"]:
+        session["auth"]=False
+        session.pop('userID', None)
+    return redirect('/')
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if session["auth"]:
+        return render_template('index.html')
+    else:
+        return render_template('login.html')
 
 @app.route('/comprar')
 def comprar():
-    return render_template('comprar.html')
+    if session["auth"]:
+        return render_template('comprar.html')
+    else:
+        return redirect('/')
 
 @app.route('/vender')
 def vender():
-    return render_template('vender.html')
+    if session["auth"]:
+        return render_template('vender.html')
+    else:
+        return redirect('/')
 
 @app.route('/sobre')
 def sobre():
     return render_template('sobre.html')
+
+
+
 
 @app.route('/list_anuncios', methods=['GET'])
 def get_anuncios():
@@ -31,8 +75,6 @@ def get_anuncios():
 
 @app.route('/test_connection_local', methods=['POST'])
 def test_connection_local():
-    # Get form data
-
     db_name = request.form['database_name']
     print("testlocal")
 
@@ -87,7 +129,7 @@ def submitVenda():
 
     Anuncios.createAnuncioVenda(automovel, veiculo, anuncio_venda)
 
-    return render_template('vender.html')
+    return redirect('/comprar')
 
 
 

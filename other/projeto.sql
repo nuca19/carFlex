@@ -5,9 +5,10 @@ CREATE TABLE Utilizador(
 	nif INT,
 	nome VARCHAR(50),
 	endereco VARCHAR(50),
+    username VARCHAR(50),
+    pass_word VARCHAR(50),
     PRIMARY KEY(id)
 );
-
 
 CREATE TABLE Veiculo(
     codigo VARCHAR(8),
