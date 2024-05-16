@@ -5,9 +5,9 @@ from persistence.Anuncios import *
 
 app = Flask(__name__)
 
-app.secret_key = 'your secret key'  # Set a secret key
+app.secret_key = '12secr34etkey56'  # Set a secret key
 session = {}
-session["auth"]=False
+session['auth']=False
 
 @app.route('/submitLogin', methods=['POST'])
 def login():
@@ -16,7 +16,7 @@ def login():
         password = request.form['password']
         user = validate_user(username, password)
         if user:
-            session["auth"] = True
+            session['auth'] = True
             session['userID'] = user[0]
         else:
             return render_template('login.html')
@@ -33,28 +33,28 @@ def validate_user(username, password):
 
 @app.route('/logout')
 def logout():
-    if session["auth"]:
-        session["auth"]=False
+    if session['auth']:
+        session['auth']=False
         session.pop('userID', None)
     return redirect('/')
 
 @app.route('/')
 def index():
-    if session["auth"]:
+    if session['auth']:
         return render_template('index.html')
     else:
         return render_template('login.html')
 
 @app.route('/comprar')
 def comprar():
-    if session["auth"]:
+    if session['auth']:
         return render_template('comprar.html')
     else:
         return redirect('/')
 
 @app.route('/vender')
 def vender():
-    if session["auth"]:
+    if session['auth']:
         return render_template('vender.html')
     else:
         return redirect('/')
@@ -69,8 +69,8 @@ def sobre():
 @app.route('/list_anuncios', methods=['GET'])
 def get_anuncios():
     anuncios = Anuncios.list_anuncios()
-    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]  # Convert to dictionaries
-    return jsonify(anuncios_dict)  # Convert to JSON and return
+    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
+    return jsonify(anuncios_dict)
 
 
 @app.route('/test_connection_local', methods=['POST'])
@@ -114,7 +114,7 @@ def print_cars():
         """, messages=messages)
 
 
-@app.route('/submitVenda', methods=['POST'])
+@app.route('/submitAnuncioAutomovel', methods=['POST'])
 def submitVenda():
 # Extract Automovel data
     automovel_details = {field: request.form.get(field) for field in Automovel._fields}
@@ -123,14 +123,36 @@ def submitVenda():
     veiculo_details = {field: request.form.get(field) for field in Veiculo._fields}
     veiculo = Veiculo(**veiculo_details)
 
-    anuncio_venda_details = {field: request.form.get(field) for field in AnuncioVendaForm._fields}
-    anuncio_venda_details['preco'] = Decimal(anuncio_venda_details['preco'])
-    anuncio_venda = AnuncioVendaForm(**anuncio_venda_details)
+    preco = Decimal(request.form.get('preco'))
+    print(session)
+    id_vendedor =  session['userID']
 
-    Anuncios.createAnuncioVenda(automovel, veiculo, anuncio_venda)
-
+    Anuncios.createAnuncioAutomovel(automovel, veiculo, preco, id_vendedor)
     return redirect('/comprar')
 
+
+@app.route('/submitAnuncioMotociclo', methods=['POST'])
+def submitVendaMotociclo():
+    # Extract Motociclo data
+    motociclo_details = {field: request.form.get(field) for field in Motociclo._fields}
+    motociclo = Motociclo(**motociclo_details)
+
+    veiculo_details = {field: request.form.get(field) for field in Veiculo._fields}
+    veiculo = Veiculo(**veiculo_details)
+
+    preco = Decimal(request.form.get('preco'))
+    print(session)
+    id_vendedor =  session['userID']
+
+    Anuncios.createAnuncioMotociclo(motociclo, veiculo, preco, id_vendedor)
+    return redirect('/comprar')
+
+@app.route('/comprar/<codigo>', methods=['GET'])
+def get_anuncio(codigo):
+    anuncio = Anuncios.get_anuncio(codigo)
+    if anuncio is None:
+        return redirect('/comprar')
+    return render_template('anuncio.html', anuncio=anuncio._asdict())
 
 
 

@@ -94,3 +94,7 @@ button[aria-busy="true"] .htmx-indicator {
     align-items: center;
     height: 100vh;
 }
+
+#switchButton{
+    background-color: rgb(54, 59, 156);
+}

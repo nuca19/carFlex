@@ -1,5 +1,21 @@
 <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 <script>
+  document.getElementById('formAutomovel').style.display = 'block';
+
+function switchForms() {
+    var formAutomovel = document.getElementById('formAutomovel');
+    var formMotociclo = document.getElementById('formMotociclo');
+    var switchButton = document.getElementById('switchButton');
+    if (formAutomovel.style.display === 'none') {
+        formAutomovel.style.display = 'block';
+        formMotociclo.style.display = 'none';
+        switchButton.textContent = 'Mudar para Motociclo';
+    } else {
+        formAutomovel.style.display = 'none';
+        formMotociclo.style.display = 'block';
+        switchButton.textContent = 'Mudar para Automovel';
+    }
+}
 </script>
 <link rel="stylesheet" href="../static/style.css">
 <div id="navbar">
@@ -12,44 +28,114 @@
 <div class="container">
   <h1>Vender</h1>
 
-  <form action="/submitVenda" method="post">
-    <h2>Criar anuncio de venda para Automovel</h2>
+<button id="switchButton" onclick="switchForms()">Mudar para Motociclo</button>
+<!-- Form for Automovel -->
+<form id="formAutomovel" action="/submitAnuncioAutomovel" method="post">
+  <h2>Criar anuncio de venda para Automovel</h2>
+  <label for="marca">Marca
+    <select name="marca" id="marca" required> 
+        <option value="Audi">Audi</option>
+        <option value="BMW">BMW</option>
+        <option value="Citroen">Citroën</option>
+        <option value="Fiat">Fiat</option>
+        <option value="Ford">Ford</option>
+        <option value="Mercedes">Mercedes-Benz</option>
+        <option value="Peugeot">Peugeot</option>
+        <option value="Renault">Renault</option>
+        <option value="Volkswagen">Volkswagen</option>
+    </select>
+  </label>
 
-    <label for="marca">Marca
-      <select name="marca" id="marca" required> 
-          <option value="Audi">Audi</option>
-          <option value="BMW">BMW</option>
-          <option value="Citroen">Citroën</option>
-          <option value="Fiat">Fiat</option>
-          <option value="Ford">Ford</option>
-          <option value="Mercedes">Mercedes-Benz</option>
-          <option value="Peugeot">Peugeot</option>
-          <option value="Renault">Renault</option>
-          <option value="Volkswagen">Volkswagen</option>
-      </select>
-    </label>
+  <input type="text" name="modelo" placeholder="Modelo" required>
+  <label for="segmento">Segmento
+    <select name="segmento" id="segmento">
+        <option value="carros_citadinos">Carros Citadinos</option>
+        <option value="utilitarios">Utilitários</option>
+        <option value="familiares_compactos">Familiares Compactos</option>
+        <option value="familiares_medios_executivos_medios">Familiares Médios/ Executivos Médios</option>
+        <option value="familiares_grandes_executivos_grandes">Familiares Grandes/ Executivos Grandes</option>
+        <option value="luxo">Luxo</option>
+    </select>
+  </label>
+  <p></p>
+  <input type="number" name="ano" placeholder="Ano" min="1950" max="2024" required>
+  <input type="number" name="km" placeholder="KM" min="0" max="500000" required>
+  <input type="number" name="cavalos" placeholder="Cavalos" required>
+  <p></p>
+  <input type="number" name="num_portas" placeholder="Numero de Portas" required>
+  <input type="number" name="num_lugares" placeholder="Numero de Lugares" required>
 
-    <input type="text" name="modelo" placeholder="Modelo" required>
-    <label for="segmento">Segmento
-      <select name="segmento" id="segmento">
-          <option value="carros_citadinos">Carros Citadinos</option>
-          <option value="utilitarios">Utilitários</option>
-          <option value="familiares_compactos">Familiares Compactos</option>
-          <option value="familiares_medios_executivos_medios">Familiares Médios/ Executivos Médios</option>
-          <option value="familiares_grandes_executivos_grandes">Familiares Grandes/ Executivos Grandes</option>
-          <option value="luxo">Luxo</option>
-      </select>
-    </label>
-    <p></p>
-    <input type="number" name="ano" placeholder="Ano" min="1950" max="2024" required>
-    <input type="number" name="km" placeholder="KM" min="0" max="500000" required>
-    <input type="number" name="cavalos" placeholder="Cavalos" required>
-    <p></p>
-    <input type="number" name="num_portas" placeholder="Numero de Portas" required>
-    <input type="number" name="num_lugares" placeholder="Numero de Lugares" required>
+  
+  <div class="vei-flex">
+  <label for="combustivel">Combustível
+    <select name="combustivel" id="combustivel">
+      <option value="diesel">Diesel</option>
+      <option value="gasolina">Gasolina</option>
+      <option value="eletrico">Elétrico</option>
+  </select>
+</label>
 
-    
-    <div class="vei-flex">
+  <label for="estado">Estado
+    <select name="estado" id="estado">
+      <option value="usado">Usado</option>
+      <option value="novo">Novo</option>
+  </select>
+</label>
+
+  <label for="tipo_caixa">Tipo de Caixa
+  <select name="tipo_caixa" id="tipo_caixa">
+      <option value="manual">Manual</option>
+      <option value="automatico">Automático</option>
+  </select>
+</label>
+</div>
+
+<label for="preco">Preço
+  <input id="preco" type="number" name="preco" placeholder="Preco" min="1" max="1000000" required>
+</label>
+
+<div class="btn-place">
+  <button type="submit">Criar Anuncio</button>
+</div>
+</form>
+
+<!-- Form for Motociclo -->
+<form id="formMotociclo" action="/submitAnuncioMotociclo" method="post" style="display: none;">
+  <h2>Criar anuncio de venda para Motociclo</h2>
+  <label for="marca">Marca
+    <select name="marca" id="marca" required>
+      <option value="Honda">Honda</option>
+      <option value="Harley-Davidson">Harley-Davidson</option>
+      <option value="Yamaha">Yamaha</option>
+      <option value="Kawasaki">Kawasaki</option>
+      <option value="Suzuki">Suzuki</option>
+      <option value="BMW Motorrad">BMW Motorrad</option>
+      <option value="Ducati">Ducati</option>
+      <option value="Triumph">Triumph</option>
+      <option value="KTM">KTM</option>
+  </select>
+    </select>
+  </label>
+
+  <input type="text" name="modelo" placeholder="Modelo" required>
+  <label for="segmento">Segmento
+    <select name="segmento" id="segmento">
+      <option value="Cruiser">Cruiser</option>
+      <option value="Todo_terreno">Todo Terreno</option>
+      <option value="Grand_Turismo">Grand Turismo</option>
+      <option value="Nacionais">Nacionais</option>
+      <option value="Motos125">Motos 125</option>
+      <option value="Quadriciclos">Quadriciclos</option>
+      <option value="Sport">Sport</option>
+      <option value="Renault">Renault</option>
+    </select>
+  </label>
+  <p></p>
+  <input type="number" name="ano" placeholder="Ano" min="1950" max="2024" required>
+  <input type="number" name="km" placeholder="KM" min="0" max="500000" required>
+  <input type="number" name="cilindrada" placeholder="Cilindrada" min="1" max="1000" required>
+  
+  <div class="vei-flex">
     <label for="combustivel">Combustível
       <select name="combustivel" id="combustivel">
         <option value="diesel">Diesel</option>
@@ -57,14 +143,14 @@
         <option value="eletrico">Elétrico</option>
     </select>
   </label>
-
+  
     <label for="estado">Estado
       <select name="estado" id="estado">
         <option value="usado">Usado</option>
         <option value="novo">Novo</option>
     </select>
   </label>
-
+  
     <label for="tipo_caixa">Tipo de Caixa
     <select name="tipo_caixa" id="tipo_caixa">
         <option value="manual">Manual</option>
@@ -72,15 +158,13 @@
     </select>
   </label>
   </div>
-
+  
   <label for="preco">Preço
     <input id="preco" type="number" name="preco" placeholder="Preco" min="1" max="1000000" required>
   </label>
 
   <div class="btn-place">
-    <button type="submit">Criar Anuncio</button>
-</div>
+      <button type="submit">Criar Anuncio</button>
+  </div>
 </form>
-<div class="content"></div>
 </div>
-  

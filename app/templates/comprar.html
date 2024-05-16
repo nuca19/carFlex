@@ -8,12 +8,14 @@
           let cards = '<div style="display: flex; flex-wrap: wrap;">';
           data.forEach(item => {
           cards += `
-              <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
-              <h2>${item.marca} ${item.modelo}</h2>
-              <p>Cavalos: ${item.cavalos}</p>
-              <p>KM: ${item.km}</p>
-              <p>Preço: ${item.preco}</p>
-              </div>
+            <a href="/comprar/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                <h2>${item.marca} ${item.modelo}</h2>
+                <p>KM: ${item.km}</p>
+                <p>Preço: ${item.preco}</p>
+                <p>#${item.codigo_veiculo}</p>
+                </div>
+            </a>
           `;
           });
           cards += '</div>';
