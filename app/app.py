@@ -46,27 +46,44 @@ def register_user():
     nome = request.form['nome']
     endereco = request.form['endereco']
     username = request.form['username']
-    password = generate_password_hash(request.form['password'])
+    password = request.form['password']
 
-    conn = sqlite3.connect('your_database.db')
-    cursor = conn.cursor()
+    # Check if nome is a string
+    if not isinstance(nome, str):
+        return "Name must be a string", 400
 
-    # Check if the generated id already exists
-    cursor.execute("SELECT id FROM Utilizador WHERE id=?", (id,))
-    result = cursor.fetchone()
-    while result is not None:
-        id = random.randint(100, 999)
+    # Check if nif is 9 characters long
+    if len(nif) != 9:
+        return "NIF must be 9 characters long", 400
+
+    with create_connection() as conn:
+        cursor = conn.cursor()
+
+        # Check if the generated id already exists
         cursor.execute("SELECT id FROM Utilizador WHERE id=?", (id,))
         result = cursor.fetchone()
+        while result is not None:
+            id = random.randint(100, 999)
+            cursor.execute("SELECT id FROM Utilizador WHERE id=?", (id,))
+            result = cursor.fetchone()
 
-    cursor.execute("INSERT INTO Utilizador(id, nif, nome, endereco, username, pass_word) VALUES (?, ?, ?, ?, ?, ?)",
-                   (id, nif, nome, endereco, username, password))
+        # Check if the username already exists
+        cursor.execute(
+            "SELECT username FROM Utilizador WHERE username=?", (username,))
+        if cursor.fetchone() is not None:
+            return "Username already exists", 400
 
-    conn.commit()
-    cursor.close()
-    conn.close()
+        # Check if the nif already exists
+        cursor.execute("SELECT nif FROM Utilizador WHERE nif=?", (nif,))
+        if cursor.fetchone() is not None:
+            return "NIF already exists", 400
 
-    return render_template('register.html', username=username)
+        cursor.execute("INSERT INTO Utilizador(id, nif, nome, endereco, username, pass_word) VALUES (?, ?, ?, ?, ?, ?)",
+                       (id, nif, nome, endereco, username, password))
+
+        conn.commit()
+
+    return redirect('/')
 
 
 @ app.route('/logout')
