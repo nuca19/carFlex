@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="../static/style.css">
     <title>Anuncio</title>
 </head>
 <body>
-    <h1>Anuncio</h1>
-    <p>Numero: {{ anuncio.numero }}</p>
-    <p>Data: {{anuncio.data_venda}}</p>
-    <p>Preco: {{ anuncio.preco }}</p>
+    <div id="navbar">
+        <a href="/">CarFlex</a>
+        <a href="/sobre">Sobre</a>
+        <a href="/comprar">Comprar</a>
+        <a href="/vender">Vender</a>
+    </div>
+
+    <div class="container">
+        <h1>Anuncio {{anuncio.numero}}</h1>
+        <h2>{{anuncio.type}} #{{ anuncio.codigo_veiculo }}</h2>
+        <p>Marca: {{anuncio.marca}}</p>
+        <p>Modelo: {{ anuncio.modelo }}</p>
+        <p>Km: {{anuncio.km}} </p>
+        <h2>Preço: {{anuncio.preco}}</h2>
+    </div>
 </body>
 </html>

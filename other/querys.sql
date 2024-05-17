@@ -1,9 +1,9 @@
 --ORDEM INTERESSA
 
 -- Insert into Veiculo
-INSERT INTO Veiculo(codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa)
-VALUES ('a3f5b2c1', 2020, 'Fiat', '500', 7000, 'Gasolina', 'Novo', 'Automatico'),
-       ('d4e6g7h8', 2018, 'Mercedes', 'Classe A', 20000, 'Gasolina', 'Usado', 'Manual');
+INSERT INTO Veiculo(codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa, tipo)
+VALUES ('a3f5b2c1', 2020, 'Fiat', '500', 7000, 'Gasolina', 'Novo', 'Automatico', 'automovel'),
+       ('d4e6g7h8', 2018, 'Mercedes', 'Classe A', 20000, 'Gasolina', 'Usado', 'Manual', 'automovel');
 
 -- Insert into Automovel codigo(8chars)
 INSERT INTO Automovel(codigo, segmento, num_portas, num_lugares, cavalos)

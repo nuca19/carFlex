@@ -6,7 +6,7 @@ CREATE TABLE Utilizador(
 	nome VARCHAR(50),
 	endereco VARCHAR(50),
     username VARCHAR(50),
-    pass_word VARCHAR(50),
+    pass_word VARCHAR(250),
     PRIMARY KEY(id)
 );
 
@@ -19,6 +19,7 @@ CREATE TABLE Veiculo(
     combustivel VARCHAR(50),
     estado VARCHAR(50),
     tipo_caixa VARCHAR(50),
+    tipo VARCHAR(50),
     PRIMARY KEY(codigo),
 );
 

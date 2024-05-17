@@ -1,7 +1,7 @@
 import pyodbc
 from flask import Flask, jsonify, render_template, request, session, redirect, render_template_string
 from persistence import Anuncios
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from persistence.Anuncios import *
 
 import sqlite3
@@ -31,11 +31,12 @@ def login():
 def validate_user(username, password):
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute(
-            'SELECT id FROM Utilizador WHERE username = ? AND pass_word = ?', (username, password))
+        cursor.execute('SELECT id, pass_word FROM Utilizador WHERE username = ?', (username,))
         res = cursor.fetchone()
-        print(res)
-        return res
+        if res and check_password_hash(res[1], password):
+            return res
+        else:
+            return None
 
 
 @app.route('/submitRegistration', methods=['POST'])
@@ -199,6 +200,7 @@ def submitVendaMotociclo():
 @ app.route('/comprar/<codigo>', methods=['GET'])
 def get_anuncio(codigo):
     anuncio = Anuncios.get_anuncio(codigo)
+    print(anuncio)
     if anuncio is None:
         return redirect('/comprar')
     return render_template('anuncio.html', anuncio=anuncio._asdict())
