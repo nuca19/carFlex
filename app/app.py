@@ -46,7 +46,7 @@ def register_user():
     nome = request.form['nome']
     endereco = request.form['endereco']
     username = request.form['username']
-    password = request.form['password']
+    password = generate_password_hash(request.form['password'])
 
     # Check if nome is a string
     if not isinstance(nome, str):
