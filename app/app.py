@@ -1,13 +1,18 @@
 import pyodbc
 from flask import Flask, jsonify, render_template, request, session, redirect, render_template_string
 from persistence import Anuncios
+from werkzeug.security import generate_password_hash
 from persistence.Anuncios import *
+
+import sqlite3
+import random
 
 app = Flask(__name__)
 
 app.secret_key = '12secr34etkey56'  # Set a secret key
 session = {}
-session['auth']=False
+session['auth'] = False
+
 
 @app.route('/submitLogin', methods=['POST'])
 def login():
@@ -22,58 +27,97 @@ def login():
             return render_template('login.html')
     return redirect('/')
 
+
 def validate_user(username, password):
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute('SELECT id FROM Utilizador WHERE username = ? AND pass_word = ?', (username, password))
+        cursor.execute(
+            'SELECT id FROM Utilizador WHERE username = ? AND pass_word = ?', (username, password))
         res = cursor.fetchone()
         print(res)
         return res
 
 
-@app.route('/logout')
+@app.route('/submitRegistration', methods=['POST'])
+def register_user():
+    id = random.randint(100, 999)
+    nif = request.form['nif']
+    nome = request.form['nome']
+    endereco = request.form['endereco']
+    username = request.form['username']
+    password = generate_password_hash(request.form['password'])
+
+    conn = sqlite3.connect('your_database.db')
+    cursor = conn.cursor()
+
+    # Check if the generated id already exists
+    cursor.execute("SELECT id FROM Utilizador WHERE id=?", (id,))
+    result = cursor.fetchone()
+    while result is not None:
+        id = random.randint(100, 999)
+        cursor.execute("SELECT id FROM Utilizador WHERE id=?", (id,))
+        result = cursor.fetchone()
+
+    cursor.execute("INSERT INTO Utilizador(id, nif, nome, endereco, username, pass_word) VALUES (?, ?, ?, ?, ?, ?)",
+                   (id, nif, nome, endereco, username, password))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return render_template('register.html', username=username)
+
+
+@ app.route('/logout')
 def logout():
     if session['auth']:
-        session['auth']=False
+        session['auth'] = False
         session.pop('userID', None)
     return redirect('/')
 
-@app.route('/')
+
+@ app.route('/')
 def index():
     if session['auth']:
         return render_template('index.html')
     else:
         return render_template('login.html')
 
-@app.route('/comprar')
+
+@ app.route('/comprar')
 def comprar():
     if session['auth']:
         return render_template('comprar.html')
     else:
         return redirect('/')
 
-@app.route('/vender')
+
+@ app.route('/vender')
 def vender():
     if session['auth']:
         return render_template('vender.html')
     else:
         return redirect('/')
 
-@app.route('/sobre')
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
+
+@ app.route('/sobre')
 def sobre():
     return render_template('sobre.html')
 
 
-
-
-@app.route('/list_anuncios', methods=['GET'])
+@ app.route('/list_anuncios', methods=['GET'])
 def get_anuncios():
     anuncios = Anuncios.list_anuncios()
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     return jsonify(anuncios_dict)
 
 
-@app.route('/test_connection_local', methods=['POST'])
+@ app.route('/test_connection_local', methods=['POST'])
 def test_connection_local():
     db_name = request.form['database_name']
     print("testlocal")
@@ -91,7 +135,7 @@ def test_connection_local():
     return f'<label style="color: {colour};">{message}</label>'
 
 
-@app.route('/cars', methods=['POST'])
+@ app.route('/cars', methods=['POST'])
 def print_cars():
     # Get form data
     db_name = request.form['database_name']
@@ -101,7 +145,7 @@ def print_cars():
         cursor = conn.cursor()
         cursor.execute("""
             SELECT marca, modelo, cavalos
-            FROM Veiculo 
+            FROM Veiculo
             JOIN Automovel ON Veiculo.automovel_codigo = Automovel.codigo
         """)
         messages = list(cursor)
@@ -114,46 +158,50 @@ def print_cars():
         """, messages=messages)
 
 
-@app.route('/submitAnuncioAutomovel', methods=['POST'])
+@ app.route('/submitAnuncioAutomovel', methods=['POST'])
 def submitVenda():
-# Extract Automovel data
-    automovel_details = {field: request.form.get(field) for field in Automovel._fields}
+    # Extract Automovel data
+    automovel_details = {field: request.form.get(
+        field) for field in Automovel._fields}
     automovel = Automovel(**automovel_details)
 
-    veiculo_details = {field: request.form.get(field) for field in Veiculo._fields}
+    veiculo_details = {field: request.form.get(
+        field) for field in Veiculo._fields}
     veiculo = Veiculo(**veiculo_details)
 
     preco = Decimal(request.form.get('preco'))
     print(session)
-    id_vendedor =  session['userID']
+    id_vendedor = session['userID']
 
     Anuncios.createAnuncioAutomovel(automovel, veiculo, preco, id_vendedor)
     return redirect('/comprar')
 
 
-@app.route('/submitAnuncioMotociclo', methods=['POST'])
+@ app.route('/submitAnuncioMotociclo', methods=['POST'])
 def submitVendaMotociclo():
     # Extract Motociclo data
-    motociclo_details = {field: request.form.get(field) for field in Motociclo._fields}
+    motociclo_details = {field: request.form.get(
+        field) for field in Motociclo._fields}
     motociclo = Motociclo(**motociclo_details)
 
-    veiculo_details = {field: request.form.get(field) for field in Veiculo._fields}
+    veiculo_details = {field: request.form.get(
+        field) for field in Veiculo._fields}
     veiculo = Veiculo(**veiculo_details)
 
     preco = Decimal(request.form.get('preco'))
     print(session)
-    id_vendedor =  session['userID']
+    id_vendedor = session['userID']
 
     Anuncios.createAnuncioMotociclo(motociclo, veiculo, preco, id_vendedor)
     return redirect('/comprar')
 
-@app.route('/comprar/<codigo>', methods=['GET'])
+
+@ app.route('/comprar/<codigo>', methods=['GET'])
 def get_anuncio(codigo):
     anuncio = Anuncios.get_anuncio(codigo)
     if anuncio is None:
         return redirect('/comprar')
     return render_template('anuncio.html', anuncio=anuncio._asdict())
-
 
 
 def create_connection_local(db_name):
