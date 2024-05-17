@@ -15,9 +15,8 @@
         <h1>Register</h1>
         <div class="register-form">
             <form action="/submitRegistration" method="post" onsubmit="handleFormSubmit(event)">
-                <input type="hidden" id="id" name="id">
                 <label for="nif">NIF:</label>
-                <input type="text" id="nif" name="nif" required>
+                <input type="text" id="nif" name="nif" maxlength="9" pattern="\d{9}" required>
                 <label for="nome">Nome:</label>
                 <input type="text" id="nome" name="nome" required>
                 <label for="endereco">Endereco:</label>
