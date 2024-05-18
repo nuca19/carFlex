@@ -227,8 +227,20 @@ def comprarAnuncio(numero):
     id_comprador = session['userID']
     print(numero)
     numero = int(numero)
-    Anuncios.comprarAnuncio(numero, id_comprador)
-    return redirect('/anuncios')
+    try:
+        Anuncios.comprarAnuncio(numero, id_comprador)
+    except pyodbc.ProgrammingError as e:
+        return f"""<div style="color: red;">Veiculo ja foi Comprado.</div>"""
+
+    return f"""
+        <form id="avaliacaoForm" action="/submitAvaliacao/{numero}" method="post">
+            <label for="avaliacao">Avaliação:</label>
+            <input type="number" id="avaliacao" name="avaliacao" required>
+            <label for="comentario">Comentário:</label>
+            <input type="text" id="comentario" name="comentario" required>
+            <button type="submit">Submit Avaliação</button>
+        </form>
+    """
 
 @app.route('/submitAvaliacao/<numero>', methods=['POST'])
 def submitAvaliacao(numero):

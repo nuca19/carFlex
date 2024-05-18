@@ -149,9 +149,17 @@ def submitAvaliacao(numero, avaliacao, comentario):
     with create_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(f"""
+            SELECT numero FROM Compra WHERE num_venda = ?
+        """, (numero,))
+        row = cursor.fetchone()
+        if row is None:
+            return "No matching num_compra found for num_venda", 400
+        num_compra = row[0]
+        # Insert into Avaliacao
+        cursor.execute(f"""
             INSERT INTO Avaliacao 
             VALUES (?, ?, ?, ?)
-        """, (generate_5dig(), numero, avaliacao, comentario))
+        """, (generate_5dig(), num_compra, avaliacao, comentario))
         conn.commit()
         return 
 

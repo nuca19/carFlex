@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="https://unpkg.com/htmx.org"></script>
     <link rel="stylesheet" href="../static/style.css">
     <title>Anuncio</title>
 </head>
@@ -19,16 +20,10 @@
         <p>Modelo: {{ anuncio.modelo }}</p>
         <p>Km: {{anuncio.km}} </p>
         <h2>Preço: {{anuncio.preco}}</h2>
-        <form action="/comprarAnuncio/{{anuncio.numero}}" method="post">
-            <button type="submit">Comprar</button>
+        <form class="center-form" hx-post="/comprarAnuncio/{{anuncio.numero}}" hx-target="#avaliacao" hx-swap="innerHTML">
+        <button type="submit">Comprar</button>
         </form>
-        <form id="avaliacaoForm" action="/submitAvaliacao/{numero}" method="post">
-            <label for="avaliacao">Avaliação:</label>
-            <input type="number" id="avaliacao" name="avaliacao" required>
-            <label for="comentario">Comentário:</label>
-            <input type="text" id="comentario" name="comentario" required>
-            <button type="submit">Submit Avaliação</button>
-        </form>
+        <div id="avaliacao"></div>
     </div>
 </body>
 </html>

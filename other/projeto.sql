@@ -65,10 +65,10 @@ CREATE TABLE Compra(
 
 
 CREATE TABLE Avaliacao(
-    numero int,
+    numero INT,
     num_compra INT,
     avaliacao INT,
-    comentario VARCHAR,
+    comentario VARCHAR(250),
     PRIMARY KEY(numero),
     FOREIGN KEY (num_compra) REFERENCES Compra(numero)
 );

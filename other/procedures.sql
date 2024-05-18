@@ -41,3 +41,4 @@ AS
     END;
 
 EXEC anuncios_nao_vendidos;
+
