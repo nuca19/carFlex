@@ -56,19 +56,7 @@ class AnuncioVeiculo(NamedTuple):
 def list_anuncios():
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("""(
-                            SELECT Veiculo.codigo, numero, marca, modelo, km, preco
-                            FROM Anuncio_venda 
-                            JOIN (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo) 
-                            ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-                        )
-                        UNION ALL
-                        (
-                            SELECT Veiculo.codigo, numero, marca, modelo, km, preco
-                            FROM Anuncio_venda 
-                            JOIN (Veiculo JOIN Motociclo ON Veiculo.codigo=Motociclo.codigo) 
-                            ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-                        )""")
+        cursor.execute("""EXEC anuncios_nao_vendidos;""")
         return [AnuncioCard(*row) for row in cursor.fetchall()]
     
 def createAnuncioAutomovel(automovel: Automovel, veiculo: Veiculo, preco, id_vendedor):
@@ -145,6 +133,27 @@ def get_anuncio(codigo_veiculo):
             return AnuncioVeiculo(*result)
         return None
 
+def comprarAnuncio(numero, id_comprador):
+    with create_connection() as conn:
+        num_compra = generate_5dig()
+        num_venda = numero
+        cursor = conn.cursor()
+        cursor.execute(f"""
+            INSERT INTO Compra 
+            VALUES (?, ?, GETDATE(), ?)
+        """, (num_compra, num_venda, id_comprador))
+        conn.commit()
+        return
+
+def submitAvaliacao(numero, avaliacao, comentario):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(f"""
+            INSERT INTO Avaliacao 
+            VALUES (?, ?, ?, ?)
+        """, (generate_5dig(), numero, avaliacao, comentario))
+        conn.commit()
+        return 
 
 def generate_codigo(length=8):
     chars = string.ascii_letters + string.digits

@@ -102,10 +102,10 @@ def index():
         return render_template('login.html')
 
 
-@ app.route('/comprar')
-def comprar():
+@ app.route('/anuncios')
+def anuncios():
     if session['auth']:
-        return render_template('comprar.html')
+        return render_template('anuncios.html')
     else:
         return redirect('/')
 
@@ -192,7 +192,7 @@ def submitVenda():
     id_vendedor = session['userID']
 
     Anuncios.createAnuncioAutomovel(automovel, veiculo, preco, id_vendedor)
-    return redirect('/comprar')
+    return redirect('/anuncios')
 
 
 @ app.route('/submitAnuncioMotociclo', methods=['POST'])
@@ -211,17 +211,31 @@ def submitVendaMotociclo():
     id_vendedor = session['userID']
 
     Anuncios.createAnuncioMotociclo(motociclo, veiculo, preco, id_vendedor)
-    return redirect('/comprar')
+    return redirect('/anuncios')
 
 
-@ app.route('/comprar/<codigo>', methods=['GET'])
+@ app.route('/anuncios/<codigo>', methods=['GET'])
 def get_anuncio(codigo):
     anuncio = Anuncios.get_anuncio(codigo)
     print(anuncio)
     if anuncio is None:
-        return redirect('/comprar')
+        return redirect('/anuncios')
     return render_template('anuncio.html', anuncio=anuncio._asdict())
 
+@app.route('/comprarAnuncio/<numero>', methods=['POST'])
+def comprarAnuncio(numero):
+    id_comprador = session['userID']
+    print(numero)
+    numero = int(numero)
+    Anuncios.comprarAnuncio(numero, id_comprador)
+    return redirect('/anuncios')
+
+@app.route('/submitAvaliacao/<numero>', methods=['POST'])
+def submitAvaliacao(numero):
+    avaliacao = request.form['avaliacao']
+    comentario = request.form['comentario']
+    Anuncios.submitAvaliacao(numero, avaliacao, comentario)
+    return redirect('/anuncios')
 
 def create_connection_local(db_name):
     DRIVER_NAME = 'SQL Server Native Client 11.0'

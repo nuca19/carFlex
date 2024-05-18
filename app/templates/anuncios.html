@@ -8,7 +8,7 @@
           let cards = '<div style="display: flex; flex-wrap: wrap;">';
           data.forEach(item => {
           cards += `
-            <a href="/comprar/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+            <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
                 <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
                 <h2>${item.marca} ${item.modelo}</h2>
                 <p>KM: ${item.km}</p>
@@ -34,7 +34,7 @@
 <div id="navbar">
     <a href="/">CarFlex</a>
     <a href="/sobre">Sobre</a>
-    <a href="/comprar">Comprar</a>
+    <a href="/anuncios">Anuncios</a>
     <a href="/vender">Vender</a>
   </div>
 <div class="content">

@@ -23,3 +23,21 @@ AS
     END;
 
     EXEC remove_anuncio @codigo_veiculo = 'codigo_veiculo';
+
+
+CREATE PROCEDURE anuncios_nao_vendidos
+AS
+    BEGIN
+        SELECT Veiculo.codigo, numero, marca, modelo, km, preco
+        FROM (SELECT * FROM Anuncio_venda WHERE numero NOT IN (SELECT num_venda FROM Compra))
+        AS anuncios_nao_vendidos JOIN (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo)
+        ON anuncios_nao_vendidos.codigo_veiculo = Veiculo.codigo
+        UNION ALL
+        SELECT Veiculo.codigo, numero, marca, modelo, km, preco
+        FROM (SELECT * FROM Anuncio_venda WHERE numero NOT IN (SELECT num_venda FROM Compra))
+        AS anuncios_nao_vendidos JOIN (Veiculo JOIN Motociclo ON Veiculo.codigo=Motociclo.codigo)
+        ON anuncios_nao_vendidos.codigo_veiculo = Veiculo.codigo;
+
+    END;
+
+EXEC anuncios_nao_vendidos;
