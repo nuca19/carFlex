@@ -46,11 +46,15 @@ button[aria-busy="true"] .htmx-indicator {
 #navbar {
     background-color: #333;
     overflow: hidden;
-    position: fixed; /* Add this line */
-    width: 100%; /* Add this line */
-    top: 0; /* Add this line */
+    position: fixed;
+    /* Add this line */
+    width: 100%;
+    /* Add this line */
+    top: 0;
+    /* Add this line */
     left: 0;
-    z-index: 100; /* Add this line */
+    z-index: 100;
+    /* Add this line */
 }
 
 #navbar a {
@@ -67,27 +71,29 @@ button[aria-busy="true"] .htmx-indicator {
     color: black;
 }
 
-.content{
+.content {
     margin-top: 50px;
     padding: 20px;
 }
 
-.vei-flex{
+.vei-flex {
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
 }
-.btn-place{
+
+.btn-place {
     display: flex;
     justify-content: center;
     margin: 0 10px;
 }
-.btn-place button{
+
+.btn-place button {
     padding: 5px 10px;
-    font-size: 1.5em; 
+    font-size: 1.5em;
 }
 
-.container{
+.container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -95,6 +101,130 @@ button[aria-busy="true"] .htmx-indicator {
     height: 100vh;
 }
 
-#switchButton{
+#switchButton {
     background-color: rgb(54, 59, 156);
+}
+
+#formAutomovel {
+    width: 60%;
+    margin: auto;
+    padding: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+}
+
+#formAutomovel h2 {
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+#formAutomovel label {
+    display: block;
+    margin-top: 20px;
+    color: #666;
+    font-family: Arial, sans-serif;
+}
+
+#formAutomovel select option {
+    font-weight: bold;
+}
+
+#formAutomovel input[type="text"],
+#formAutomovel input[type="number"],
+#formAutomovel select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.vei-flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.vei-flex label {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.btn-place {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn-place button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-place button:hover {
+    background-color: #45a049;
+}
+
+#formMotociclo {
+    width: 60%;
+    margin: auto;
+    padding: 20px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+}
+
+#formMotociclo h2 {
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+#formMotociclo label {
+    display: block;
+    margin-top: 20px;
+    color: #666;
+    font-family: Arial, sans-serif;
+}
+
+#formMotociclo input[type="text"],
+#formMotociclo input[type="number"],
+#formMotociclo select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#formMotociclo .vei-flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+#formMotociclo .vei-flex label {
+    flex: 1;
+    margin-right: 10px;
+}
+
+#formMotociclo .btn-place {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#formMotociclo .btn-place button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+#formMotociclo .btn-place button:hover {
+    background-color: #45a049;
+}
+
+#formMotociclo select option {
+    font-weight: bold;
 }
