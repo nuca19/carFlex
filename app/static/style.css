@@ -233,3 +233,32 @@ button[aria-busy="true"] .htmx-indicator {
     display: flex;
     justify-content: center;
 }
+
+.preco{
+    font-weight: bold;
+    font-size: 20px;
+    display: flex;
+
+}
+
+.header {
+    display: flex;
+}
+
+#filter {
+    display: flex;
+    flex-direction: row;
+}
+
+#filter form {
+    display: flex;
+    flex-direction: column;
+}
+
+#filter label {
+    margin-bottom: 0.5em; /* Adds some space between the form elements */
+}
+
+#filter input[type="submit"] {
+    margin-top: 1em; /* Adds some space above the submit button */
+}

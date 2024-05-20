@@ -40,6 +40,8 @@ class AnuncioCard(NamedTuple):
     numero: int
     marca: str
     modelo: str
+    ano: int
+    segmento: str
     km: int
     preco: Decimal
     
@@ -49,15 +51,53 @@ class AnuncioVeiculo(NamedTuple):
     numero: int
     marca: str
     modelo: str
+    ano: int
+    segmento: str
     km: int
     preco: Decimal
     tipo : str
+
+class AnuncioAutomovel(NamedTuple):
+    codigo_veiculo: str
+    numero: int
+    marca: str
+    modelo: str
+    ano : int
+    segmento: str
+    km: int
+    cavalos: int
+    preco: Decimal
+
+class AnuncioMotociclo(NamedTuple):
+    codigo_veiculo: str
+    numero: int
+    marca: str
+    modelo: str
+    ano: int
+    segmento: str
+    km: int
+    cilindrada: int
+    preco: Decimal
+
+
     
 def list_anuncios():
     with create_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""EXEC anuncios_nao_vendidos;""")
         return [AnuncioCard(*row) for row in cursor.fetchall()]
+    
+def list_anuncios_automovel():
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""EXEC anuncios_automovel;""")
+        return [AnuncioAutomovel(*row) for row in cursor.fetchall()]
+
+def list_anuncios_motociclo():
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""EXEC anuncios_motociclo;""")
+        return [AnuncioMotociclo(*row) for row in cursor.fetchall()]
     
 def createAnuncioAutomovel(automovel: Automovel, veiculo: Veiculo, preco, id_vendedor):
     with create_connection() as conn:
@@ -113,7 +153,7 @@ def get_anuncio(codigo_veiculo):
 
         if veiculo_type == 'automovel':
             cursor.execute(f"""
-                SELECT Veiculo.codigo, numero, marca, modelo, km, preco, tipo
+                SELECT Veiculo.codigo, numero, marca, modelo, ano, segmento, km, preco, tipo
                 FROM Anuncio_venda 
                 JOIN (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo) 
                 ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
@@ -123,7 +163,7 @@ def get_anuncio(codigo_veiculo):
             return AnuncioVeiculo(*result)
         elif veiculo_type == 'motociclo':
             cursor.execute(f"""
-                SELECT Veiculo.codigo, numero, marca, modelo, km, preco, tipo
+                SELECT Veiculo.codigo, numero, marca, modelo, km, segmento, ano, preco, tipo
                 FROM Anuncio_venda 
                 JOIN (Veiculo JOIN Motociclo ON Veiculo.codigo=Motociclo.codigo) 
                 ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
@@ -163,6 +203,14 @@ def submitAvaliacao(numero, avaliacao, comentario):
         conn.commit()
         return 
 
+def filter_anuncios(tipo, marca, ano, km):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(f"""
+            EXEC filter_anuncios @tipo = ?, @marca = ?, @ano = ?, @km = ?
+        """, (tipo, marca, ano, km))
+        return [AnuncioVeiculo(*row) for row in cursor.fetchall()]
+    
 def generate_codigo(length=8):
     chars = string.ascii_letters + string.digits
     codigo = ''.join(random.choice(chars) for _ in range(length))

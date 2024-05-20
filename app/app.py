@@ -134,7 +134,30 @@ def get_anuncios():
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     return jsonify(anuncios_dict)
 
+@app.route('/list_anuncios_automovel', methods=['GET'])
+def get_anuncios_automovel():
+    anuncios = Anuncios.list_anuncios_automovel()
+    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
+    return jsonify(anuncios_dict)
 
+@app.route('/list_anuncios_motociclo', methods=['GET'])
+def get_anuncios_motociclo():
+    anuncios = Anuncios.list_anuncios_motociclo()
+    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
+    return jsonify(anuncios_dict)
+
+@ app.route('/filter_anuncios', methods=['POST'])
+def filter_anuncios():
+    data = request.get_json()
+    tipo = data['tipo']
+    marca = data['marca']
+    km = data['km']
+    ano = data['ano']
+    cursor = Anuncios.filter_anuncios(tipo, marca, ano, km)
+    anuncios = list(cursor)
+    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
+    return jsonify(anuncios_dict)
+    
 @ app.route('/test_connection_local', methods=['POST'])
 def test_connection_local():
     db_name = request.form['database_name']

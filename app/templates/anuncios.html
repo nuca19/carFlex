@@ -11,9 +11,9 @@
             <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
                 <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
                 <h2>${item.marca} ${item.modelo}</h2>
-                <p>KM: ${item.km}</p>
-                <p>Preço: ${item.preco}</p>
-                <p>#${item.codigo_veiculo}</p>
+                <p>Segmento: ${item.segmento}</p>
+                <p>${item.ano} | ${item.km} km </p>
+                <div class="preco">${item.preco} €</div>
                 </div>
             </a>
           `;
@@ -26,6 +26,123 @@
           console.error('Error:', error);
         });
     }
+    function fetchAnunciosAutomovel() {
+      fetch('/list_anuncios_automovel')
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          let cards = '<div style="display: flex; flex-wrap: wrap;">';
+          data.forEach(item => {
+          cards += `
+            <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                <h2>${item.marca} ${item.modelo}</h2>
+                <p>Segmento: ${item.segmento}</p>
+                <p>${item.ano} | ${item.km} km | ${item.cavalos} cv</p>
+                <div class="preco">${item.preco} €</div>
+                <p>
+                </div>
+            </a>
+          `;
+          });
+          cards += '</div>';
+
+          document.getElementById('anuncios').innerHTML = cards;
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+    function fetchAnunciosMotociclo() {
+      fetch('/list_anuncios_motociclo')
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          let cards = '<div style="display: flex; flex-wrap: wrap;">';
+          data.forEach(item => {
+          cards += `
+            <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                <h2>${item.marca} ${item.modelo}</h2>
+                <p>Segmento: ${item.segmento}</p>
+                <p>${item.ano} | ${item.km} km | ${item.cilindrada} cm3</p>
+                <div class="preco">${item.preco} €</div>
+                </div>
+            </a>
+          `;
+          });
+          cards += '</div>';
+
+
+          document.getElementById('anuncios').innerHTML = cards;
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+    function fetchFilterAnuncios() {
+    const tipo = document.getElementById('tipo').value;
+    const marca = document.getElementById('marca').value;
+    const km = document.getElementById('km').value;
+    const ano = document.getElementById('ano').value;
+
+    const data = { tipo, marca, km, ano };
+
+    fetch('/filter_anuncios', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+      let contentDiv = '<div style="display: flex; flex-wrap: wrap;">';
+        data.forEach(anuncio => {
+            let anuncioDiv = `
+                <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                    <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                    <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                    <p>Segmento: ${anuncio.segmento}</p>
+                    <p>${anuncio.ano} | ${anuncio.km} km </p>
+                    <div class="preco">${anuncio.preco} €</div>
+                    </div>
+                </a>
+            `;
+            contentDiv += anuncioDiv;
+        });
+        contentDiv += '</div>';
+        document.getElementById('anuncios').innerHTML = contentDiv;
+      })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.getElementById('tipo').addEventListener('change', function() {
+      var marcaSelect = document.getElementById('marca');
+      var selectedTipo = this.value;
+
+      // clear the current options
+      marcaSelect.innerHTML = '';
+
+      var marcas;
+
+      if (selectedTipo === 'automovel') {
+        marcas = ['Audi', 'BMW', 'Citroën', 'Fiat', 'Ford', 'Mercedes-Benz', 'Peugeot', 'Renault', 'Volkswagen'];
+      } else if (selectedTipo === 'motociclo') {
+        marcas = ['Honda', 'Harley-Davidson', 'Yamaha', 'Kawasaki', 'Suzuki', 'BMW Motorrad', 'Ducati', 'Triumph', 'KTM'];
+      }
+
+      // create new options based on the selected tipo
+      for (var i = 0; i < marcas.length; i++) {
+        var option = document.createElement('option');
+        option.value = marcas[i];
+        option.text = marcas[i];
+        marcaSelect.add(option);
+      }
+  });
+    });
 
     // Call fetchAnuncios immediately when the script is loaded
     fetchAnuncios();
@@ -39,4 +156,54 @@
   </div>
 <div class="content">
   <h1>ANUNCIOS</h1>
+  <div class="header">
+    <div>
+      <button onclick="fetchAnuncios()">Todos</button>
+      <button onclick="fetchAnunciosAutomovel()">Automoveis</button>
+      <button onclick="fetchAnunciosMotociclo()">Motociclos</button>
+    </div>
+    <div id="filter">
+      <form onsubmit="event.preventDefault(); fetchFilterAnuncios();" method="post">
+        <label for="tipo">Tipo
+          <select name="tipo" id="tipo">
+            <option value="automovel">Automovel</option>
+            <option value="motociclo">Motociclo</option>
+          </select>
+        </label>
+        <label for="marca">Marca
+          <select name="marca" id="marca">
+            <option value="Audi">Audi</option>
+            <option value="BMW">BMW</option>
+            <option value="Citroen">Citroën</option>
+            <option value="Fiat">Fiat</option>
+            <option value="Ford">Ford</option>
+            <option value="Mercedes">Mercedes-Benz</option>
+            <option value="Peugeot">Peugeot</option>
+            <option value="Renault">Renault</option>
+            <option value="Volkswagen">Volkswagen</option>
+          </select>
+        </label>
+        <label for="segmento">Segmento
+          <select name="segmento" id="segmento">
+            <option value="carros_citadinos">Carros Citadinos</option>
+            <option value="utilitarios">Utilitários</option>
+            <option value="familiares_compactos">Familiares Compactos</option>
+            <option value="familiares_medios_executivos_medios">Familiares Médios/ Executivos Médios</option>
+            <option value="familiares_grandes_executivos_grandes">Familiares Grandes/ Executivos Grandes</option>
+            <option value="luxo">Luxo</option>
+          </select>
+        </label>
+        <label for="ano">Ano
+          <input type="number" id="ano" name="ano" min="1900" max="2099" step="1">
+        </label>
+          <label for="km">Km
+            <input type="number" id="km" name="km" min="0">
+          </label>
+        <input type="submit" value="Filtrar">
+      </form>
+    </div>
+    
+  
+  </div>
   <div id="anuncios"></div>
+</div>
