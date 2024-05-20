@@ -31,7 +31,8 @@ def login():
 def validate_user(username, password):
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute('SELECT id, pass_word FROM Utilizador WHERE username = ?', (username,))
+        cursor.execute(
+            'SELECT id, pass_word FROM Utilizador WHERE username = ?', (username,))
         res = cursor.fetchone()
         if res and check_password_hash(res[1], password):
             return res
@@ -121,6 +122,48 @@ def vender():
 @app.route('/register')
 def register():
     return render_template('register.html')
+
+
+@app.route('/perfil')
+def perfil():
+    if session['auth']:
+        with create_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM Utilizador WHERE id=?",
+                           (session['userID'],))
+            user = cursor.fetchone()
+        return render_template('perfil.html', user=user)
+    else:
+        return redirect('/')
+
+
+@app.route('/submitUserInfo', methods=['POST'])
+def submitUserInfo():
+    if 'userID' in session:
+        id = session['userID']
+        nif = request.form['nif']
+        nome = request.form['nome']
+        endereco = request.form['endereco']
+        username = request.form['username']
+
+        with create_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE Utilizador SET nif=?, nome=?, endereco=?, username=? WHERE id=?",
+                           (nif, nome, endereco, username, id))
+            conn.commit()
+
+        return redirect('/perfil')
+    else:
+        # Redirect to the login page if the user is not authenticated
+        return redirect('/login')
+
+
+@app.route('/anuncios_user')
+def anuncions_user():
+    anuncios = Anuncios.list_UserAnuncios(session['userID'])
+    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
+    print(anuncios_dict)
+    return jsonify(anuncios_dict)
 
 
 @ app.route('/sobre')
@@ -222,6 +265,7 @@ def get_anuncio(codigo):
         return redirect('/anuncios')
     return render_template('anuncio.html', anuncio=anuncio._asdict())
 
+
 @app.route('/comprarAnuncio/<numero>', methods=['POST'])
 def comprarAnuncio(numero):
     id_comprador = session['userID']
@@ -242,12 +286,14 @@ def comprarAnuncio(numero):
         </form>
     """
 
+
 @app.route('/submitAvaliacao/<numero>', methods=['POST'])
 def submitAvaliacao(numero):
     avaliacao = request.form['avaliacao']
     comentario = request.form['comentario']
     Anuncios.submitAvaliacao(numero, avaliacao, comentario)
     return redirect('/anuncios')
+
 
 def create_connection_local(db_name):
     DRIVER_NAME = 'SQL Server Native Client 11.0'
