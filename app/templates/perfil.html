@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Perfil</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <link rel="stylesheet" href="../static/style.css">
+    <script>
+        let areAnunciosShown = false;
+
+        function fetchAnunciosUser(event){
+            event.preventDefault();
+
+            if (areAnunciosShown) {
+                // If the anuncios are currently shown, hide them
+                document.getElementById('anuncios').innerHTML = '';
+            } else {
+                // If the anuncios are not currently shown, fetch and display them
+                fetch('/anuncios_user')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        let cards = '<div style="display: flex; flex-wrap: wrap;">';
+                        data.forEach(item => {
+                            cards += `
+                            <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                                <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                <h2>${item.marca} ${item.modelo}</h2>
+                                <p>KM: ${item.km}</p>
+                                <p>Preço: ${item.preco}</p>
+                                <p>#${item.codigo_veiculo}</p>
+                                </div>
+                            </a>
+                        `;
+                        });
+                        cards += '</div>';
+
+                        document.getElementById('anuncios').innerHTML = cards;
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            // Toggle the areAnunciosShown variable
+            areAnunciosShown = !areAnunciosShown;
+        }
+
+        function editUserInfo() {
+            const userInfo = document.getElementById('UserInfo');
+        
+            userInfo.innerHTML = `
+                <form id="userInfoForm" action="/submitUserInfo" method="post">
+                    <label for="nomeInput">Nome:</label>
+                    <input type="text" id="nomeInput" name="nome" pattern="[A-Za-z\s]+" value="{{ user.nome }}">
+                    
+                    <label for="usernameInput">Username:</label>
+                    <input type="text" id="usernameInput" name="username" value="{{ user.username }}">
+                    
+                    <label for="enderecoInput">Morada:</label>
+                    <input type="text" id="enderecoInput" name="endereco" value="{{ user.endereco }}">
+                    
+                    <label for="nifInput">Nif:</label>
+                    <input type="text" id="nifInput" name="nif" pattern="\\d{9}" maxlength="9" value="{{ user.nif }}">
+                    
+                    <input type="submit" value="Submit">
+                </form>
+            `;
+        }
+
+
+          
+    </script>
+</head>
+<body>
+    <div id="navbar">
+        <a href="/">CarFlex</a>
+        <a href="/sobre">Sobre</a>
+        <a href="/anuncios">Anuncios</a>
+        <a href="/vender">Vender</a>
+        <a href="/logout">Logout</a>
+        <a href="/perfil">Perfil</a>     
+    </div>
+
+    <div id="UserInfo">
+        <h2 id="nome">{{ user.nome }}</h2>
+        <p id="username">Username: {{ user.username }}</p>
+        <p id="endereco">Morada: {{ user.endereco }}</p>
+        <p id="nif">Nif: {{ user.nif }}</p>
+        <button onclick="editUserInfo()">Edit</button>
+        <div id="MeusAnuncios">
+            <button onclick="fetchAnunciosUser(event)">Meus Anuncios</button>
+            <div id="anuncios"></div>
+        </div>
+    </div>
+    
+</body>
+</html>
