@@ -191,13 +191,16 @@ def get_anuncios_motociclo():
 @ app.route('/filter_anuncios', methods=['POST'])
 def filter_anuncios():
     data = request.get_json()
+    print(data)
     tipo = data['tipo']
     marca = data['marca']
+    segmento = data['segmento']
     km = data['km']
     ano = data['ano']
-    cursor = Anuncios.filter_anuncios(tipo, marca, ano, km)
+    cursor = Anuncios.filter_anuncios(tipo, marca, segmento, ano, km)
     anuncios = list(cursor)
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
+    print(anuncios_dict)
     return jsonify(anuncios_dict)
     
 @ app.route('/test_connection_local', methods=['POST'])

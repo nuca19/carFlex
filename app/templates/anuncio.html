@@ -14,12 +14,20 @@
     </div>
 
     <div class="container">
-        <h1>Anuncio {{anuncio.numero}}</h1>
-        <h2>{{anuncio.tipo}} #{{ anuncio.codigo_veiculo }}</h2>
-        <p>Marca: {{anuncio.marca}}</p>
-        <p>Modelo: {{ anuncio.modelo }}</p>
+        <h1>{{anuncio.marca}} {{ anuncio.modelo }}</h1>
+        <h2>{{anuncio.tipo}} {{anuncio.segmento}}</h2>
+        <p>Ano: {{anuncio.ano}}</p>
         <p>Km: {{anuncio.km}} </p>
+        {% if anuncio.tipo == "automovel" %}
+            <p>Cavalos: {{anuncio.cavalos}}</p>
+            <p>Lugares: {{anuncio.num_lugares}} | Portas: {{anuncio.num_portas}}</p>
+        {% elif anuncio.tipo == "motociclo" %}
+            <p>Cilindrada: {{anuncio.cilindrada}}</p>
+        {% endif %}
+        <p>{{anuncio.combustivel}} | {{anuncio.estado}} | {{anuncio.tipo_caixa}}</p>
+        <p>veiculo {{anuncio.numero}} #{{ anuncio.codigo_veiculo }}</p>
         <h2>Preço: {{anuncio.preco}}</h2>
+        
         <form class="center-form" hx-post="/comprarAnuncio/{{anuncio.numero}}" hx-target="#avaliacao" hx-swap="innerHTML">
         <button type="submit">Comprar</button>
         </form>

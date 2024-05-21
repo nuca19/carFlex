@@ -11,7 +11,7 @@
             <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
                 <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
                 <h2>${item.marca} ${item.modelo}</h2>
-                <p>Segmento: ${item.segmento}</p>
+                <p>${item.tipo}</p>
                 <p>${item.ano} | ${item.km} km </p>
                 <div class="preco">${item.preco} €</div>
                 </div>
@@ -37,7 +37,7 @@
             <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
                 <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
                 <h2>${item.marca} ${item.modelo}</h2>
-                <p>Segmento: ${item.segmento}</p>
+                <p>${item.segmento}</p>
                 <p>${item.ano} | ${item.km} km | ${item.cavalos} cv</p>
                 <div class="preco">${item.preco} €</div>
                 <p>
@@ -64,7 +64,7 @@
             <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
                 <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
                 <h2>${item.marca} ${item.modelo}</h2>
-                <p>Segmento: ${item.segmento}</p>
+                <p>${item.segmento}</p>
                 <p>${item.ano} | ${item.km} km | ${item.cilindrada} cm3</p>
                 <div class="preco">${item.preco} €</div>
                 </div>
@@ -83,10 +83,11 @@
     function fetchFilterAnuncios() {
     const tipo = document.getElementById('tipo').value;
     const marca = document.getElementById('marca').value;
+    const segmento = document.getElementById('segmento').value;
     const km = document.getElementById('km').value;
     const ano = document.getElementById('ano').value;
 
-    const data = { tipo, marca, km, ano };
+    const data = { tipo, marca, segmento, km, ano };
 
     fetch('/filter_anuncios', {
         method: 'POST',
@@ -99,17 +100,31 @@
     .then(data => {
       let contentDiv = '<div style="display: flex; flex-wrap: wrap;">';
         data.forEach(anuncio => {
+          if (anuncio.tipo === 'automovel') {
             let anuncioDiv = `
                 <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
                     <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
                     <h2>${anuncio.marca} ${anuncio.modelo}</h2>
-                    <p>Segmento: ${anuncio.segmento}</p>
-                    <p>${anuncio.ano} | ${anuncio.km} km </p>
+                    <p>${anuncio.segmento}</p>
+                    <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
                     <div class="preco">${anuncio.preco} €</div>
                     </div>
                 </a>
             `;
             contentDiv += anuncioDiv;
+          } else if (anuncio.tipo === 'motociclo') {
+            let anuncioDiv = `
+                <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                    <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                    <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                    <p>Segmento: ${anuncio.segmento}</p>
+                    <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
+                    <div class="preco">${anuncio.preco} €</div>
+                    </div>
+                </a>
+            `;
+            contentDiv += anuncioDiv;
+          }
         });
         contentDiv += '</div>';
         document.getElementById('anuncios').innerHTML = contentDiv;
@@ -118,31 +133,43 @@
         console.error('Error:', error);
     });
 }
-    document.addEventListener('DOMContentLoaded', (event) => {
-      document.getElementById('tipo').addEventListener('change', function() {
-      var marcaSelect = document.getElementById('marca');
-      var selectedTipo = this.value;
+document.addEventListener('DOMContentLoaded', (event) => {
+  document.getElementById('tipo').addEventListener('change', function() {
+    var marcaSelect = document.getElementById('marca');
+    var segmentoSelect = document.getElementById('segmento'); // get the segmento select element
+    var selectedTipo = this.value;
 
-      // clear the current options
-      marcaSelect.innerHTML = '';
+    marcaSelect.innerHTML = '';
+    segmentoSelect.innerHTML = '';
 
-      var marcas;
+    var marcas;
+    var segmentos; // declare the segmentos variable
 
-      if (selectedTipo === 'automovel') {
-        marcas = ['Audi', 'BMW', 'Citroën', 'Fiat', 'Ford', 'Mercedes-Benz', 'Peugeot', 'Renault', 'Volkswagen'];
-      } else if (selectedTipo === 'motociclo') {
-        marcas = ['Honda', 'Harley-Davidson', 'Yamaha', 'Kawasaki', 'Suzuki', 'BMW Motorrad', 'Ducati', 'Triumph', 'KTM'];
-      }
+    if (selectedTipo === 'automovel') {
+    marcas = ['', 'Audi', 'BMW', 'Citroën', 'Fiat', 'Ford', 'Mercedes-Benz', 'Peugeot', 'Renault', 'Volkswagen'];
+    segmentos = ['', 'carros_citadinos', 'utilitarios', 'familiares_compactos', 'familiares_medios_executivos_medios', 'familiares_grandes_executivos_grandes', 'luxo'];
+} else if (selectedTipo === 'motociclo') {
+    marcas = ['', 'Honda', 'Harley-Davidson', 'Yamaha', 'Kawasaki', 'Suzuki', 'BMW Motorrad', 'Ducati', 'Triumph', 'KTM'];
+    segmentos = ['', 'Cruiser', 'Todo_terreno', 'Grand_Turismo', 'Nacionais', 'Motos125', 'Quadriciclos', 'Sport', 'Renault'];
+}
 
-      // create new options based on the selected tipo
-      for (var i = 0; i < marcas.length; i++) {
-        var option = document.createElement('option');
-        option.value = marcas[i];
-        option.text = marcas[i];
-        marcaSelect.add(option);
-      }
+    // create new options based on the selected tipo
+    for (var i = 0; i < marcas.length; i++) {
+      var option = document.createElement('option');
+      option.value = marcas[i];
+      option.text = marcas[i];
+      marcaSelect.add(option);
+    }
+
+    // create new options for segmentos based on the selected tipo
+    for (var i = 0; i < segmentos.length; i++) {
+      var option = document.createElement('option');
+      option.value = segmentos[i];
+      option.text = segmentos[i];
+      segmentoSelect.add(option); // add the option to the segmento select element
+    }
   });
-    });
+});
 
     // Call fetchAnuncios immediately when the script is loaded
     fetchAnuncios();
@@ -166,37 +193,24 @@
       <form onsubmit="event.preventDefault(); fetchFilterAnuncios();" method="post">
         <label for="tipo">Tipo
           <select name="tipo" id="tipo">
-            <option value="automovel">Automovel</option>
-            <option value="motociclo">Motociclo</option>
+              <option value=""></option>
+              <option value="automovel">Automovel</option>
+              <option value="motociclo">Motociclo</option>
           </select>
-        </label>
-        <label for="marca">Marca
+      </label>
+      <label for="marca">Marca
           <select name="marca" id="marca">
-            <option value="Audi">Audi</option>
-            <option value="BMW">BMW</option>
-            <option value="Citroen">Citroën</option>
-            <option value="Fiat">Fiat</option>
-            <option value="Ford">Ford</option>
-            <option value="Mercedes">Mercedes-Benz</option>
-            <option value="Peugeot">Peugeot</option>
-            <option value="Renault">Renault</option>
-            <option value="Volkswagen">Volkswagen</option>
+              <!-- Options will be populated by JavaScript -->
           </select>
-        </label>
-        <label for="segmento">Segmento
+      </label>
+      <label for="segmento">Segmento
           <select name="segmento" id="segmento">
-            <option value="carros_citadinos">Carros Citadinos</option>
-            <option value="utilitarios">Utilitários</option>
-            <option value="familiares_compactos">Familiares Compactos</option>
-            <option value="familiares_medios_executivos_medios">Familiares Médios/ Executivos Médios</option>
-            <option value="familiares_grandes_executivos_grandes">Familiares Grandes/ Executivos Grandes</option>
-            <option value="luxo">Luxo</option>
+              <!-- Options will be populated by JavaScript -->
           </select>
-        </label>
-        <label for="ano">Ano
+        <label for="ano">Ano (minimo)
           <input type="number" id="ano" name="ano" min="1900" max="2099" step="1">
         </label>
-          <label for="km">Km
+          <label for="km">Km (minimo)
             <input type="number" id="km" name="km" min="0">
           </label>
         <input type="submit" value="Filtrar">
