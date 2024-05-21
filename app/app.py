@@ -160,9 +160,8 @@ def submitUserInfo():
 
 @app.route('/anuncios_user')
 def anuncions_user():
-    anuncios = Anuncios.list_UserAnuncios(session['userID'])
+    anuncios = Anuncios.list_user_anuncios(session['userID'])
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
-    print(anuncios_dict)
     return jsonify(anuncios_dict)
 
 

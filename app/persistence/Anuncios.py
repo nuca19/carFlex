@@ -44,7 +44,16 @@ class AnuncioCard(NamedTuple):
     segmento: str
     km: int
     preco: Decimal
-    
+
+class AnuncioVeiculo2(NamedTuple):
+    codigo_veiculo: str
+    numero: int
+    marca: str
+    modelo: str
+    ano: int
+    km: int
+    preco: Decimal
+    tipo : str
 
 class AnuncioVeiculo(NamedTuple):
     codigo_veiculo: str
@@ -86,6 +95,14 @@ def list_anuncios():
         cursor = conn.cursor()
         cursor.execute("""EXEC anuncios_nao_vendidos;""")
         return [AnuncioCard(*row) for row in cursor.fetchall()]
+
+def list_user_anuncios(id_vendedor):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""  SELECT Veiculo.codigo, numero, marca, modelo, ano, km, preco, tipo
+                            FROM Anuncio_venda JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+                            WHERE id_vendedor = ?""", (id_vendedor,))
+        return ([AnuncioVeiculo2(*row) for row in cursor.fetchall()])
     
 def list_anuncios_automovel():
     with create_connection() as conn:
@@ -210,6 +227,7 @@ def filter_anuncios(tipo, marca, ano, km):
             EXEC filter_anuncios @tipo = ?, @marca = ?, @ano = ?, @km = ?
         """, (tipo, marca, ano, km))
         return [AnuncioVeiculo(*row) for row in cursor.fetchall()]
+    
     
 def generate_codigo(length=8):
     chars = string.ascii_letters + string.digits
