@@ -25,6 +25,8 @@ AS
     EXEC remove_anuncio @codigo_veiculo = 'codigo_veiculo';
 
 
+DROP PROCEDURE ***
+
 CREATE PROCEDURE anuncios_nao_vendidos
 AS
     BEGIN
@@ -33,7 +35,6 @@ AS
         AS anuncios_nao_vendidos JOIN Veiculo ON anuncios_nao_vendidos.codigo_veiculo = Veiculo.codigo;
     END;
 
-DROP PROCEDURE anuncios_automovel;
 
 CREATE PROCEDURE anuncios_automovel
 AS
@@ -44,7 +45,7 @@ AS
         ON anuncios_automovel.codigo_veiculo = Veiculo.codigo
     END;
 
-Create PROCEDURE anuncios_motociclo
+CREATE PROCEDURE anuncios_motociclo
 AS
     BEGIN
         SELECT Veiculo.codigo, numero, marca, modelo, ano, segmento, km, preco, tipo, cilindrada, combustivel, estado, tipo_caixa
@@ -60,7 +61,14 @@ CREATE PROCEDURE filter_anuncios
     @marca nvarchar(50) = NULL,
     @segmento nvarchar(50) = NULL,
     @ano int = NULL,
-    @km int = NULL
+    @km int = NULL,
+    @combustivel nvarchar(50) = NULL,
+    @estado nvarchar(50) = NULL,
+    @tipo_caixa nvarchar(50) = NULL,
+	@cavalos INT,
+    @num_portas INT,
+    @num_lugares INT,
+    @cilindrada INT
 AS
 BEGIN
     IF @tipo = 'automovel' OR @tipo IS NULL
@@ -75,8 +83,15 @@ BEGIN
         AND (@segmento IS NULL OR segmento = @segmento)
         AND (@ano IS NULL OR ano >= @ano) 
         AND (@km IS NULL OR km >= @km)
+        AND (@combustivel IS NULL OR combustivel = @combustivel)
+        AND (@estado IS NULL OR estado = @estado)
+        AND (@tipo_caixa IS NULL OR tipo_caixa = @tipo_caixa)
+        AND (@cavalos IS NULL OR cavalos >= @cavalos)
+        AND (@num_portas IS NULL OR num_portas = @num_portas)
+        AND (@num_lugares IS NULL OR num_lugares = @num_lugares)
     END
-    ELSE IF @tipo = 'motociclo' OR @tipo IS NULL
+    
+    IF @tipo = 'motociclo' OR @tipo IS NULL
     BEGIN
         SELECT Veiculo.codigo, numero, marca, modelo, ano, segmento, km, preco, tipo, cilindrada, combustivel, estado, tipo_caixa
         FROM Anuncio_venda 
@@ -88,8 +103,13 @@ BEGIN
         AND (@segmento IS NULL OR segmento = @segmento)
         AND (@ano IS NULL OR ano >= @ano) 
         AND (@km IS NULL OR km >= @km)
+        AND (@combustivel IS NULL OR combustivel = @combustivel)
+        AND (@estado IS NULL OR estado = @estado)
+        AND (@tipo_caixa IS NULL OR tipo_caixa = @tipo_caixa)
+        AND (@cilindrada IS NULL OR cilindrada >= @cilindrada)
     END
 END
+
 
 
 CREATE PROCEDURE anuncioveiculototal (@codigo_veiculo VARCHAR(8))

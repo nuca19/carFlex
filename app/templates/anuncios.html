@@ -1,31 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CarFlex - Anuncios</title>
+    <link rel="stylesheet" href="../static/style.css">
 <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 <script>
-    function fetchAnuncios() {
-      fetch('/list_anuncios')
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          let cards = '<div style="display: flex; flex-wrap: wrap;">';
-          data.forEach(item => {
-          cards += `
-            <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
-                <h2>${item.marca} ${item.modelo}</h2>
-                <p>${item.tipo}</p>
-                <p>${item.ano} | ${item.km} km </p>
-                <div class="preco">${item.preco} €</div>
-                </div>
-            </a>
-          `;
-          });
-          cards += '</div>';
-
-          document.getElementById('anuncios').innerHTML = cards;
-        })
-        .catch((error) => {
-          console.error('Error:', error);
+function fetchAnuncios() {
+  fetch('/list_all_anuncios')
+    .then(response => response.json())
+    .then(data => {
+        let contentDiv = '<div style="display: flex; flex-wrap: wrap;">';
+        data.forEach(anuncio => {
+            if (anuncio.tipo === 'automovel') {
+                let anuncioDiv = `
+                    <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                        <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                        <p>${anuncio.segmento}</p>
+                        <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
+                        <div class="preco">${anuncio.preco} €</div>
+                        </div>
+                    </a>
+                `;
+                contentDiv += anuncioDiv;
+            } else if (anuncio.tipo === 'motociclo') {
+                let anuncioDiv = `
+                    <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                        <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                        <p>Segmento: ${anuncio.segmento}</p>
+                        <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
+                        <div class="preco">${anuncio.preco} €</div>
+                        </div>
+                    </a>
+                `;
+                contentDiv += anuncioDiv;
+            }
         });
-    }
+        contentDiv += '</div>';
+        document.getElementById('anuncios').innerHTML = contentDiv;
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
     function fetchAnunciosAutomovel() {
       fetch('/list_anuncios_automovel')
         .then(response => response.json())
@@ -80,14 +98,24 @@
           console.error('Error:', error);
         });
     }
+
     function fetchFilterAnuncios() {
     const tipo = document.getElementById('tipo').value;
     const marca = document.getElementById('marca').value;
     const segmento = document.getElementById('segmento').value;
     const km = document.getElementById('km').value;
     const ano = document.getElementById('ano').value;
+    const combustivel = document.getElementById('combustivel').value;
+    const estado = document.getElementById('estado').value;
+    const tipo_caixa = document.getElementById('tipo_caixa').value;
 
-    const data = { tipo, marca, segmento, km, ano };
+    let cavalos = tipo === 'automovel' ? document.getElementById('cavalos').value : '';
+    let num_portas = tipo === 'automovel' ? document.getElementById('num_portas').value : '';
+    let num_lugares = tipo === 'automovel' ? document.getElementById('num_lugares').value : '';
+    let cilindrada = tipo === 'motociclo' ? document.getElementById('cilindrada').value : '';
+
+    const data = { tipo, marca, segmento, km, ano, combustivel, estado, tipo_caixa, cavalos, num_portas, num_lugares, cilindrada };
+    console.log(data);
 
     fetch('/filter_anuncios', {
         method: 'POST',
@@ -136,8 +164,10 @@
 document.addEventListener('DOMContentLoaded', (event) => {
   document.getElementById('tipo').addEventListener('change', function() {
     var marcaSelect = document.getElementById('marca');
-    var segmentoSelect = document.getElementById('segmento'); // get the segmento select element
+    var segmentoSelect = document.getElementById('segmento');
     var selectedTipo = this.value;
+    var marcasegDiv = document.getElementById('marcaseg');
+    var extraFieldsDiv = document.getElementById('extrafields');
 
     marcaSelect.innerHTML = '';
     segmentoSelect.innerHTML = '';
@@ -146,12 +176,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
     var segmentos; // declare the segmentos variable
 
     if (selectedTipo === 'automovel') {
-    marcas = ['', 'Audi', 'BMW', 'Citroën', 'Fiat', 'Ford', 'Mercedes-Benz', 'Peugeot', 'Renault', 'Volkswagen'];
-    segmentos = ['', 'carros_citadinos', 'utilitarios', 'familiares_compactos', 'familiares_medios_executivos_medios', 'familiares_grandes_executivos_grandes', 'luxo'];
-} else if (selectedTipo === 'motociclo') {
-    marcas = ['', 'Honda', 'Harley-Davidson', 'Yamaha', 'Kawasaki', 'Suzuki', 'BMW Motorrad', 'Ducati', 'Triumph', 'KTM'];
-    segmentos = ['', 'Cruiser', 'Todo_terreno', 'Grand_Turismo', 'Nacionais', 'Motos125', 'Quadriciclos', 'Sport', 'Renault'];
-}
+        marcas = ['', 'Audi', 'BMW', 'Citroën', 'Fiat', 'Ford', 'Mercedes-Benz', 'Peugeot', 'Renault', 'Volkswagen'];
+        segmentos = ['', 'carros_citadinos', 'utilitarios', 'familiares_compactos', 'familiares_medios_executivos_medios', 'familiares_grandes_executivos_grandes', 'luxo'];
+        extraFieldsDiv.innerHTML = `
+            <label for="cavalos">Cavalos (minimo)</label>
+            <input type="number" id="cavalos" name="cavalos">
+            <label for="num_portas">Número de Portas</label>
+            <input type="number" id="num_portas" name="num_portas">
+            <label for="num_lugares">Número de Lugares</label>
+            <input type="number" id="num_lugares" name="num_lugares">
+        `;
+        marcasegDiv.style.display = 'block';
+        
+    } else if (selectedTipo === 'motociclo') {
+        marcas = ['', 'Honda', 'Harley-Davidson', 'Yamaha', 'Kawasaki', 'Suzuki', 'BMW Motorrad', 'Ducati', 'Triumph', 'KTM'];
+        segmentos = ['', 'Cruiser', 'Todo_terreno', 'Grand_Turismo', 'Nacionais', 'Motos125', 'Quadriciclos', 'Sport', 'Renault'];
+        extraFieldsDiv.innerHTML = `
+            <label for="cilindrada">Cilindrada (minimo)</label>
+            <input type="number" id="cilindrada" name="cilindrada">
+        `;
+        marcasegDiv.style.display = 'block';
+    } else {
+      marcasegDiv.style.display = 'none';
+      extraFieldsDiv.innerHTML = '';
+        return;
+    }
 
     // create new options based on the selected tipo
     for (var i = 0; i < marcas.length; i++) {
@@ -174,51 +223,82 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // Call fetchAnuncios immediately when the script is loaded
     fetchAnuncios();
 </script>
-<link rel="stylesheet" href="../static/style.css">
-<div id="navbar">
-  <a href="/">CarFlex</a>
-  <a href="/anuncios">Anuncios</a>
-  <a href="/vender">Vender</a>
-  <a href="/logout">Logout</a>
-  <a href="/perfil">Perfil</a>
-  </div>
-<div class="content">
-  <h1>ANUNCIOS</h1>
-  <div class="header">
-    <div>
-      <button onclick="fetchAnuncios()">Todos</button>
-      <button onclick="fetchAnunciosAutomovel()">Automoveis</button>
-      <button onclick="fetchAnunciosMotociclo()">Motociclos</button>
+</head>
+<body>
+  <div id="navbar">
+    <a href="/">CarFlex</a>
+    <a href="/anuncios">Anuncios</a>
+    <a href="/vender">Vender</a>
+    <a href="/logout">Logout</a>
+    <a href="/perfil">Perfil</a>
     </div>
-    <div id="filter">
-      <form onsubmit="event.preventDefault(); fetchFilterAnuncios();" method="post">
-        <label for="tipo">Tipo
-          <select name="tipo" id="tipo">
-              <option value=""></option>
-              <option value="automovel">Automovel</option>
-              <option value="motociclo">Motociclo</option>
-          </select>
-      </label>
-      <label for="marca">Marca
-          <select name="marca" id="marca">
-              <!-- Options will be populated by JavaScript -->
-          </select>
-      </label>
-      <label for="segmento">Segmento
-          <select name="segmento" id="segmento">
-              <!-- Options will be populated by JavaScript -->
-          </select>
-        <label for="ano">Ano (minimo)
-          <input type="number" id="ano" name="ano" min="1900" max="2099" step="1">
+  <div class="content">
+    <h1>ANUNCIOS</h1>
+    <div class="header">
+      <div>
+        <button onclick="fetchAnuncios()">Todos</button>
+        <button onclick="fetchAnunciosAutomovel()">Automoveis</button>
+        <button onclick="fetchAnunciosMotociclo()">Motociclos</button>
+      </div>
+      <div id="filter">
+        <div>
+        <form onsubmit="event.preventDefault(); fetchFilterAnuncios();" method="post">
+          <label for="tipo">Tipo
+            <select name="tipo" id="tipo">
+                <option value=""></option>
+                <option value="automovel">Automovel</option>
+                <option value="motociclo">Motociclo</option>
+            </select>
         </label>
-          <label for="km">Km (minimo)
-            <input type="number" id="km" name="km" min="0">
+          <label for="ano">Ano (minimo)
+            <input type="number" id="ano" name="ano" min="1900" max="2099" step="1">
           </label>
+            <label for="km">Km (minimo)
+              <input type="number" id="km" name="km" min="0">
+            </label>
+            <label for="combustivel">Combustivel
+              <select name="combustivel" id="combustivel">
+                  <option value=""></option>
+                  <option value="gasolina">Gasolina</option>
+                  <option value="diesel">Diesel</option>
+                  <option value="eletrico">Eletrico</option>
+              </select>
+          </label>
+          <label for="estado">Estado
+              <select name="estado" id="estado">
+                  <option value=""></option>
+                  <option value="novo">Novo</option>
+                  <option value="usado">Usado</option>
+              </select>
+          </label>
+          <label for="tipo_caixa">Tipo de Caixa
+              <select name="tipo_caixa" id="tipo_caixa">
+                  <option value=""></option>
+                  <option value="manual">Manual</option>
+                  <option value="automatico">Automatico </option>
+              </select>
+          </label>
+        </div>
+        <div id="marcaseg">
+          <label for="marca">Marca
+              <select name="marca" id="marca">
+                  <!-- Options will be populated by JavaScript -->
+              </select>
+          </label>
+          <label for="segmento">Segmento
+              <select name="segmento" id="segmento">
+                  <!-- Options will be populated by JavaScript -->
+              </select>
+          </label>
+          <div id="extrafields"></div>
+        </div>
         <input type="submit" value="Filtrar">
-      </form>
-    </div>
+        </form>
+      </div>
+      
     
-  
+    </div>
+    <div id="anuncios"></div>
   </div>
-  <div id="anuncios"></div>
-</div>
+</body>
+</html>

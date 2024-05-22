@@ -83,13 +83,6 @@ class AnuncioMotocicloTotal(NamedTuple):
     tipo_caixa: str
 
 
-def list_anuncios():
-    with create_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute("""EXEC anuncios_nao_vendidos;""")
-        return [AnuncioVeiculo2(*row) for row in cursor.fetchall()]
-
-
 def list_user_anuncios(id_vendedor):
     with create_connection() as conn:
         cursor = conn.cursor()
@@ -255,20 +248,23 @@ def submitAvaliacao(numero, avaliacao, comentario):
         return
 
 
-def filter_anuncios(tipo, marca, segmento, ano, km):
+def filter_anuncios(tipo, marca, segmento, ano, km, combustivel, estado, tipo_caixa, cavalos, num_portas, num_lugares, cilindrada):
     with create_connection() as conn:
         cursor = conn.cursor()
-
-        tipo = tipo if tipo != '' else None
-        marca = marca if marca != '' else None
-        segmento = segmento if segmento != '' else None
-        ano = ano if ano is not None else None
-        km = km if km is not None else None
-
         cursor.execute(f"""
-            EXEC filter_anuncios @tipo = ?, @marca = ?, @segmento = ?, @ano = ?, @km = ?
-        """, (tipo, marca, segmento, ano, km))
-        result = cursor.fetchall()
+            EXEC filter_anuncios @tipo = ?, @marca = ?, @segmento = ?, @ano = ?, @km = ?, @combustivel = ?, @estado = ?, @tipo_caixa = ?, @cavalos = ?, @num_portas = ?, @num_lugares = ?, @cilindrada = ?
+        """, (tipo, marca, segmento, ano, km, combustivel, estado, tipo_caixa, cavalos, num_portas, num_lugares, cilindrada))
+
+        result = []
+        while True:
+            rows = cursor.fetchall()
+            if rows:
+                result.extend(rows)
+            if cursor.nextset():
+                continue
+            else:
+                break
+
         return [AnuncioAutomovelTotal(*row) if row[8] == 'automovel' else AnuncioMotocicloTotal(*row) for row in result]
 
 

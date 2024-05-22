@@ -192,19 +192,25 @@ def sobre():
     return render_template('sobre.html')
 
 
-@ app.route('/list_anuncios', methods=['GET'])
-def get_anuncios():
-    anuncios = Anuncios.list_anuncios()
-    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
-    return jsonify(anuncios_dict)
-
-
 @app.route('/list_anuncios_automovel', methods=['GET'])
 def get_anuncios_automovel():
     anuncios = Anuncios.list_anuncios_automovel()
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     return jsonify(anuncios_dict)
 
+@app.route('/list_anuncios_motociclo', methods=['GET'])
+def get_anuncios_motociclo():
+    anuncios = Anuncios.list_anuncios_motociclo()
+    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
+    return jsonify(anuncios_dict)
+
+@app.route('/list_all_anuncios', methods=['GET'])
+def get_all_anuncios():
+    anuncios_automovel = Anuncios.list_anuncios_automovel()
+    anuncios_motociclo = Anuncios.list_anuncios_motociclo()
+    all_anuncios = anuncios_automovel + anuncios_motociclo
+    all_anuncios_dict = [anuncio._asdict() for anuncio in all_anuncios]
+    return jsonify(all_anuncios_dict)
 
 @app.route('/list_anuncios_automovel_User', methods=['GET'])
 def get_anuncios_automovel_User():
@@ -220,68 +226,30 @@ def get_anuncios_motociclo_User():
     return jsonify(anuncios_dict)
 
 
-@app.route('/list_anuncios_motociclo', methods=['GET'])
-def get_anuncios_motociclo():
-    anuncios = Anuncios.list_anuncios_motociclo()
-    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
-    return jsonify(anuncios_dict)
-
-
 @ app.route('/filter_anuncios', methods=['POST'])
 def filter_anuncios():
     data = request.get_json()
     print(data)
-    tipo = data['tipo']
-    marca = data['marca']
-    segmento = data['segmento']
-    km = data['km']
-    ano = data['ano']
-    cursor = Anuncios.filter_anuncios(tipo, marca, segmento, ano, km)
+    tipo = data.get('tipo', '') if data.get('tipo', '') != '' else None
+    marca = data.get('marca', '') if data.get('marca', '') != '' else None
+    segmento = data.get('segmento', '') if data.get('segmento', '') != '' else None
+    ano = int(data.get('ano', '')) if data.get('ano', '') != '' else None
+    km = int(data.get('km', '')) if data.get('km', '') != '' else None
+    combustivel = data.get('combustivel', '') if data.get('combustivel', '') != '' else None
+    estado = data.get('estado', '') if data.get('estado', '') != '' else None
+    tipo_caixa = data.get('tipo_caixa', '') if data.get('tipo_caixa', '') != '' else None
+    cavalos = int(data.get('cavalos', '')) if data.get('cavalos', '') != '' else None
+    num_portas = int(data.get('num_portas', '')) if data.get('num_portas', '') != '' else None
+    num_lugares = int(data.get('num_lugares', '')) if data.get('num_lugares', '') != '' else None
+    cilindrada = int(data.get('cilindrada', '')) if data.get('cilindrada', '') != '' else None
+
+    cursor = Anuncios.filter_anuncios(tipo, marca, segmento, ano, km,
+                                       combustivel, estado, tipo_caixa,
+                                       cavalos, num_portas, num_lugares, cilindrada)
     anuncios = list(cursor)
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     print(anuncios_dict)
     return jsonify(anuncios_dict)
-
-
-@ app.route('/test_connection_local', methods=['POST'])
-def test_connection_local():
-    db_name = request.form['database_name']
-    print("testlocal")
-
-    try:
-        with create_connection_local(db_name) as conn:
-            print("success")
-            message = "Connection successful!"
-            colour = "green"
-    except pyodbc.Error as e:
-        print("error")
-        message = f"Connection failed: {str(e)}"
-        colour = "red"
-
-    return f'<label style="color: {colour};">{message}</label>'
-
-
-@ app.route('/cars', methods=['POST'])
-def print_cars():
-    # Get form data
-    db_name = request.form['database_name']
-
-    # Fetch the hello table
-    with create_connection_local(db_name) as conn:
-        cursor = conn.cursor()
-        cursor.execute("""
-            SELECT marca, modelo, cavalos
-            FROM Veiculo
-            JOIN Automovel ON Veiculo.automovel_codigo = Automovel.codigo
-        """)
-        messages = list(cursor)
-
-    return render_template_string("""
-        <h1>cars</h1>
-        {% for x in messages %}
-        <p>{{ x }}</p>
-        {% endfor %}
-        """, messages=messages)
 
 
 @ app.route('/submitAnuncioAutomovel', methods=['POST'])
@@ -359,14 +327,6 @@ def submitAvaliacao(numero):
     Anuncios.submitAvaliacao(numero, avaliacao, comentario)
     return redirect('/anuncios')
 
-
-def create_connection_local(db_name):
-    DRIVER_NAME = 'SQL Server Native Client 11.0'
-    SERVER_NAME = 'ADRIANO'
-    connection_string = f"""DRIVER={{{DRIVER_NAME}}};SERVER={SERVER_NAME};DATABASE={db_name};Trusted_Connection=yes;"""
-
-    conn = pyodbc.connect(connection_string)
-    return conn
 
 
 if __name__ == '__main__':

@@ -343,3 +343,7 @@ button[aria-busy="true"] .htmx-indicator {
 #filterPerfil {
     margin-left: 10px;
 }
+
+#marcaseg{
+    display: none;
+}
