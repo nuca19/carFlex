@@ -165,6 +165,28 @@ def anuncions_user():
     return jsonify(anuncios_dict)
 
 
+@app.route('/compras_user')
+def compras_user():
+    compras = Anuncios.list_user_compras(session['userID'])
+    compras_dict = [compra._asdict() for compra in compras]
+    print(compras_dict)
+    return jsonify(compras_dict)
+
+
+@app.route('/compras_user_automovel')
+def compras_user_automovel():
+    compras = Anuncios.list_user_compras_automovel(session['userID'])
+    compras_dict = [compra._asdict() for compra in compras]
+    return jsonify(compras_dict)
+
+
+@app.route('/compras_user_motociclo')
+def compras_user_motociclo():
+    compras = Anuncios.list_user_compras_motociclo(session['userID'])
+    compras_dict = [compra._asdict() for compra in compras]
+    return jsonify(compras_dict)
+
+
 @ app.route('/sobre')
 def sobre():
     return render_template('sobre.html')
@@ -176,17 +198,34 @@ def get_anuncios():
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     return jsonify(anuncios_dict)
 
+
 @app.route('/list_anuncios_automovel', methods=['GET'])
 def get_anuncios_automovel():
     anuncios = Anuncios.list_anuncios_automovel()
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     return jsonify(anuncios_dict)
 
+
+@app.route('/list_anuncios_automovel_User', methods=['GET'])
+def get_anuncios_automovel_User():
+    anuncios = Anuncios.list_anuncios_automovel_User(session['userID'])
+    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
+    return jsonify(anuncios_dict)
+
+
+@app.route('/list_anuncios_motociclo_User', methods=['GET'])
+def get_anuncios_motociclo_User():
+    anuncios = Anuncios.list_anuncios_motociclo_User(session['userID'])
+    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
+    return jsonify(anuncios_dict)
+
+
 @app.route('/list_anuncios_motociclo', methods=['GET'])
 def get_anuncios_motociclo():
     anuncios = Anuncios.list_anuncios_motociclo()
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     return jsonify(anuncios_dict)
+
 
 @ app.route('/filter_anuncios', methods=['POST'])
 def filter_anuncios():
@@ -202,7 +241,8 @@ def filter_anuncios():
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     print(anuncios_dict)
     return jsonify(anuncios_dict)
-    
+
+
 @ app.route('/test_connection_local', methods=['POST'])
 def test_connection_local():
     db_name = request.form['database_name']
@@ -322,7 +362,7 @@ def submitAvaliacao(numero):
 
 def create_connection_local(db_name):
     DRIVER_NAME = 'SQL Server Native Client 11.0'
-    SERVER_NAME = 'LAPTOP-PQBKH6FT'
+    SERVER_NAME = 'ADRIANO'
     connection_string = f"""DRIVER={{{DRIVER_NAME}}};SERVER={SERVER_NAME};DATABASE={db_name};Trusted_Connection=yes;"""
 
     conn = pyodbc.connect(connection_string)

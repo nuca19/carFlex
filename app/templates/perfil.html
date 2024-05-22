@@ -7,13 +7,16 @@
     <link rel="stylesheet" href="../static/style.css">
     <script>
         let areAnunciosShown = false;
-
+        let areComprasShown = false;
+        let areAutomovelAnunciosShown = false; 
+        let areMotocicloAnunciosShown = false;  
         function fetchAnunciosUser(event){
             event.preventDefault();
 
             if (areAnunciosShown) {
                 // If the anuncios are currently shown, hide them
                 document.getElementById('anuncios').innerHTML = '';
+                document.getElementById('filterAnuncios').innerHTML = '';
             } else {
                 // If the anuncios are not currently shown, fetch and display them
                 fetch('/anuncios_user')
@@ -21,6 +24,7 @@
                     .then(data => {
                         console.log(data);
                         let cards = '<div style="display: flex; flex-wrap: wrap;">';
+                        
                         data.forEach(item => {
                             cards += `
                             <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
@@ -35,6 +39,11 @@
                         });
                         cards += '</div>';
 
+                        let filters = ' ';
+                        filters += '<button onclick="fetchAnunciosAutomovel(event)"style="margin-right: 10px;">Automóvies</button>';
+                        filters += '<button onclick="fetchAnunciosMotociclo(event)"> Motociclos </button>';
+
+                        document.getElementById('filterAnuncios').innerHTML = filters;
                         document.getElementById('anuncios').innerHTML = cards;
                     })
                     .catch((error) => {
@@ -45,6 +54,156 @@
             // Toggle the areAnunciosShown variable
             areAnunciosShown = !areAnunciosShown;
         }
+    
+            function fetchAnunciosAutomovel(event) {
+                event.preventDefault();
+                    // If the automovel anuncios are not currently shown, fetch and display them
+                    fetch('/list_anuncios_automovel_User')
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            let cards = '<div style="display: flex; flex-wrap: wrap;">';
+                            data.forEach(item => {
+                                cards += `
+                                <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                                    <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                    <h2>${item.marca} ${item.modelo}</h2>
+                                    <p>KM: ${item.km}</p>
+                                    <p>Preço: ${item.preco}</p>
+                                    <p>#${item.codigo_veiculo}</p>
+                                    </div>
+                                </a>
+                                `;
+                            });
+                            cards += '</div>';
+            
+                            document.getElementById('anuncios').innerHTML = cards;
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                }       
+              function fetchAnunciosMotociclo() {
+                fetch('/list_anuncios_motociclo_User')
+                  .then(response => response.json())
+                  .then(data => {
+                    console.log(data);
+                    let cards = '<div style="display: flex; flex-wrap: wrap;">';
+                    data.forEach(item => {
+                    cards += `
+                    <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                        <h2>${item.marca} ${item.modelo}</h2>
+                        <p>KM: ${item.km}</p>
+                        <p>Preço: ${item.preco}</p>
+                        <p>#${item.codigo_veiculo}</p>
+                        </div>
+                    </a>
+                    `;
+                    });
+                    cards += '</div>';
+          
+          
+                    document.getElementById('anuncios').innerHTML = cards;
+                  })
+                  .catch((error) => {
+                    console.error('Error:', error);
+                  });
+                }
+
+              function fetchComprasUser(event){
+                event.preventDefault();
+            
+                if (areComprasShown) {
+                    // If the compras are currently shown, hide them
+                    document.getElementById('compras').innerHTML = '';
+                    document.getElementById('filterCompras').innerHTML = '';
+                } else {
+                    // If the compras are not currently shown, fetch and display them
+                    fetch('/compras_user')
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            let cards = '<div style="display: flex; flex-wrap: wrap;">';
+                                
+                            data.forEach(item => {
+                                cards += `
+                                <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                                    <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                    <h2>${item.marca} ${item.modelo}</h2>
+                                    <p>KM: ${item.km}</p>
+                                    <p>Preço: ${item.preco}</p>
+                                    <p>#${item.codigo_veiculo}</p>
+                                    </div>
+                                </a>
+                            `;
+                            });
+                            cards += '</div>';
+            
+                            let filters = ' ';
+                            filters += '<button onclick="fetchComprasAutomovel(event)">Automóvies</button>';
+                            filters += '<button onclick = "  fetchComprasMotociclo(event)"> Motociclos </button>';
+                            
+                            document.getElementById('filterCompras').innerHTML = filters;
+                            document.getElementById('compras').innerHTML = cards;
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                }
+            
+                // Toggle the areComprasShown variable
+                areComprasShown = !areComprasShown;
+            }
+
+
+        function fetchComprasAutomovel(event) {
+            fetch('/compras_user_automovel')
+            print("ola")
+            .then (response => response.json())
+            .then(data => {
+                console.log(data);
+                let cards = '<div style="display: flex; flex-wrap: wrap;">';
+                data.forEach(item => {
+                    cards += `
+                    <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                        <h2>${item.marca} ${item.modelo}</h2>
+                        <p>KM: ${item.km}</p>
+                        <p>Preço: ${item.preco}</p>
+                        <p>#${item.codigo_veiculo}</p>
+                        </div>
+                    </a>
+                    `;
+                });
+                cards += '</div>';
+                document.getElementById('compras').innerHTML = cards;
+            })
+        }
+
+        function fetchComprasMotociclo(event){
+            fetch('/compras_user_motociclo')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                let cards = '<div style="display: flex; flex-wrap: wrap;">';
+                data.forEach(item => {
+                    cards += `
+                    <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                        <h2>${item.marca} ${item.modelo}</h2>
+                        <p>KM: ${item.km}</p>
+                        <p>Preço: ${item.preco}</p>
+                        <p>#${item.codigo_veiculo}</p>
+                        </div>
+                    </a>
+                    `;
+                });
+                cards += '</div>';
+                document.getElementById('compras').innerHTML = cards;
+            })
+        }
+
 
         function editUserInfo() {
             const userInfo = document.getElementById('UserInfo');
@@ -74,12 +233,11 @@
 </head>
 <body>
     <div id="navbar">
-        <a href="/">CarFlex</a>
-        <a href="/sobre">Sobre</a>
-        <a href="/anuncios">Anuncios</a>
-        <a href="/vender">Vender</a>
-        <a href="/logout">Logout</a>
-        <a href="/perfil">Perfil</a>     
+    <a href="/">CarFlex</a>
+    <a href="/anuncios">Anuncios</a>
+    <a href="/vender">Vender</a>
+    <a href="/logout">Logout</a>
+    <a href="/perfil">Perfil</a>    
     </div>
 
     <div id="UserInfo">
@@ -88,9 +246,17 @@
         <p id="endereco">Morada: {{ user.endereco }}</p>
         <p id="nif">Nif: {{ user.nif }}</p>
         <button onclick="editUserInfo()">Edit</button>
-        <div id="MeusAnuncios">
-            <button onclick="fetchAnunciosUser(event)">Meus Anuncios</button>
-            <div id="anuncios"></div>
+        <div id="Options">
+            <div id="MeusAnuncios">
+                <button onclick="fetchAnunciosUser(event)">Meus Anuncios</button>
+                <div id="filterAnuncios"></div>
+                <div id="anuncios"></div>
+            </div>
+            <div id="MinhasCompras">
+                <button onclick="fetchComprasUser(event)">Minhas Compras</button>
+                <div id="filterCompras"></div>
+                <div id="compras"></div>
+            </div>
         </div>
     </div>
     

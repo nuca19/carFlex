@@ -8,7 +8,6 @@ from pyodbc import IntegrityError
 from persistence.session import create_connection
 
 
-
 class AnuncioVenda(NamedTuple):
     numero: int
     data_venda: str
@@ -16,15 +15,18 @@ class AnuncioVenda(NamedTuple):
     codigo_veiculo: int
     id_vendedor: int
 
+
 class Motociclo(NamedTuple):
     segmento: str
     cilindrada: int
+
 
 class Automovel(NamedTuple):
     segmento: str
     num_portas: int
     num_lugares: int
     cavalos: int
+
 
 class Veiculo(NamedTuple):
     ano: int
@@ -44,7 +46,7 @@ class AnuncioVeiculo2(NamedTuple):
     ano: int
     km: int
     preco: Decimal
-    tipo : str
+    tipo: str
 
 
 class AnuncioAutomovelTotal(NamedTuple):
@@ -52,17 +54,18 @@ class AnuncioAutomovelTotal(NamedTuple):
     numero: int
     marca: str
     modelo: str
-    ano : int
+    ano: int
     segmento: str
     km: int
     preco: Decimal
-    tipo : str
+    tipo: str
     num_portas: int
     num_lugares: int
     cavalos: int
     combustivel: str
     estado: str
     tipo_caixa: str
+
 
 class AnuncioMotocicloTotal(NamedTuple):
     codigo_veiculo: str
@@ -73,19 +76,19 @@ class AnuncioMotocicloTotal(NamedTuple):
     segmento: str
     km: int
     preco: Decimal
-    tipo : str
+    tipo: str
     cilindrada: int
     combustivel: str
     estado: str
     tipo_caixa: str
 
 
-    
 def list_anuncios():
     with create_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""EXEC anuncios_nao_vendidos;""")
         return [AnuncioVeiculo2(*row) for row in cursor.fetchall()]
+
 
 def list_user_anuncios(id_vendedor):
     with create_connection() as conn:
@@ -94,42 +97,94 @@ def list_user_anuncios(id_vendedor):
                             FROM Anuncio_venda JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
                             WHERE id_vendedor = ?""", (id_vendedor,))
         return ([AnuncioVeiculo2(*row) for row in cursor.fetchall()])
-    
+
+
+def list_user_compras(id_comprador):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""  SELECT Veiculo.codigo, num_venda, marca, modelo, ano, km, preco, tipo
+                            FROM Compra JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
+                            JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+                            WHERE id_comprador = ?""", (id_comprador,))
+        return ([AnuncioVeiculo2(*row) for row in cursor.fetchall()])
+
+
+def list_user_compras_automovel(id_comprador):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""  SELECT Veiculo.codigo, num_venda, marca, modelo, ano, km, preco, tipo
+                            FROM Compra JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
+                            JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+                            WHERE id_comprador = ? AND tipo = 'automovel'""", (id_comprador,))
+        return ([AnuncioVeiculo2(*row) for row in cursor.fetchall()])
+
+
+def list_user_compras_motociclo(id_comprador):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""  SELECT Veiculo.codigo, num_venda, marca, modelo, ano, km, preco, tipo
+                            FROM Compra JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
+                            JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+                            WHERE id_comprador = ? AND tipo = 'motociclo'""", (id_comprador,))
+        return ([AnuncioVeiculo2(*row) for row in cursor.fetchall()])
+
+
 def list_anuncios_automovel():
     with create_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""EXEC anuncios_automovel;""")
         return [AnuncioAutomovelTotal(*row) for row in cursor.fetchall()]
 
+
 def list_anuncios_motociclo():
     with create_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""EXEC anuncios_motociclo;""")
         return [AnuncioMotocicloTotal(*row) for row in cursor.fetchall()]
-    
+
+
+def list_anuncios_automovel_User(id_vendedor):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""SELECT Veiculo.codigo, numero, marca, modelo, ano, km, preco, tipo
+                            FROM Anuncio_venda JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+                            WHERE id_vendedor = ? AND tipo = 'automovel'""", (id_vendedor,))
+        return [AnuncioVeiculo2(*row) for row in cursor.fetchall()]
+
+
+def list_anuncios_motociclo_User(id_vendedor):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""SELECT Veiculo.codigo, numero, marca, modelo, ano, km, preco, tipo
+                            FROM Anuncio_venda JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+                            WHERE id_vendedor = ? AND tipo = 'motociclo'""", (id_vendedor,))
+        return [AnuncioVeiculo2(*row) for row in cursor.fetchall()]
+
+
 def createAnuncioAutomovel(automovel: Automovel, veiculo: Veiculo, preco, id_vendedor):
     with create_connection() as conn:
-            codigo = generate_codigo()
-            numero = generate_5dig()
-            cursor = conn.cursor()
-            cursor.execute(f"""
+        codigo = generate_codigo()
+        numero = generate_5dig()
+        cursor = conn.cursor()
+        cursor.execute(f"""
                 INSERT INTO Veiculo (codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa, tipo)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (codigo, *veiculo, 'automovel'))
 
-            cursor.execute(f"""
+        cursor.execute(f"""
                 INSERT INTO Automovel (codigo, segmento, num_portas, num_lugares, cavalos)
                 VALUES (?, ?, ?, ?, ?)
             """, (codigo, *automovel))
 
-            cursor.execute(f"""
+        cursor.execute(f"""
                 INSERT INTO Anuncio_venda (numero, data_venda, preco, codigo_veiculo, id_vendedor)
                 VALUES (?, GETDATE(), ?, ?, ?)
             """, (numero, preco, codigo, id_vendedor))
 
-            conn.commit()
-            return
-    
+        conn.commit()
+        return
+
+
 def createAnuncioMotociclo(motociclo: Motociclo, veiculo: Veiculo, preco, id_vendedor):
     with create_connection() as conn:
         codigo = generate_codigo()
@@ -151,20 +206,22 @@ def createAnuncioMotociclo(motociclo: Motociclo, veiculo: Veiculo, preco, id_ven
         """, (numero, preco, codigo, id_vendedor))
         conn.commit()
         return
-    
+
 
 def get_anuncio(codigo_veiculo):
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("""EXEC anuncioveiculototal @codigo_veiculo = ? """, (codigo_veiculo,))
+        cursor.execute(
+            """EXEC anuncioveiculototal @codigo_veiculo = ? """, (codigo_veiculo,))
         result = cursor.fetchone()
         tipo = result[8]
         if tipo == 'automovel':
             return AnuncioAutomovelTotal(*result)
         elif tipo == 'motociclo':
             return AnuncioMotocicloTotal(*result)
-        else: 
+        else:
             return None
+
 
 def comprarAnuncio(numero, id_comprador):
     with create_connection() as conn:
@@ -177,6 +234,7 @@ def comprarAnuncio(numero, id_comprador):
         """, (num_compra, num_venda, id_comprador))
         conn.commit()
         return
+
 
 def submitAvaliacao(numero, avaliacao, comentario):
     with create_connection() as conn:
@@ -194,7 +252,8 @@ def submitAvaliacao(numero, avaliacao, comentario):
             VALUES (?, ?, ?, ?)
         """, (generate_5dig(), num_compra, avaliacao, comentario))
         conn.commit()
-        return 
+        return
+
 
 def filter_anuncios(tipo, marca, segmento, ano, km):
     with create_connection() as conn:
@@ -211,12 +270,13 @@ def filter_anuncios(tipo, marca, segmento, ano, km):
         """, (tipo, marca, segmento, ano, km))
         result = cursor.fetchall()
         return [AnuncioAutomovelTotal(*row) if row[8] == 'automovel' else AnuncioMotocicloTotal(*row) for row in result]
-    
-    
+
+
 def generate_codigo(length=8):
     chars = string.ascii_letters + string.digits
     codigo = ''.join(random.choice(chars) for _ in range(length))
     return codigo
+
 
 def generate_5dig():
     return random.randint(10000, 99999)

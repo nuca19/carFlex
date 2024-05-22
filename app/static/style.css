@@ -245,14 +245,34 @@ button[aria-busy="true"] .htmx-indicator {
     flex-direction: column;
 }
 
-
-#MeusAnuncios {
+#filterPerfil {
+    display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
 }
 
-#MeusAnuncios button {
-    margin-left: 45%;
+#filterPerfil button {
+    margin-right: 10%;
 }
+
+#compras {
+    justify-content: center;
+}
+
+
+
+#Options {
+    display: flex;
+    justify-content: space-between;
+}
+
+#Options>div {
+    flex: 1;
+    text-align: center;
+}
+
+
 
 #userInfoForm {
     width: 300px;
@@ -289,7 +309,7 @@ button[aria-busy="true"] .htmx-indicator {
 }
 
 
-.preco{
+.preco {
     font-weight: bold;
     font-size: 20px;
     display: flex;
@@ -311,9 +331,15 @@ button[aria-busy="true"] .htmx-indicator {
 }
 
 #filter label {
-    margin-bottom: 0.5em; /* Adds some space between the form elements */
+    margin-bottom: 0.5em;
+    /* Adds some space between the form elements */
 }
 
 #filter input[type="submit"] {
-    margin-top: 1em; /* Adds some space above the submit button */
+    margin-top: 1em;
+    /* Adds some space above the submit button */
+}
+
+#filterPerfil {
+    margin-left: 10px;
 }
