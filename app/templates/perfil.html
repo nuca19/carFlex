@@ -23,29 +23,45 @@
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
-                        let cards = '<div style="display: flex; flex-wrap: wrap;">';
+                        let contentDiv = '<div style="display: flex; flex-wrap: wrap;">';
                         
-                        data.forEach(item => {
-                            cards += `
-                            <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                                <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
-                                <h2>${item.marca} ${item.modelo}</h2>
-                                <p>KM: ${item.km}</p>
-                                <p>Preço: ${item.preco}</p>
-                                <p>#${item.codigo_veiculo}</p>
-                                </div>
-                            </a>
-                        `;
-                        });
-                        cards += '</div>';
+                            data.forEach(anuncio => {
+                                if (anuncio.tipo === 'automovel') {
+                                  let anuncioDiv = `
+                                      <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                                          <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                          <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                                          <p>${anuncio.segmento}</p>
+                                          <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
+                                          <div class="preco">${anuncio.preco} €</div>
+                                          </div>
+                                      </a>
+                                  `;
+                                  contentDiv += anuncioDiv;
+                                } else if (anuncio.tipo === 'motociclo') {
+                                  let anuncioDiv = `
+                                      <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                                          <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                          <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                                          <p>Segmento: ${anuncio.segmento}</p>
+                                          <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
+                                          <div class="preco">${anuncio.preco} €</div>
+                                          </div>
+                                      </a>
+                                  `;
+                                  contentDiv += anuncioDiv;
 
-                        let filters = ' ';
-                        filters += '<button onclick="fetchAnunciosAutomovel(event)"style="margin-right: 10px;">Automóvies</button>';
-                        filters += '<button onclick="fetchAnunciosMotociclo(event)"> Motociclos </button>';
+                                
+                                }
+                              });
+                              contentDiv += '</div>';
 
-                        document.getElementById('filterAnuncios').innerHTML = filters;
-                        document.getElementById('anuncios').innerHTML = cards;
-                    })
+                            let filters = ' ';
+                            filters += '<button onclick="fetchAnunciosAutomovel(event)"style="margin-right: 10px;">Automóvies</button>';
+                            filters += '<button onclick="fetchAnunciosMotociclo(event)"> Motociclos </button>';
+                              document.getElementById('anuncios').innerHTML = contentDiv;
+                              document.getElementById('filterAnuncios').innerHTML = filters;
+                            })
                     .catch((error) => {
                         console.error('Error:', error);
                     });
@@ -63,16 +79,16 @@
                         .then(data => {
                             console.log(data);
                             let cards = '<div style="display: flex; flex-wrap: wrap;">';
-                            data.forEach(item => {
+                            data.forEach(anuncio => {
                                 cards += `
-                                <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                                    <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
-                                    <h2>${item.marca} ${item.modelo}</h2>
-                                    <p>KM: ${item.km}</p>
-                                    <p>Preço: ${item.preco}</p>
-                                    <p>#${item.codigo_veiculo}</p>
-                                    </div>
-                                </a>
+                                 <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                                          <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                          <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                                          <p>${anuncio.segmento}</p>
+                                          <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
+                                          <div class="preco">${anuncio.preco} €</div>
+                                          </div>
+                                      </a>
                                 `;
                             });
                             cards += '</div>';
@@ -89,14 +105,14 @@
                   .then(data => {
                     console.log(data);
                     let cards = '<div style="display: flex; flex-wrap: wrap;">';
-                    data.forEach(item => {
+                    data.forEach(anuncio => {
                     cards += `
-                    <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                    <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
                         <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
-                        <h2>${item.marca} ${item.modelo}</h2>
-                        <p>KM: ${item.km}</p>
-                        <p>Preço: ${item.preco}</p>
-                        <p>#${item.codigo_veiculo}</p>
+                        <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                        <p>Segmento: ${anuncio.segmento}</p>
+                        <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
+                        <div class="preco">${anuncio.preco} €</div>
                         </div>
                     </a>
                     `;
@@ -124,28 +140,43 @@
                         .then(response => response.json())
                         .then(data => {
                             console.log(data);
-                            let cards = '<div style="display: flex; flex-wrap: wrap;">';
+                            let contentDiv = '<div style="display: flex; flex-wrap: wrap;">';
                                 
-                            data.forEach(item => {
-                                cards += `
-                                <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                                    <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
-                                    <h2>${item.marca} ${item.modelo}</h2>
-                                    <p>KM: ${item.km}</p>
-                                    <p>Preço: ${item.preco}</p>
-                                    <p>#${item.codigo_veiculo}</p>
-                                    </div>
-                                </a>
-                            `;
-                            });
-                            cards += '</div>';
+                                data.forEach(anuncio => {
+                                    if (anuncio.tipo === 'automovel') {
+                                      let anuncioDiv = `
+                                          <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                                              <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                              <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                                              <p>${anuncio.segmento}</p>
+                                              <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
+                                              <div class="preco">${anuncio.preco} €</div>
+                                              </div>
+                                          </a>
+                                      `;
+                                      contentDiv += anuncioDiv;
+                                    } else if (anuncio.tipo === 'motociclo') {
+                                      let anuncioDiv = `
+                                          <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                                              <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                              <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                                              <p>Segmento: ${anuncio.segmento}</p>
+                                              <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
+                                              <div class="preco">${anuncio.preco} €</div>
+                                              </div>
+                                          </a>
+                                      `;
+                                      contentDiv += anuncioDiv;
+                                    }
+                                });
+                                contentDiv += '</div>';
             
                             let filters = ' ';
-                            filters += '<button onclick="fetchComprasAutomovel(event)">Automóvies</button>';
+                            filters += '<button onclick="fetchComprasAutomovel(event)"style="margin-right: 10px;" >Automóvies</button>';
                             filters += '<button onclick = "  fetchComprasMotociclo(event)"> Motociclos </button>';
                             
                             document.getElementById('filterCompras').innerHTML = filters;
-                            document.getElementById('compras').innerHTML = cards;
+                            document.getElementById('compras').innerHTML = contentDiv;
                         })
                         .catch((error) => {
                             console.error('Error:', error);
@@ -163,14 +194,14 @@
             .then(data => {
                 console.log(data);
                 let cards = '<div style="display: flex; flex-wrap: wrap;">';
-                data.forEach(item => {
+                data.forEach(anuncio => {
                     cards += `
-                    <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                    <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
                         <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
-                        <h2>${item.marca} ${item.modelo}</h2>
-                        <p>KM: ${item.km}</p>
-                        <p>Preço: ${item.preco}</p>
-                        <p>#${item.codigo_veiculo}</p>
+                        <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                        <p>${anuncio.segmento}</p>
+                        <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
+                        <div class="preco">${anuncio.preco} €</div>
                         </div>
                     </a>
                     `;
@@ -186,14 +217,14 @@
             .then(data => {
                 console.log(data);
                 let cards = '<div style="display: flex; flex-wrap: wrap;">';
-                data.forEach(item => {
+                data.forEach(anuncio => {
                     cards += `
-                    <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+                    <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
                         <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
-                        <h2>${item.marca} ${item.modelo}</h2>
-                        <p>KM: ${item.km}</p>
-                        <p>Preço: ${item.preco}</p>
-                        <p>#${item.codigo_veiculo}</p>
+                        <h2>${anuncio.marca} ${anuncio.modelo}</h2>
+                        <p>Segmento: ${anuncio.segmento}</p>
+                        <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
+                        <div class="preco">${anuncio.preco} €</div>
                         </div>
                     </a>
                     `;
@@ -241,21 +272,21 @@
 
     <div id="UserInfo">
         <h2 id="nome">{{ user.nome }}</h2>
-        <p id="username">Username: {{ user.username }}</p>
-        <p id="endereco">Morada: {{ user.endereco }}</p>
-        <p id="nif">Nif: {{ user.nif }}</p>
+        <p id="username"><strong> Username: </strong>{{ user.username }}</p>
+        <p id="endereco"><strong>Morada: </strong> {{ user.endereco }}</p>
+        <p id="nif"><strong>Nif: </strong>  {{ user.nif }}</p>
         <button onclick="editUserInfo()">Edit</button>
-        <div id="Options">
-            <div id="MeusAnuncios">
-                <button onclick="fetchAnunciosUser(event)">Meus Anuncios</button>
-                <div id="filterAnuncios"></div>
-                <div id="anuncios"></div>
-            </div>
-            <div id="MinhasCompras">
-                <button onclick="fetchComprasUser(event)">Minhas Compras</button>
-                <div id="filterCompras"></div>
-                <div id="compras"></div>
-            </div>
+    </div>
+    <div id="Options">
+        <div id="MeusAnuncios">
+            <button onclick="fetchAnunciosUser(event)">Meus Anuncios</button>
+            <div id="filterAnuncios"></div>
+            <div id="anuncios"></div>
+        </div>
+        <div id="MinhasCompras">
+            <button onclick="fetchComprasUser(event)">Minhas Compras</button>
+            <div id="filterCompras"></div>
+            <div id="compras"></div>
         </div>
     </div>
     
