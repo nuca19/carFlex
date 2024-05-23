@@ -292,12 +292,12 @@ def submitAvaliacao(numero, avaliacao, comentario):
         return
 
 
-def filter_anuncios(tipo, marca, segmento, ano, km, combustivel, estado, tipo_caixa, cavalos, num_portas, num_lugares, cilindrada):
+def filter_anuncios(tipo, marca, segmento, ano, km, combustivel, estado, tipo_caixa, cavalos, num_portas, num_lugares, cilindrada, preco, modelo):
     with create_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(f"""
-            EXEC filter_anuncios @tipo = ?, @marca = ?, @segmento = ?, @ano = ?, @km = ?, @combustivel = ?, @estado = ?, @tipo_caixa = ?, @cavalos = ?, @num_portas = ?, @num_lugares = ?, @cilindrada = ?
-        """, (tipo, marca, segmento, ano, km, combustivel, estado, tipo_caixa, cavalos, num_portas, num_lugares, cilindrada))
+            EXEC filter_anuncios @tipo = ?, @marca = ?, @segmento = ?, @ano = ?, @km = ?, @combustivel = ?, @estado = ?, @tipo_caixa = ?, @cavalos = ?, @num_portas = ?, @num_lugares = ?, @cilindrada = ?, @preco = ?, @modelo = ?
+        """, (tipo, marca, segmento, ano, km, combustivel, estado, tipo_caixa, cavalos, num_portas, num_lugares, cilindrada, preco, modelo))
 
         result = []
         while True:

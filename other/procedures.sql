@@ -65,10 +65,12 @@ CREATE PROCEDURE filter_anuncios
     @combustivel nvarchar(50) = NULL,
     @estado nvarchar(50) = NULL,
     @tipo_caixa nvarchar(50) = NULL,
-	@cavalos INT,
-    @num_portas INT,
-    @num_lugares INT,
-    @cilindrada INT
+    @cavalos INT = NULL,
+    @num_portas INT = NULL,
+    @num_lugares INT = NULL,
+    @cilindrada INT = NULL,
+    @preco INT = NULL,
+    @modelo nvarchar(50) = NULL
 AS
 BEGIN
     IF @tipo = 'automovel' OR @tipo IS NULL
@@ -89,6 +91,9 @@ BEGIN
         AND (@cavalos IS NULL OR cavalos >= @cavalos)
         AND (@num_portas IS NULL OR num_portas = @num_portas)
         AND (@num_lugares IS NULL OR num_lugares = @num_lugares)
+        AND (@preco IS NULL OR preco >= @preco)
+        AND (@modelo IS NULL OR modelo LIKE '%' + @modelo + '%')
+        
     END
     
     IF @tipo = 'motociclo' OR @tipo IS NULL
@@ -107,6 +112,8 @@ BEGIN
         AND (@estado IS NULL OR estado = @estado)
         AND (@tipo_caixa IS NULL OR tipo_caixa = @tipo_caixa)
         AND (@cilindrada IS NULL OR cilindrada >= @cilindrada)
+        AND (@preco IS NULL OR preco >= @preco)
+        AND (@modelo IS NULL OR modelo LIKE '%' + @modelo + '%')
     END
 END
 

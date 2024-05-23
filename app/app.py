@@ -240,13 +240,15 @@ def filter_anuncios():
     num_portas = int(data.get('num_portas', '')) if data.get('num_portas', '') != '' else None
     num_lugares = int(data.get('num_lugares', '')) if data.get('num_lugares', '') != '' else None
     cilindrada = int(data.get('cilindrada', '')) if data.get('cilindrada', '') != '' else None
+    preco = int(data.get('preco', '')) if data.get('preco', '') != '' else None
+    modelo = data.get('modelo', '') if data.get('modelo', '') != '' else None
 
     cursor = Anuncios.filter_anuncios(tipo, marca, segmento, ano, km,
                                        combustivel, estado, tipo_caixa,
-                                       cavalos, num_portas, num_lugares, cilindrada)
+                                       cavalos, num_portas, num_lugares, cilindrada,
+                                       preco, modelo)
     anuncios = list(cursor)
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
-    print(anuncios_dict)
     return jsonify(anuncios_dict)
 
 
