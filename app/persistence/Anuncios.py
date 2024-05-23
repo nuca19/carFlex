@@ -86,40 +86,68 @@ class AnuncioMotocicloTotal(NamedTuple):
 def list_user_anuncios(id_vendedor):
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("""  SELECT Veiculo.codigo, numero, marca, modelo, ano, km, preco, tipo
-                            FROM Anuncio_venda JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-                            WHERE id_vendedor = ?""", (id_vendedor,))
-        return ([AnuncioVeiculo2(*row) for row in cursor.fetchall()])
+        cursor.execute(
+            """  EXEC anuncioveiculototalByUser @id_vendedor =  ?""", (id_vendedor,))
+        result = []
+        while True:
+            rows = cursor.fetchall()
+            if rows:
+                result.extend(rows)
+            if cursor.nextset():
+                continue
+            else:
+                break
+        return [AnuncioAutomovelTotal(*row) if row[8] == 'automovel' else AnuncioMotocicloTotal(*row) for row in result]
 
 
 def list_user_compras(id_comprador):
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("""  SELECT Veiculo.codigo, num_venda, marca, modelo, ano, km, preco, tipo
-                            FROM Compra JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
-                            JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-                            WHERE id_comprador = ?""", (id_comprador,))
-        return ([AnuncioVeiculo2(*row) for row in cursor.fetchall()])
+        cursor.execute("EXEC ComprasByUser @id_comprador = ?", (id_comprador,))
+        result = []
+        while True:
+            rows = cursor.fetchall()
+            if rows:
+                result.extend(rows)
+            if cursor.nextset():
+                continue
+            else:
+                break
+        return [AnuncioAutomovelTotal(*row) if row[8] == 'automovel' else AnuncioMotocicloTotal(*row) for row in result]
 
 
 def list_user_compras_automovel(id_comprador):
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("""  SELECT Veiculo.codigo, num_venda, marca, modelo, ano, km, preco, tipo
-                            FROM Compra JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
-                            JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-                            WHERE id_comprador = ? AND tipo = 'automovel'""", (id_comprador,))
-        return ([AnuncioVeiculo2(*row) for row in cursor.fetchall()])
+        cursor.execute(
+            """  EXEC ComprasByUser @id_comprador =  ?""", (id_comprador,))
+        result = []
+        while True:
+            rows = cursor.fetchall()
+            if rows:
+                result.extend(rows)
+            if cursor.nextset():
+                continue
+            else:
+                break
+        return [AnuncioAutomovelTotal(*row) for row in result if row[8] == 'automovel']
 
 
 def list_user_compras_motociclo(id_comprador):
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("""  SELECT Veiculo.codigo, num_venda, marca, modelo, ano, km, preco, tipo
-                            FROM Compra JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
-                            JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-                            WHERE id_comprador = ? AND tipo = 'motociclo'""", (id_comprador,))
-        return ([AnuncioVeiculo2(*row) for row in cursor.fetchall()])
+        cursor.execute(
+            """  EXEC ComprasByUser @id_comprador =  ?""", (id_comprador,))
+        result = []
+        while True:
+            rows = cursor.fetchall()
+            if rows:
+                result.extend(rows)
+            if cursor.nextset():
+                continue
+            else:
+                break
+        return [AnuncioMotocicloTotal(*row) for row in result if row[8] == 'motociclo']
 
 
 def list_anuncios_automovel():
@@ -139,19 +167,35 @@ def list_anuncios_motociclo():
 def list_anuncios_automovel_User(id_vendedor):
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("""SELECT Veiculo.codigo, numero, marca, modelo, ano, km, preco, tipo
-                            FROM Anuncio_venda JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-                            WHERE id_vendedor = ? AND tipo = 'automovel'""", (id_vendedor,))
-        return [AnuncioVeiculo2(*row) for row in cursor.fetchall()]
+        cursor.execute(
+            """  EXEC anuncioveiculototalByUser @id_vendedor =  ?""", (id_vendedor,))
+        result = []
+        while True:
+            rows = cursor.fetchall()
+            if rows:
+                result.extend(rows)
+            if cursor.nextset():
+                continue
+            else:
+                break
+        return [AnuncioAutomovelTotal(*row) for row in result if row[8] == 'automovel']
 
 
 def list_anuncios_motociclo_User(id_vendedor):
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("""SELECT Veiculo.codigo, numero, marca, modelo, ano, km, preco, tipo
-                            FROM Anuncio_venda JOIN Veiculo ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-                            WHERE id_vendedor = ? AND tipo = 'motociclo'""", (id_vendedor,))
-        return [AnuncioVeiculo2(*row) for row in cursor.fetchall()]
+        cursor.execute(
+            """  EXEC anuncioveiculototalByUser @id_vendedor =  ?""", (id_vendedor,))
+        result = []
+        while True:
+            rows = cursor.fetchall()
+            if rows:
+                result.extend(rows)
+            if cursor.nextset():
+                continue
+            else:
+                break
+        return [AnuncioMotocicloTotal(*row) for row in result if row[8] == 'motociclo']
 
 
 def createAnuncioAutomovel(automovel: Automovel, veiculo: Veiculo, preco, id_vendedor):

@@ -1,5 +1,6 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #ffffff;
 }
 
 form {
@@ -64,6 +65,7 @@ button[aria-busy="true"] .htmx-indicator {
     text-align: center;
     padding: 20px 24px;
     text-decoration: none;
+    font-weight: bolder;
 }
 
 #navbar a:hover {
@@ -245,6 +247,12 @@ button[aria-busy="true"] .htmx-indicator {
     flex-direction: column;
 }
 
+#UserInfo #nome {
+    text-align: center;
+}
+
+#UserInfo label {}
+
 #filterPerfil {
     display: flex;
     flex-direction: row;
@@ -344,6 +352,6 @@ button[aria-busy="true"] .htmx-indicator {
     margin-left: 10px;
 }
 
-#marcaseg{
+#marcaseg {
     display: none;
 }
