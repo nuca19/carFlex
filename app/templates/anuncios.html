@@ -18,6 +18,7 @@ function fetchAnuncios() {
                         <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                         <p>${anuncio.segmento}</p>
                         <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
+                        <p>${anuncio.combustivel} | ${anuncio.estado} | ${anuncio.tipo_caixa}</p>
                         <div class="preco">${anuncio.preco} €</div>
                         </div>
                     </a>
@@ -30,6 +31,7 @@ function fetchAnuncios() {
                         <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                         <p>Segmento: ${anuncio.segmento}</p>
                         <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
+                        <p>${anuncio.combustivel} | ${anuncio.estado} | ${anuncio.tipo_caixa}</p>
                         <div class="preco">${anuncio.preco} €</div>
                         </div>
                     </a>
@@ -55,8 +57,9 @@ function fetchAnuncios() {
             <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
                 <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
                 <h2>${item.marca} ${item.modelo}</h2>
-                <p>${item.segmento}</p>
+                ${item.segmento}
                 <p>${item.ano} | ${item.km} km | ${item.cavalos} cv</p>
+                <p>${item.combustivel} | ${item.estado} | ${item.tipo_caixa}</p>
                 <div class="preco">${item.preco} €</div>
                 <p>
                 </div>
@@ -84,6 +87,7 @@ function fetchAnuncios() {
                 <h2>${item.marca} ${item.modelo}</h2>
                 <p>${item.segmento}</p>
                 <p>${item.ano} | ${item.km} km | ${item.cilindrada} cm3</p>
+                <p>${item.combustivel} | ${item.estado} | ${item.tipo_caixa}</p>
                 <div class="preco">${item.preco} €</div>
                 </div>
             </a>
@@ -135,6 +139,7 @@ function fetchAnuncios() {
                     <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                     <p>${anuncio.segmento}</p>
                     <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
+                    <p>${anuncio.combustivel} | ${anuncio.estado} | ${anuncio.tipo_caixa}</p>
                     <div class="preco">${anuncio.preco} €</div>
                     </div>
                 </a>
@@ -147,6 +152,7 @@ function fetchAnuncios() {
                     <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                     <p>Segmento: ${anuncio.segmento}</p>
                     <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
+                    <p>${anuncio.combustivel} | ${anuncio.estado} | ${anuncio.tipo_caixa}</p>
                     <div class="preco">${anuncio.preco} €</div>
                     </div>
                 </a>
@@ -278,12 +284,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
                   <option value="automatico">Automatico </option>
               </select>
           </label>
+          <label for="preco">Preço (minimo)
+              <input type="number" id="preco" name="preco" min="0">
+          </label>
         </div>
         <div id="marcaseg">
           <label for="marca">Marca
               <select name="marca" id="marca">
                   <!-- Options will be populated by JavaScript -->
               </select>
+          </label>
+          <label for="modelo">Modelo
+              <input type="text" id="modelo" name="modelo">
           </label>
           <label for="segmento">Segmento
               <select name="segmento" id="segmento">

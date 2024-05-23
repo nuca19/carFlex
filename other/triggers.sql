@@ -1,20 +1,31 @@
-CREATE TRIGGER prevent_duplicate_compra
+CREATE TRIGGER prevent_purchase
 ON Compra
 INSTEAD OF INSERT
 AS
-BEGIN
-    IF NOT EXISTS (
+BEGIN 
+    -- Check if the buyer is the seller
+    IF EXISTS ( 
+        SELECT 1 
+        FROM inserted i
+        JOIN Anuncio_venda a ON i.num_venda = a.numero
+        WHERE i.id_comprador = a.id_vendedor
+    )
+    BEGIN
+        RAISERROR ('Nao pode comprar um anuncio seu', 16, 1);
+    END
+    
+    ELSE IF EXISTS (
         SELECT 1 
         FROM Compra c
         JOIN inserted i ON c.num_venda = i.num_venda
     )
     BEGIN
-        INSERT INTO Compra
-        SELECT * FROM inserted
+        RAISERROR ('Veiculo ja comprado', 16, 1);
     END
     ELSE
     BEGIN
-        RAISERROR ('Veiculo ja comprado', 16, 1);
+        INSERT INTO Compra
+        SELECT * FROM inserted
     END
 END;
 

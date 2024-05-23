@@ -3,8 +3,6 @@ from flask import Flask, jsonify, render_template, request, session, redirect, r
 from persistence import Anuncios
 from werkzeug.security import generate_password_hash, check_password_hash
 from persistence.Anuncios import *
-
-import sqlite3
 import random
 
 app = Flask(__name__)
@@ -307,8 +305,11 @@ def comprarAnuncio(numero):
     try:
         Anuncios.comprarAnuncio(numero, id_comprador)
     except pyodbc.ProgrammingError as e:
-        return f"""<div style="color: red;">Veiculo ja foi Comprado.</div>"""
-
+        if 'Nao pode comprar um anuncio seu' in str(e):
+             return f"""<div style="color: red;">Nao pode comprar um anuncio seu.</div>"""
+        elif 'Veiculo ja comprado' in str(e):
+            return f"""<div style="color: red;">Veiculo ja foi Comprado.</div>"""
+    
     return f"""
         <form id="avaliacaoForm" action="/submitAvaliacao/{numero}" method="post">
             <label for="avaliacao">Avaliação:</label>
