@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CarFlex - Anuncios</title>
+    <link rel="stylesheet" href="../static/style.css">
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<script>
+</script>
+</head>
+<body>
+  <div id="navbar">
+    <a href="/">CarFlex</a>
+    <a href="/anuncios">Anuncios</a>
+    <a href="/vender">Vender</a>
+    <a href="/perfil">Perfil</a>
+    <a id="logout" href="/logout">Logout</a>
+    </div>
+  <div class="content">
+    <div class="header">
+      <div id="leftanuncios">
+        <h1>Avaliações</h1>
+        <div>
+          <button onclick="">Todos</button>
+          <button onclick="">Automoveis</button>
+          <button onclick="">Motociclos</button>
+        </div>
+      </div>
+      <div id="fullfilter">
+      <div id="filter">
+        <div>
+          <form onsubmit="event.preventDefault(); fetchFilterAnuncios();" method="post">
+            <label for="tipo">Tipo</label>
+              <select name="tipo" id="tipo">
+                  <option value=""></option>
+                  <option value="automovel">Automovel</option>
+                  <option value="motociclo">Motociclo</option>
+              </select>
+            <label for="ano">Ano (min)</label>
+              <input type="number" id="ano" name="ano" min="1900" max="2024" step="1">
+            <label for="km">Km (min)</label>
+              <input type="number" id="km" name="km" min="0">
+            <label for="preco">Preço(min)</label>
+              <input type="number" id="preco" name="preco" min="0">
+          </div>
+        <div style="margin-top: 20px; margin-left: 40px">
+          <label for="estado">Estado</label>
+              <select name="estado" id="estado">
+                  <option value=""></option>
+                  <option value="novo">Novo</option>
+                  <option value="usado">Usado</option>
+              </select>
+          <label for="tipo_caixa">Tipo de Caixa</label>
+              <select name="tipo_caixa" id="tipo_caixa">
+                  <option value=""></option>
+                  <option value="manual">Manual</option>
+                  <option value="automatico">Automatico </option>
+              </select>
+          <label for="combustivel">Combustivel</label>
+          <select name="combustivel" id="combustivel">
+              <option value=""></option>
+              <option value="gasolina">Gasolina</option>
+              <option value="diesel">Diesel</option>
+              <option value="eletrico">Eletrico</option>
+          </select>
+        </div>
+        <div id="marcaseg" style="display: none;">
+          <label for="marca">Marca</label>
+              <select name="marca" id="marca">
+                  <!-- Options will be populated by JavaScript -->
+              </select>
+          <label for="modelo">Modelo</label>
+              <input type="text" id="modelo" name="modelo" style="width: 150px; height: 36px;">
+          <label for="segmento">Segmento</label>
+              <select name="segmento" id="segmento"">
+                  <!-- Options will be populated by JavaScript -->
+              </select>
+  
+        </div>
+        <div id="extrafields"></div>
+      </div>
+      <input id="filtrarinput" type="submit" value="Filtrar">
+      </div>
+      </form>
+      </div>
+      
+    
+    </div>
+    <div id="anuncios"></div>
+  </div>
+</body>
+</html>

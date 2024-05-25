@@ -75,7 +75,6 @@ button[aria-busy="true"] .htmx-indicator {
 
 .content {
     height: 100%;
-    width: 100%;
     margin-top: 50px;
     padding: 20px;
 }
@@ -283,7 +282,6 @@ button[aria-busy="true"] .htmx-indicator {
     text-align: center;
 }
 
-#UserInfo label {}
 
 #filterPerfil {
     display: flex;
@@ -359,6 +357,7 @@ button[aria-busy="true"] .htmx-indicator {
 
 .header {
     display: flex;
+    width: 100%;
 }
 
 #filter {
@@ -431,6 +430,8 @@ button[aria-busy="true"] .htmx-indicator {
 
 } */
 
+
+
 #fullfilter {
     display: flex;
     flex-direction: column;
@@ -462,7 +463,7 @@ button[aria-busy="true"] .htmx-indicator {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 100%;
+    width: 150px;
     box-sizing: border-box;
 }
 

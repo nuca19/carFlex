@@ -115,6 +115,14 @@ def vender():
         return render_template('vender.html')
     else:
         return redirect('/')
+    
+@app.route('/avaliacoes')
+def avaliacoes():
+    if session['auth']:
+        return render_template('avaliacoes.html')
+    else:
+        return redirect('/')
+
 
 
 @app.route('/register')
