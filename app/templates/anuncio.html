@@ -2,6 +2,9 @@
 <html>
 <head>
     <script src="https://unpkg.com/htmx.org"></script>
+    <script>
+
+    </script>
     <link rel="stylesheet" href="../static/style.css">
     <title>Anuncio</title>
 </head>
@@ -14,29 +17,40 @@
         <a id="logout" href="/logout">Logout</a>
     </div>
 
-    <div class="container">
-        <h1>{{anuncio.marca}} {{ anuncio.modelo }}</h1>
-        <h2>{{anuncio.tipo}} {{anuncio.segmento}}</h2>
-        <p>Ano: {{anuncio.ano}}</p>
-        <p>Km: {{anuncio.km}} </p>
-        {% if anuncio.tipo == "automovel" %}
-            <p>Cavalos: {{anuncio.cavalos}}</p>
-            <p>Lugares: {{anuncio.num_lugares}} | Portas: {{anuncio.num_portas}}</p>
-        {% elif anuncio.tipo == "motociclo" %}
-            <p>Cilindrada: {{anuncio.cilindrada}}</p>
-        {% endif %}
-        <p>{{anuncio.combustivel}} | {{anuncio.estado}} | {{anuncio.tipo_caixa}}</p>
-        <p>veiculo {{anuncio.numero}} #{{ anuncio.codigo_veiculo }}</p>
-        <h2>Preço: {{anuncio.preco}}</h2>
-        {% if anuncio.num_compra is defined %}
-            <h2>Veiculo já foi vendido</h2> num_compra: {{anuncio.num_compra}}
-            <p>Avaliação: {{anuncio.avaliacao}} Comentario: {{anuncio.comentario}}</p> 
-        {% else %}
-            <form class="center-form" hx-post="/comprarAnuncio/{{anuncio.numero}}" hx-target="#avaliacao" hx-swap="innerHTML">
-                <button type="submit">Comprar</button>
-            </form>
-            <div id="avaliacao"></div>
-        {%endif%}
+    <div class="container2">
+        <div id="veiculo-details">
+            <h1>{{anuncio.marca}} {{ anuncio.modelo }}</h1>
+            <h2>{{anuncio.tipo}} {{anuncio.segmento}}</h2>
+            <p>Ano: {{anuncio.ano}}</p>
+            <p>Km: {{anuncio.km}} </p>
+            {% if anuncio.tipo == "automovel" %}
+                <p>Cavalos: {{anuncio.cavalos}}</p>
+                <p>Lugares: {{anuncio.num_lugares}} | Portas: {{anuncio.num_portas}}</p>
+            {% elif anuncio.tipo == "motociclo" %}
+                <p>Cilindrada: {{anuncio.cilindrada}}</p>
+            {% endif %}
+            <p>{{anuncio.combustivel}} | {{anuncio.estado}} | {{anuncio.tipo_caixa}}</p>
+            <p>veiculo {{anuncio.numero}} #{{ anuncio.codigo_veiculo }}</p>
+            <h2>Preço: {{anuncio.preco}}</h2>
+        </div>
+        <div id="buy-info">
+            {% if anuncio.num_compra is defined %}
+
+                <h2>Veiculo já vendido</h2> num_compra: {{anuncio.num_compra}}
+                {% if anuncio.avaliacao == None %}
+                    <div hx-post="/checkforAvaliacao/{{anuncio.numero}}" hx-trigger="load" hx-target="#aval2" hx-swap="innerHTML"></div>
+                    <div id="aval2"></div>
+                {%else%}
+                    <p>Avaliação: {{anuncio.avaliacao}} /10</p>
+                    <p>Comentário: {{anuncio.comentario}}</p>
+                {%endif%}
+            {% else %}
+                <form class="center-form" hx-post="/comprarAnuncio/{{anuncio.numero}}" hx-target="#avaliacao" hx-swap="innerHTML">
+                    <button type="submit">Comprar</button>
+                </form>
+                <div id="avaliacao"></div>
+            {%endif%}
+        </div>
     </div>
 </body>
 </html>

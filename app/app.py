@@ -1,8 +1,9 @@
 import pyodbc
 from flask import Flask, jsonify, render_template, request, session, redirect, render_template_string
-from persistence import Anuncios
+from persistence import Anuncios, Avaliacoes
 from werkzeug.security import generate_password_hash, check_password_hash
 from persistence.Anuncios import *
+from persistence.Avaliacoes import *
 import random
 
 app = Flask(__name__)
@@ -344,7 +345,7 @@ def comprarAnuncio(numero):
             <input type="number" id="avaliacao" name="avaliacao" required>
             <label for="comentario">Comentário:</label>
             <input type="text" id="comentario" name="comentario" required>
-            <button type="submit">Submit Avaliação</button>
+            <button type="submit">Avaliar</button>
         </form>
     """
 
@@ -354,8 +355,23 @@ def submitAvaliacao(numero):
     avaliacao = request.form['avaliacao']
     comentario = request.form['comentario']
     Anuncios.submitAvaliacao(numero, avaliacao, comentario)
-    return redirect('/anuncios')
+    return redirect('/perfil')
 
-
+@app.route('/checkforAvaliacao/<num_venda>', methods=['POST'])
+def checkforAvaliacao(num_venda):
+    user = session['userID']
+    aval_status = Avaliacoes.checkforAvaliacao(num_venda, user)
+    if aval_status == 0:
+        return f"""
+                <form id="avaliacaoForm" action="/submitAvaliacao/{num_venda}" method="post">
+                    <label for="avaliacao">Avaliação:</label>
+                    <input type="number" id="avaliacao" name="avaliacao" required>
+                    <label for="comentario">Comentário:</label>
+                    <input type="text" id="comentario" name="comentario" required>
+                    <button type="submit">Avaliar</button>
+                </form>
+            """
+    else:
+        return
 if __name__ == '__main__':
     app.run(debug=True)

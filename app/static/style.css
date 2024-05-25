@@ -133,6 +133,13 @@ button[aria-busy="true"] .htmx-indicator {
     align-items: center;
     height: 100vh;
 }
+.container2{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
 #switchButton {
     background-color: rgb(54, 59, 156);
@@ -508,4 +515,20 @@ button[aria-busy="true"] .htmx-indicator {
 
 .button:hover {
     background-color: #0056b3;
+}
+
+#veiculo-details{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+}
+
+#buy-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 254px;
 }
