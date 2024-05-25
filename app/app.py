@@ -325,15 +325,6 @@ def get_anuncio(codigo):
     return render_template('anuncio.html', anuncio=anuncio._asdict())
 
 
-@ app.route('/compra/<codigo>', methods=['GET'])
-def get_compra(codigo):
-    compra = Anuncios.get_compra(codigo)
-    print(compra)
-    if compra is None:
-        return redirect('/compra')
-    return render_template('compra.html', compra=compra._asdict())
-
-
 @app.route('/comprarAnuncio/<numero>', methods=['POST'])
 def comprarAnuncio(numero):
     id_comprador = session['userID']

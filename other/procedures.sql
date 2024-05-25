@@ -127,18 +127,22 @@ BEGIN
 
     IF @veiculo_type = 'automovel'
     BEGIN
-        SELECT Veiculo.codigo, numero, marca, modelo, ano, segmento, km, preco, tipo, num_portas, num_lugares, cavalos, combustivel, estado, tipo_caixa
+        SELECT Veiculo.codigo, Anuncio_venda.numero, marca, modelo, ano, segmento, km, preco, tipo, num_portas, num_lugares, cavalos, combustivel, estado, tipo_caixa, Compra.numero, Compra.data_compra, Avaliacao.avaliacao, Avaliacao.comentario
         FROM Anuncio_venda 
         JOIN (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo) 
         ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+        LEFT JOIN Compra ON Anuncio_venda.numero = Compra.num_venda
+        LEFT JOIN Avaliacao ON Compra.numero = Avaliacao.num_compra
         WHERE Veiculo.codigo = @codigo_veiculo;
     END
     ELSE IF @veiculo_type = 'motociclo'
     BEGIN
-        SELECT Veiculo.codigo, numero, marca, modelo, ano, segmento, km, preco, tipo, cilindrada, combustivel, estado, tipo_caixa
+        SELECT Veiculo.codigo, Anuncio_venda.numero, marca, modelo, ano, segmento, km, preco, tipo, cilindrada, combustivel, estado, tipo_caixa, Compra.numero, Compra.data_compra, Avaliacao.avaliacao, Avaliacao.comentario
         FROM Anuncio_venda 
         JOIN (Veiculo JOIN Motociclo ON Veiculo.codigo=Motociclo.codigo) 
         ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+        LEFT JOIN Compra ON Anuncio_venda.numero = Compra.num_venda
+        LEFT JOIN Avaliacao ON Compra.numero = Avaliacao.num_compra
         WHERE Veiculo.codigo = @codigo_veiculo;
     END
 END;

@@ -28,11 +28,15 @@
         <p>{{anuncio.combustivel}} | {{anuncio.estado}} | {{anuncio.tipo_caixa}}</p>
         <p>veiculo {{anuncio.numero}} #{{ anuncio.codigo_veiculo }}</p>
         <h2>Preço: {{anuncio.preco}}</h2>
-        
-        <form class="center-form" hx-post="/comprarAnuncio/{{anuncio.numero}}" hx-target="#avaliacao" hx-swap="innerHTML">
-        <button type="submit">Comprar</button>
-        </form>
-        <div id="avaliacao"></div>
+        {% if anuncio.num_compra is defined %}
+            <h2>Veiculo já foi vendido</h2> num_compra: {{anuncio.num_compra}}
+            <p>Avaliação: {{anuncio.avaliacao}} Comentario: {{anuncio.comentario}}</p> 
+        {% else %}
+            <form class="center-form" hx-post="/comprarAnuncio/{{anuncio.numero}}" hx-target="#avaliacao" hx-swap="innerHTML">
+                <button type="submit">Comprar</button>
+            </form>
+            <div id="avaliacao"></div>
+        {%endif%}
     </div>
 </body>
 </html>

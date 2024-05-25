@@ -37,16 +37,6 @@ class Veiculo(NamedTuple):
     tipo_caixa: str
 
 
-class AnuncioVeiculo2(NamedTuple):
-    codigo_veiculo: str
-    numero: int
-    marca: str
-    modelo: str
-    ano: int
-    km: int
-    preco: Decimal
-    tipo: str
-
 
 class AnuncioAutomovelTotal(NamedTuple):
     codigo_veiculo: str
@@ -98,7 +88,10 @@ class CompraAutomovelTotal(NamedTuple):
     combustivel: str
     estado: str
     tipo_caixa: str
+    num_compra: int
+    data_compra: str
     avaliacao: str
+    comentario: str
 
 
 class CompraMotocicloTotal(NamedTuple):
@@ -115,7 +108,10 @@ class CompraMotocicloTotal(NamedTuple):
     combustivel: str
     estado: str
     tipo_caixa: str
+    num_compra: int
+    data_compra: str
     avaliacao: str
+    comentario: str
 
 
 def list_user_anuncios(id_vendedor):
@@ -148,7 +144,7 @@ def list_user_compras(id_comprador):
                 continue
             else:
                 break
-        return [CompraAutomovelTotal(*row) if row[8] == 'automovel' else CompraMotocicloTotal(*row) for row in result]
+        return [AnuncioAutomovelTotal(*row) if row[8] == 'automovel' else AnuncioMotocicloTotal(*row) for row in result]
 
 
 def list_user_compras_automovel(id_comprador):
@@ -165,7 +161,7 @@ def list_user_compras_automovel(id_comprador):
                 continue
             else:
                 break
-        return [CompraAutomovelTotal(*row) for row in result if row[8] == 'automovel']
+        return [AnuncioAutomovelTotal(*row) for row in result if row[8] == 'automovel']
 
 
 def list_user_compras_motociclo(id_comprador):
@@ -182,7 +178,7 @@ def list_user_compras_motociclo(id_comprador):
                 continue
             else:
                 break
-        return [CompraMotocicloTotal(*row) for row in result if row[8] == 'motociclo']
+        return [AnuncioMotocicloTotal(*row) for row in result if row[8] == 'motociclo']
 
 
 def list_anuncios_automovel():
@@ -286,28 +282,22 @@ def get_anuncio(codigo_veiculo):
         cursor.execute(
             """EXEC anuncioveiculototal @codigo_veiculo = ? """, (codigo_veiculo,))
         result = cursor.fetchone()
+        print(result)
         tipo = result[8]
-        if tipo == 'automovel':
-            return AnuncioAutomovelTotal(*result)
-        elif tipo == 'motociclo':
-            return AnuncioMotocicloTotal(*result)
+        if result[-4] is None: #numero compra
+            result = result[:-4]
+            if tipo == 'automovel':
+                return AnuncioAutomovelTotal(*result)	
+            elif tipo == 'motociclo':
+                return AnuncioMotocicloTotal(*result)
         else:
-            return None
+            if tipo == 'automovel':
+                return CompraAutomovelTotal(*result)
+            elif tipo == 'motociclo':
+                return CompraMotocicloTotal(*result)
+            else:
+                return None
 
-
-def get_compra(codigo_veiculo):
-    with create_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute(
-            """EXEC compraveiculototal @codigo_veiculo = ? """, (codigo_veiculo,))
-        result = cursor.fetchone()
-        tipo = result[8]
-        if tipo == 'automovel':
-            return CompraAutomovelTotal(*result)
-        elif tipo == 'motociclo':
-            return CompraMotocicloTotal(*result)
-        else:
-            return None
 
 
 def comprarAnuncio(numero, id_comprador):
