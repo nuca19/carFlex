@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <link rel="stylesheet" href="../static/style.css">
+    <title>Compra</title>
+</head>
+<body>
+    <div id="navbar">
+        <a href="/">CarFlex</a>
+        <a href="/anuncios">Anuncios</a>
+        <a href="/vender">Vender</a>
+        <a href="/perfil">Perfil</a>
+        <a id="logout" href="/logout">Logout</a>
+    </div>
+
+    <div class="container">
+        <h1>{{compra.marca}} {{ compra.modelo }}</h1>
+        <h2>{{compra.tipo}} {{compra.segmento}}</h2>
+        <p>Ano: {{compra.ano}}</p>
+        <p>Km: {{compra.km}} </p>
+        {% if compra.tipo == "automovel" %}
+            <p>Cavalos: {{compra.cavalos}}</p>
+            <p>Lugares: {{compra.num_lugares}} | Portas: {{compra.num_portas}}</p>
+        {% elif compra.tipo == "motociclo" %}
+            <p>Cilindrada: {{compra.cilindrada}}</p>
+        {% endif %}
+        <p>{{compra.combustivel}} | {{compra.estado}} | {{compra.tipo_caixa}}</p>
+        <h2>Preço: {{compra.preco}}</h2>
+        <h2>Avaliação: {{compra.avaliacao}}</h2>
+    </div>
+</body>
+</html>

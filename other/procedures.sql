@@ -143,6 +143,34 @@ BEGIN
     END
 END;
 
+CREATE PROCEDURE compraveiculototal (@codigo_veiculo VARCHAR(8))
+AS
+BEGIN
+    DECLARE @veiculo_type VARCHAR(255);
+    SELECT @veiculo_type = tipo FROM Veiculo WHERE codigo = @codigo_veiculo;
+
+    IF @veiculo_type = 'automovel'
+    BEGIN
+        SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano, segmento, km, preco, tipo, num_portas, num_lugares, cavalos, combustivel, estado, tipo_caixa, comentario
+        FROM Compra 
+        JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
+        JOIN (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo) 
+        ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+        JOIN Avaliacao ON Compra.numero = Avaliacao.num_compra
+        WHERE Veiculo.codigo = @codigo_veiculo;
+    END
+    ELSE IF @veiculo_type = 'motociclo'
+    BEGIN
+        SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano, segmento, km, preco, tipo, cilindrada, combustivel, estado, tipo_caixa, comentario
+        FROM Compra 
+        JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
+        JOIN (Veiculo JOIN Motociclo ON Veiculo.codigo=Motociclo.codigo) 
+        ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+        JOIN Avaliacao ON Compra.numero = Avaliacao.num_compra
+        WHERE Veiculo.codigo = @codigo_veiculo;
+    END
+END;
+
 CREATE PROCEDURE anuncioveiculototalByUser (@id_vendedor INT)
 AS
 BEGIN
@@ -201,21 +229,21 @@ BEGIN
 
         IF @veiculo_type = 'automovel'
         BEGIN
-            SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano,segmento, km, preco, tipo, num_portas, num_lugares, cavalos, combustivel, estado, tipo_caixa
-            FROM Compra 
-            JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
-            JOIN (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo) 
-            ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-            WHERE Veiculo.codigo = @codigo_veiculo AND Compra.id_comprador = @id_comprador;
-        END
+            SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano, segmento, km, preco, tipo, num_portas, num_lugares, cavalos, combustivel, estado, tipo_caixa, comentario
+			FROM Compra 
+			JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
+			JOIN (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo) ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+			JOIN Avaliacao ON Compra.numero = Avaliacao.num_compra
+			WHERE Veiculo.codigo = @codigo_veiculo AND Compra.id_comprador = @id_comprador;
+		END
         ELSE IF @veiculo_type = 'motociclo'
         BEGIN
-            SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano, segmento, km, preco, tipo, cilindrada, combustivel, estado, tipo_caixa
-            FROM Compra 
-            JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
-            JOIN (Veiculo JOIN Motociclo ON Veiculo.codigo=Motociclo.codigo) 
-            ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-            WHERE Veiculo.codigo = @codigo_veiculo AND Compra.id_comprador = @id_comprador;
+            SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano, segmento, km, preco, tipo, cilindrada, combustivel, estado, tipo_caixa, comentario
+			FROM Compra 
+			JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
+			JOIN (Veiculo JOIN Motociclo ON Veiculo.codigo=Motociclo.codigo) ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
+			JOIN Avaliacao ON Compra.numero = Avaliacao.num_compra
+			WHERE Veiculo.codigo = @codigo_veiculo AND Compra.id_comprador = @id_comprador;
         END
 
         FETCH NEXT FROM veiculo_cursor INTO @codigo_veiculo;
@@ -223,4 +251,4 @@ BEGIN
 
     CLOSE veiculo_cursor;
     DEALLOCATE veiculo_cursor;
-END;
+END;    
