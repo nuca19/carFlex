@@ -109,6 +109,14 @@ def anuncios():
         return redirect('/')
 
 
+@app.route('/compra')
+def compra():
+    if session['auth']:
+        return render_template('compra.html')
+    else:
+        return redirect('/')
+
+
 @ app.route('/vender')
 def vender():
     if session['auth']:
@@ -196,11 +204,13 @@ def get_anuncios_automovel():
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     return jsonify(anuncios_dict)
 
+
 @app.route('/list_anuncios_motociclo', methods=['GET'])
 def get_anuncios_motociclo():
     anuncios = Anuncios.list_anuncios_motociclo()
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     return jsonify(anuncios_dict)
+
 
 @app.route('/list_all_anuncios', methods=['GET'])
 def get_all_anuncios():
@@ -209,6 +219,7 @@ def get_all_anuncios():
     all_anuncios = anuncios_automovel + anuncios_motociclo
     all_anuncios_dict = [anuncio._asdict() for anuncio in all_anuncios]
     return jsonify(all_anuncios_dict)
+
 
 @app.route('/list_anuncios_automovel_User', methods=['GET'])
 def get_anuncios_automovel_User():
@@ -230,23 +241,30 @@ def filter_anuncios():
     print(data)
     tipo = data.get('tipo', '') if data.get('tipo', '') != '' else None
     marca = data.get('marca', '') if data.get('marca', '') != '' else None
-    segmento = data.get('segmento', '') if data.get('segmento', '') != '' else None
+    segmento = data.get('segmento', '') if data.get(
+        'segmento', '') != '' else None
     ano = int(data.get('ano', '')) if data.get('ano', '') != '' else None
     km = int(data.get('km', '')) if data.get('km', '') != '' else None
-    combustivel = data.get('combustivel', '') if data.get('combustivel', '') != '' else None
+    combustivel = data.get('combustivel', '') if data.get(
+        'combustivel', '') != '' else None
     estado = data.get('estado', '') if data.get('estado', '') != '' else None
-    tipo_caixa = data.get('tipo_caixa', '') if data.get('tipo_caixa', '') != '' else None
-    cavalos = int(data.get('cavalos', '')) if data.get('cavalos', '') != '' else None
-    num_portas = int(data.get('num_portas', '')) if data.get('num_portas', '') != '' else None
-    num_lugares = int(data.get('num_lugares', '')) if data.get('num_lugares', '') != '' else None
-    cilindrada = int(data.get('cilindrada', '')) if data.get('cilindrada', '') != '' else None
+    tipo_caixa = data.get('tipo_caixa', '') if data.get(
+        'tipo_caixa', '') != '' else None
+    cavalos = int(data.get('cavalos', '')) if data.get(
+        'cavalos', '') != '' else None
+    num_portas = int(data.get('num_portas', '')) if data.get(
+        'num_portas', '') != '' else None
+    num_lugares = int(data.get('num_lugares', '')) if data.get(
+        'num_lugares', '') != '' else None
+    cilindrada = int(data.get('cilindrada', '')) if data.get(
+        'cilindrada', '') != '' else None
     preco = int(data.get('preco', '')) if data.get('preco', '') != '' else None
     modelo = data.get('modelo', '') if data.get('modelo', '') != '' else None
 
     cursor = Anuncios.filter_anuncios(tipo, marca, segmento, ano, km,
-                                       combustivel, estado, tipo_caixa,
-                                       cavalos, num_portas, num_lugares, cilindrada,
-                                       preco, modelo)
+                                      combustivel, estado, tipo_caixa,
+                                      cavalos, num_portas, num_lugares, cilindrada,
+                                      preco, modelo)
     anuncios = list(cursor)
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     return jsonify(anuncios_dict)
@@ -299,6 +317,15 @@ def get_anuncio(codigo):
     return render_template('anuncio.html', anuncio=anuncio._asdict())
 
 
+@ app.route('/compra/<codigo>', methods=['GET'])
+def get_compra(codigo):
+    compra = Anuncios.get_compra(codigo)
+    print(compra)
+    if compra is None:
+        return redirect('/compra')
+    return render_template('compra.html', compra=compra._asdict())
+
+
 @app.route('/comprarAnuncio/<numero>', methods=['POST'])
 def comprarAnuncio(numero):
     id_comprador = session['userID']
@@ -308,10 +335,10 @@ def comprarAnuncio(numero):
         Anuncios.comprarAnuncio(numero, id_comprador)
     except pyodbc.ProgrammingError as e:
         if 'Nao pode comprar um anuncio seu' in str(e):
-             return f"""<div style="color: red;">Nao pode comprar um anuncio seu.</div>"""
+            return f"""<div style="color: red;">Nao pode comprar um anuncio seu.</div>"""
         elif 'Veiculo ja comprado' in str(e):
             return f"""<div style="color: red;">Veiculo ja foi Comprado.</div>"""
-    
+
     return f"""
         <form id="avaliacaoForm" action="/submitAvaliacao/{numero}" method="post">
             <label for="avaliacao">Avaliação:</label>
@@ -329,7 +356,6 @@ def submitAvaliacao(numero):
     comentario = request.form['comentario']
     Anuncios.submitAvaliacao(numero, avaliacao, comentario)
     return redirect('/anuncios')
-
 
 
 if __name__ == '__main__':

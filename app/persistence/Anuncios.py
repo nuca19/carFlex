@@ -1,11 +1,10 @@
-import random
-import string
-from typing import NamedTuple
-from decimal import Decimal
-import random
-import string
-from pyodbc import IntegrityError
 from persistence.session import create_connection
+from pyodbc import IntegrityError
+import random
+from decimal import Decimal
+from typing import NamedTuple
+import string
+import random
 
 
 class AnuncioVenda(NamedTuple):
@@ -83,6 +82,42 @@ class AnuncioMotocicloTotal(NamedTuple):
     tipo_caixa: str
 
 
+class CompraAutomovelTotal(NamedTuple):
+    codigo_veiculo: str
+    numero: int
+    marca: str
+    modelo: str
+    ano: int
+    segmento: str
+    km: int
+    preco: Decimal
+    tipo: str
+    num_portas: int
+    num_lugares: int
+    cavalos: int
+    combustivel: str
+    estado: str
+    tipo_caixa: str
+    avaliacao: str
+
+
+class CompraMotocicloTotal(NamedTuple):
+    codigo_veiculo: str
+    numero: int
+    marca: str
+    modelo: str
+    ano: int
+    segmento: str
+    km: int
+    preco: Decimal
+    tipo: str
+    cilindrada: int
+    combustivel: str
+    estado: str
+    tipo_caixa: str
+    avaliacao: str
+
+
 def list_user_anuncios(id_vendedor):
     with create_connection() as conn:
         cursor = conn.cursor()
@@ -113,7 +148,7 @@ def list_user_compras(id_comprador):
                 continue
             else:
                 break
-        return [AnuncioAutomovelTotal(*row) if row[8] == 'automovel' else AnuncioMotocicloTotal(*row) for row in result]
+        return [CompraAutomovelTotal(*row) if row[8] == 'automovel' else CompraMotocicloTotal(*row) for row in result]
 
 
 def list_user_compras_automovel(id_comprador):
@@ -130,7 +165,7 @@ def list_user_compras_automovel(id_comprador):
                 continue
             else:
                 break
-        return [AnuncioAutomovelTotal(*row) for row in result if row[8] == 'automovel']
+        return [CompraAutomovelTotal(*row) for row in result if row[8] == 'automovel']
 
 
 def list_user_compras_motociclo(id_comprador):
@@ -147,7 +182,7 @@ def list_user_compras_motociclo(id_comprador):
                 continue
             else:
                 break
-        return [AnuncioMotocicloTotal(*row) for row in result if row[8] == 'motociclo']
+        return [CompraMotocicloTotal(*row) for row in result if row[8] == 'motociclo']
 
 
 def list_anuncios_automovel():
@@ -256,6 +291,21 @@ def get_anuncio(codigo_veiculo):
             return AnuncioAutomovelTotal(*result)
         elif tipo == 'motociclo':
             return AnuncioMotocicloTotal(*result)
+        else:
+            return None
+
+
+def get_compra(codigo_veiculo):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """EXEC compraveiculototal @codigo_veiculo = ? """, (codigo_veiculo,))
+        result = cursor.fetchone()
+        tipo = result[8]
+        if tipo == 'automovel':
+            return CompraAutomovelTotal(*result)
+        elif tipo == 'motociclo':
+            return CompraMotocicloTotal(*result)
         else:
             return None
 
