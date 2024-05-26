@@ -11,6 +11,8 @@ class AvaliacaoCard(NamedTuple):
     data_compra: str
     avaliacao: str
     comentario: str
+    marca: str
+    modelo: str
 
 def checkforAvaliacao(num_venda, user):
     with create_connection() as conn:
@@ -34,10 +36,11 @@ def listAvaliacoes():
     with create_connection() as conn:
         cursor = conn.cursor()
         cursor.execute('''
-            SELECT Anuncio_venda.codigo_veiculo, Compra.data_compra, Avaliacao.avaliacao, Avaliacao.comentario 
+            SELECT Anuncio_venda.codigo_veiculo, Compra.data_compra, Avaliacao.avaliacao, Avaliacao.comentario, Veiculo.marca, Veiculo.modelo
             FROM Avaliacao 
             JOIN Compra ON Avaliacao.num_compra = Compra.numero 
             JOIN Anuncio_venda ON Compra.num_venda = Anuncio_venda.numero
+            JOIN Veiculo ON Anuncio_venda.codigo_veiculo = Veiculo.codigo
         ''')
         return [AvaliacaoCard(*row) for row in cursor.fetchall()]
 

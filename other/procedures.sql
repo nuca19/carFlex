@@ -256,3 +256,41 @@ BEGIN
     CLOSE veiculo_cursor;
     DEALLOCATE veiculo_cursor;
 END;    
+
+
+-- aval
+
+CREATE PROCEDURE filterAvaliacoes
+    @tipo nvarchar(50) = NULL,
+    @marca nvarchar(50) = NULL,
+    @modelo nvarchar(50) = NULL,
+    @sort nvarchar(50) = NULL
+AS
+BEGIN
+    DECLARE @sql nvarchar(max);
+    SET @sql = N'SELECT Veiculo.codigo, Compra.data_compra, Avaliacao.avaliacao, Avaliacao.comentario, Veiculo.marca, Veiculo.modelo FROM Avaliacao '
+    SET @sql = @sql + N'JOIN Compra ON Avaliacao.num_compra = Compra.numero '
+    SET @sql = @sql + N'JOIN Anuncio_venda ON Compra.num_venda = Anuncio_venda.numero '
+    SET @sql = @sql + N'JOIN Veiculo ON Anuncio_venda.codigo_veiculo = Veiculo.codigo WHERE (1=1) '
+    
+    IF @tipo IS NOT NULL
+        SET @sql = @sql + N' AND (Veiculo.tipo = @tipo) '
+    IF @marca IS NOT NULL
+        SET @sql = @sql + N' AND (Veiculo.marca = @marca) '
+    IF @modelo IS NOT NULL
+        SET @sql = @sql + N' AND (Veiculo.modelo LIKE ''%'' + @modelo + ''%'') '
+
+    IF @sort IS NOT NULL
+    BEGIN
+        IF @sort = 'highest_rating'
+            SET @sql = @sql + N' ORDER BY Avaliacao.avaliacao DESC '
+        ELSE IF @sort = 'lowest_rating'
+            SET @sql = @sql + N' ORDER BY Avaliacao.avaliacao ASC '
+        ELSE IF @sort = 'most_recent'
+            SET @sql = @sql + N' ORDER BY Compra.data_compra DESC '
+        ELSE IF @sort = 'oldest'
+            SET @sql = @sql + N' ORDER BY Compra.data_compra ASC '
+    END
+
+    EXEC sp_executesql @sql, N'@tipo nvarchar(50), @marca nvarchar(50), @modelo nvarchar(50)', @tipo, @marca, @modelo;
+END
