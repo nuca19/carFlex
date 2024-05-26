@@ -373,5 +373,27 @@ def checkforAvaliacao(num_venda):
             """
     else:
         return
+    
+
+@app.route('/listAvaliacoes', methods=['GET'])
+def listAvaliacoes():
+    avaliacoes = Avaliacoes.listAvaliacoes()
+    avaliacoes_dict = [avaliacao._asdict() for avaliacao in avaliacoes]
+    print(avaliacoes_dict)
+    return jsonify(avaliacoes_dict)
+
+
+@app.route('/filterAvaliacoes', methods=['POST'])
+def filterAvaliacoes():
+    data = request.get_json()
+    tipo = data.get('tipo', '') if data.get('tipo', '') != '' else None
+    marca = data.get('marca', '') if data.get('marca', '') != '' else None
+    modelo = data.get('modelo', '') if data.get('modelo', '') != '' else None
+    sort = data.get('sort', '') if data.get('sort', '') != '' else None
+
+    avaliacoes = Avaliacoes.filterAvaliacoes(tipo, marca, modelo, sort)
+    avaliacoes_dict = [avaliacao._asdict() for avaliacao in avaliacoes]
+    return jsonify(avaliacoes_dict)
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -6,6 +6,12 @@ from typing import NamedTuple
 import string
 import random
 
+class AvaliacaoCard(NamedTuple):
+    codigo_veiculo: str
+    data_compra: str
+    avaliacao: str
+    comentario: str
+
 def checkforAvaliacao(num_venda, user):
     with create_connection() as conn:
         cursor = conn.cursor()
@@ -23,3 +29,20 @@ def checkforAvaliacao(num_venda, user):
         if result is None:
             return 1
         return result[0]
+    
+def listAvaliacoes():
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT Anuncio_venda.codigo_veiculo, Compra.data_compra, Avaliacao.avaliacao, Avaliacao.comentario 
+            FROM Avaliacao 
+            JOIN Compra ON Avaliacao.num_compra = Compra.numero 
+            JOIN Anuncio_venda ON Compra.num_venda = Anuncio_venda.numero
+        ''')
+        return [AvaliacaoCard(*row) for row in cursor.fetchall()]
+
+def filterAvaliacoes(tipo, marca, modelo, sort):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''EXEC filterAvaliacoes ?, ?, ?, ?''', (tipo, marca, modelo, sort))
+        return [AvaliacaoCard(*row) for row in cursor.fetchall()]

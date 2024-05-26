@@ -1,10 +1,112 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CarFlex - Anuncios</title>
+    <title>CarFlex - Avaliacoes</title>
     <link rel="stylesheet" href="../static/style.css">
 <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 <script>
+      function fetchFilterAnuncios() {
+    const tipo = document.getElementById('tipo').value;
+    const marca = document.getElementById('marca').value;
+    const modelo = document.getElementById('modelo').value;
+    const sort = document.getElementById('sort').value;
+
+    const data = { tipo, marca, modelo, sort };
+    console.log(data);
+
+    fetch('/filterAvaliacoes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      let cards = '<div style="display: flex; flex-wrap: wrap;">';
+      data.forEach(item => {
+        let date = new Date(item.data_compra);
+        let formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+
+        cards += `
+          <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+            <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 320px;">
+              <h2>${item.avaliacao}/10</h2>
+              <p>${item.comentario}</p>
+               <p>${formattedDate}</p>
+            </div>
+          </a>
+        `;
+      });
+      cards += '</div>';
+      document.getElementById('avaliacoes').innerHTML = cards;
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+  document.addEventListener('DOMContentLoaded', (event) => {
+  document.getElementById('tipo').addEventListener('change', function() {
+    var marcaSelect = document.getElementById('marca');
+    var selectedTipo = this.value;
+    var marcasegDiv = document.getElementById('marcaseg');
+
+    marcaSelect.innerHTML = '';
+
+    var marcas;
+    var segmentos; // declare the segmentos variable
+
+    if (selectedTipo === 'automovel') {
+        marcas = ['', 'Audi', 'BMW', 'Citroën', 'Fiat', 'Ford', 'Mercedes-Benz', 'Peugeot', 'Renault', 'Volkswagen'];
+        marcasegDiv.style.display = 'block';
+        
+    } else if (selectedTipo === 'motociclo') {
+        marcas = ['', 'Honda', 'Harley-Davidson', 'Yamaha', 'Kawasaki', 'Suzuki', 'BMW Motorrad', 'Ducati', 'Triumph', 'KTM'];
+        marcasegDiv.style.display = 'block';
+    } else {
+      marcasegDiv.style.display = 'none';
+      return;
+    }
+
+    // create new options based on the selected tipo
+    for (var i = 0; i < marcas.length; i++) {
+      var option = document.createElement('option');
+      option.value = marcas[i];
+      option.text = marcas[i];
+      marcaSelect.add(option);
+    }
+
+  });
+});
+
+
+  function fetchListAval(event){
+    fetch('/listAvaliacoes')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      let cards = '<div style="display: flex; flex-wrap: wrap;">';
+      data.forEach(item => {
+        let date = new Date(item.data_compra);
+        let formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+
+        cards += `
+          <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
+            <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 320px;">
+              <h2>${item.avaliacao}/10</h2>
+              <p>${item.comentario}</p>
+               <p>${formattedDate}</p>
+            </div>
+          </a>
+        `;
+      });
+      cards += '</div>';
+      document.getElementById('avaliacoes').innerHTML = cards;
+    });
+  }
+
+  fetchListAval();
 </script>
 </head>
 <body>
@@ -12,6 +114,7 @@
     <a href="/">CarFlex</a>
     <a href="/anuncios">Anuncios</a>
     <a href="/vender">Vender</a>
+    <a href="/avaliacoes">Avaliações</a>
     <a href="/perfil">Perfil</a>
     <a id="logout" href="/logout">Logout</a>
     </div>
@@ -19,10 +122,8 @@
     <div class="header">
       <div id="leftanuncios">
         <h1>Avaliações</h1>
-        <div>
-          <button onclick="">Todos</button>
-          <button onclick="">Automoveis</button>
-          <button onclick="">Motociclos</button>
+        <div> 
+          <button onclick="fetchListAval()">Todas</button>
         </div>
       </div>
       <div id="fullfilter">
@@ -35,34 +136,18 @@
                   <option value="automovel">Automovel</option>
                   <option value="motociclo">Motociclo</option>
               </select>
-            <label for="ano">Ano (min)</label>
-              <input type="number" id="ano" name="ano" min="1900" max="2024" step="1">
-            <label for="km">Km (min)</label>
-              <input type="number" id="km" name="km" min="0">
-            <label for="preco">Preço(min)</label>
-              <input type="number" id="preco" name="preco" min="0">
+              <div id="sortOptions">
+                <label for="sort">Ordenar por</label>
+                <select name="sort" id="sort">
+                  <option value=""></option>
+                  <option value="highest_rating">Nota maior</option>
+                  <option value="lowest_rating">Nota menor</option>
+                  <option value="most_recent">Mais recente</option>
+                  <option value="oldest">Mais antiga</option>
+                </select>
+              </div>
+
           </div>
-        <div style="margin-top: 20px; margin-left: 40px">
-          <label for="estado">Estado</label>
-              <select name="estado" id="estado">
-                  <option value=""></option>
-                  <option value="novo">Novo</option>
-                  <option value="usado">Usado</option>
-              </select>
-          <label for="tipo_caixa">Tipo de Caixa</label>
-              <select name="tipo_caixa" id="tipo_caixa">
-                  <option value=""></option>
-                  <option value="manual">Manual</option>
-                  <option value="automatico">Automatico </option>
-              </select>
-          <label for="combustivel">Combustivel</label>
-          <select name="combustivel" id="combustivel">
-              <option value=""></option>
-              <option value="gasolina">Gasolina</option>
-              <option value="diesel">Diesel</option>
-              <option value="eletrico">Eletrico</option>
-          </select>
-        </div>
         <div id="marcaseg" style="display: none;">
           <label for="marca">Marca</label>
               <select name="marca" id="marca">
@@ -70,10 +155,6 @@
               </select>
           <label for="modelo">Modelo</label>
               <input type="text" id="modelo" name="modelo" style="width: 150px; height: 36px;">
-          <label for="segmento">Segmento</label>
-              <select name="segmento" id="segmento"">
-                  <!-- Options will be populated by JavaScript -->
-              </select>
   
         </div>
         <div id="extrafields"></div>
@@ -85,7 +166,7 @@
       
     
     </div>
-    <div id="anuncios"></div>
+    <div id="avaliacoes"></div>
   </div>
 </body>
 </html>
