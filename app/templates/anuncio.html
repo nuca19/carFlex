@@ -48,7 +48,9 @@
                 <form class="center-form" hx-post="/comprarAnuncio/{{anuncio.numero}}" hx-target="#avaliacao" hx-swap="innerHTML">
                     <button type="submit">Comprar</button>
                 </form>
+                <div hx-post="/checkifowner/{{anuncio.numero}}" hx-trigger="load" hx-target="#remove" hx-swap="innerHTML"></div>
                 <div id="avaliacao"></div>
+                <div id="remove"></div>
             {%endif%}
         </div>
     </div>

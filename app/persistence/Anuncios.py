@@ -351,6 +351,21 @@ def filter_anuncios(tipo, marca, segmento, ano, km, combustivel, estado, tipo_ca
 
         return [AnuncioAutomovelTotal(*row) if row[8] == 'automovel' else AnuncioMotocicloTotal(*row) for row in result]
 
+def checkifowner(num_anu, user): #check if user on page is the owner of the anuncio
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''SELECT * FROM Anuncio_venda WHERE numero = ? AND id_vendedor = ?''', (num_anu, user))
+        result = cursor.fetchone()
+        if result is None:
+            return 0
+        return 1
+    
+def removeAnuncio(num_anu):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''EXEC remove_anuncio ?''', (num_anu,))
+        conn.commit()
+        return
 
 def generate_codigo(length=8):
     chars = string.ascii_letters + string.digits

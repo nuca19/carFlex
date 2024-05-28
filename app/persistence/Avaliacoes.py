@@ -14,6 +14,8 @@ class AvaliacaoCard(NamedTuple):
     marca: str
     modelo: str
 
+
+
 def checkforAvaliacao(num_venda, user):
     with create_connection() as conn:
         cursor = conn.cursor()

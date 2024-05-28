@@ -1,28 +1,30 @@
 --apagar anuncio completo
-CREATE PROCEDURE remove_anuncio @codigo_veiculo VARCHAR(8)
+CREATE PROCEDURE remove_anuncio @numero INT
 AS
-    BEGIN
-        -- Declare a variable to store the type of the vehicle
-        DECLARE @type VARCHAR(50);
+BEGIN
+    -- Declare a variable to store the type of the vehicle
+    DECLARE @type VARCHAR(50);
+    DECLARE @codigo_veiculo VARCHAR(8);
 
-        -- Get the type of the vehicle
-        SELECT @type = type FROM Veiculo WHERE codigo = @codigo_veiculo;
+    -- Get the codigo_veiculo from the Anuncio_venda
+    SELECT @codigo_veiculo = codigo_veiculo FROM Anuncio_venda WHERE numero = @numero;
 
-        -- Delete from Anuncio_venda where the codigo_veiculo matches
-        DELETE FROM Anuncio_venda WHERE codigo_veiculo = @codigo_veiculo;
+    -- Get the type of the vehicle
+    SELECT @type = type FROM Veiculo WHERE codigo = @codigo_veiculo;
 
-        -- If the type of the vehicle is 'Motociclo', delete from Motociclo
-        IF @type = 'Motociclo' 
-            DELETE FROM Motociclo WHERE codigo = @codigo_veiculo;
-        -- If the type of the vehicle is 'Automovel', delete from Automovel
-        ELSE IF @type = 'Automovel' 
-            DELETE FROM Automovel WHERE codigo = @codigo_veiculo;
+    -- Delete from Anuncio_venda where the numero matches
+    DELETE FROM Anuncio_venda WHERE numero = @numero;
 
-        -- Finally, delete from Veiculo where the codigo matches
-        DELETE FROM Veiculo WHERE codigo = @codigo_veiculo;
-    END;
+    -- If the type of the vehicle is 'Motociclo', delete from Motociclo
+    IF @type = 'Motociclo' 
+        DELETE FROM Motociclo WHERE codigo = @codigo_veiculo;
+    -- If the type of the vehicle is 'Automovel', delete from Automovel
+    ELSE IF @type = 'Automovel' 
+        DELETE FROM Automovel WHERE codigo = @codigo_veiculo;
 
-    EXEC remove_anuncio @codigo_veiculo = 'codigo_veiculo';
+    -- Finally, delete from Veiculo where the codigo matches
+    DELETE FROM Veiculo WHERE codigo = @codigo_veiculo;
+END;
 
 
 DROP PROCEDURE ***
@@ -293,4 +295,17 @@ BEGIN
     END
 
     EXEC sp_executesql @sql, N'@tipo nvarchar(50), @marca nvarchar(50), @modelo nvarchar(50)', @tipo, @marca, @modelo;
+END
+
+CREATE PROCEDURE removeAnuncio
+    @num_anu int
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Compra WHERE num_venda = @num_anu)
+    BEGIN
+        RAISERROR ('Cannot delete Anuncio_venda because it is associated with a Compra.', 16, 1);
+        RETURN;
+    END
+
+    DELETE FROM Anuncio_venda WHERE numero = @num_anu;
 END

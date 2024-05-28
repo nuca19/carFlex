@@ -349,6 +349,31 @@ def comprarAnuncio(numero):
         </form>
     """
 
+@app.route('/checkifowner/<num_anu>', methods=['POST'])
+def checkifowner(num_anu):
+    user = session['userID']
+    check = Anuncios.checkifowner(num_anu, user)
+    if check == 1:
+        return f"""
+            <form id="removeAnuncioForm" action="/removeAnuncio/{num_anu}" method="post">
+                <button type="submit">Remover Anuncio</button>
+            </form>
+        """
+    else:
+        return
+    
+@app.route('/removeAnuncio/<num_anu>', methods=['POST'])
+def removeAnuncio(num_anu):
+    try:
+        Anuncios.removeAnuncio(num_anu)
+    except pyodbc.ProgrammingError as e:
+        if 'Cannot delete Anuncio_venda because it is associated with a Compra.' in str(e):
+            return f"""<div style="color: red;">Veiculo ja foi Comprado.</div>"""
+    return redirect('/anuncios')
+    
+
+
+
 
 @app.route('/submitAvaliacao/<numero>', methods=['POST'])
 def submitAvaliacao(numero):
