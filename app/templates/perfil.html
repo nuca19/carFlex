@@ -23,8 +23,11 @@
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
+                        if (data.length === 0) {
+                            document.getElementById('error').innerHTML = '<div style="display: flex; justify-content: center;">Ainda não criou nenhum Anuncio.</div>';
+                            return;
+                        }
                         let contentDiv = '<div style="display: flex; flex-wrap: wrap;">';
-                        
                             data.forEach(anuncio => {
                                 if (anuncio.tipo === 'automovel') {
                                   let anuncioDiv = `
@@ -144,6 +147,10 @@
                         .then(response => response.json())
                         .then(data => {
                             console.log(data);
+                            if (data.length === 0) {
+                                document.getElementById('error').innerHTML = '<div style="display: flex; justify-content: center;">Ainda não tem nenhuma Compra.</div>';
+                                return;
+                            }
                             let contentDiv = '<div style="display: flex; flex-wrap: wrap;">';
                                 
                                 data.forEach(anuncio => {
@@ -286,6 +293,7 @@
         <p id="nif"><strong>Nif: </strong>  {{ user.nif }}</p>
         <button onclick="editUserInfo()">Edit</button>
     </div>
+    <div id="error"></div>
     <div id="Options">
         <div id="MeusAnuncios">
             <button onclick="fetchAnunciosUser(event)">Meus Anuncios</button>

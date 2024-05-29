@@ -5,6 +5,7 @@ from decimal import Decimal
 from typing import NamedTuple
 import string
 import random
+import pyodbc
 
 
 class AnuncioVenda(NamedTuple):
@@ -121,7 +122,10 @@ def list_user_anuncios(id_vendedor):
             """  EXEC anuncioveiculototalByUser @id_vendedor =  ?""", (id_vendedor,))
         result = []
         while True:
-            rows = cursor.fetchall()
+            try:
+                rows = cursor.fetchall()
+            except pyodbc.ProgrammingError as e:
+                return None
             if rows:
                 result.extend(rows)
             if cursor.nextset():
@@ -137,7 +141,10 @@ def list_user_compras(id_comprador):
         cursor.execute("EXEC ComprasByUser @id_comprador = ?", (id_comprador,))
         result = []
         while True:
-            rows = cursor.fetchall()
+            try:
+                rows = cursor.fetchall()
+            except pyodbc.ProgrammingError as e:
+                return None
             if rows:
                 result.extend(rows)
             if cursor.nextset():
@@ -154,7 +161,10 @@ def list_user_compras_automovel(id_comprador):
             """  EXEC ComprasByUser @id_comprador =  ?""", (id_comprador,))
         result = []
         while True:
-            rows = cursor.fetchall()
+            try:
+                rows = cursor.fetchall()
+            except pyodbc.ProgrammingError as e:
+                return None
             if rows:
                 result.extend(rows)
             if cursor.nextset():
@@ -171,7 +181,10 @@ def list_user_compras_motociclo(id_comprador):
             """  EXEC ComprasByUser @id_comprador =  ?""", (id_comprador,))
         result = []
         while True:
-            rows = cursor.fetchall()
+            try:
+                rows = cursor.fetchall()
+            except pyodbc.ProgrammingError as e:
+                return None
             if rows:
                 result.extend(rows)
             if cursor.nextset():
@@ -232,7 +245,7 @@ def list_anuncios_motociclo_User(id_vendedor):
 def createAnuncioAutomovel(automovel: Automovel, veiculo: Veiculo, preco, id_vendedor):
     with create_connection() as conn:
         codigo = generate_codigo()
-        numero = generate_5dig()
+        #check if codigo not in use TODO
         cursor = conn.cursor()
         cursor.execute(f"""
                 INSERT INTO Veiculo (codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa, tipo)
@@ -245,9 +258,9 @@ def createAnuncioAutomovel(automovel: Automovel, veiculo: Veiculo, preco, id_ven
             """, (codigo, *automovel))
 
         cursor.execute(f"""
-                INSERT INTO Anuncio_venda (numero, data_venda, preco, codigo_veiculo, id_vendedor)
-                VALUES (?, GETDATE(), ?, ?, ?)
-            """, (numero, preco, codigo, id_vendedor))
+                INSERT INTO Anuncio_venda (data_venda, preco, codigo_veiculo, id_vendedor)
+                VALUES (GETDATE(), ?, ?, ?)
+            """, (preco, codigo, id_vendedor))
 
         conn.commit()
         return
@@ -256,7 +269,6 @@ def createAnuncioAutomovel(automovel: Automovel, veiculo: Veiculo, preco, id_ven
 def createAnuncioMotociclo(motociclo: Motociclo, veiculo: Veiculo, preco, id_vendedor):
     with create_connection() as conn:
         codigo = generate_codigo()
-        numero = generate_5dig()
         cursor = conn.cursor()
         cursor.execute(f"""
             INSERT INTO Veiculo (codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa, tipo)
@@ -269,9 +281,9 @@ def createAnuncioMotociclo(motociclo: Motociclo, veiculo: Veiculo, preco, id_ven
         """, (codigo, *motociclo))
 
         cursor.execute(f"""
-            INSERT INTO Anuncio_venda (numero, data_venda, preco, codigo_veiculo, id_vendedor)
-            VALUES (?, GETDATE(), ?, ?, ?)
-        """, (numero, preco, codigo, id_vendedor))
+            INSERT INTO Anuncio_venda (data_venda, preco, codigo_veiculo, id_vendedor)
+            VALUES (GETDATE(), ?, ?, ?)
+        """, (preco, codigo, id_vendedor))
         conn.commit()
         return
 
@@ -302,13 +314,12 @@ def get_anuncio(codigo_veiculo):
 
 def comprarAnuncio(numero, id_comprador):
     with create_connection() as conn:
-        num_compra = generate_5dig()
         num_venda = numero
         cursor = conn.cursor()
         cursor.execute(f"""
             INSERT INTO Compra 
-            VALUES (?, ?, GETDATE(), ?)
-        """, (num_compra, num_venda, id_comprador))
+            VALUES (?, GETDATE(), ?)
+        """, (num_venda, id_comprador))
         conn.commit()
         return
 
@@ -326,8 +337,8 @@ def submitAvaliacao(numero, avaliacao, comentario):
         # Insert into Avaliacao
         cursor.execute(f"""
             INSERT INTO Avaliacao 
-            VALUES (?, ?, ?, ?)
-        """, (generate_5dig(), num_compra, avaliacao, comentario))
+            VALUES (?, ?, ?)
+        """, (num_compra, avaliacao, comentario))
         conn.commit()
         return
 

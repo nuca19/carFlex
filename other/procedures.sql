@@ -10,7 +10,7 @@ BEGIN
     SELECT @codigo_veiculo = codigo_veiculo FROM Anuncio_venda WHERE numero = @numero;
 
     -- Get the type of the vehicle
-    SELECT @type = type FROM Veiculo WHERE codigo = @codigo_veiculo;
+    SELECT @type = tipo FROM Veiculo WHERE codigo = @codigo_veiculo;
 
     -- Delete from Anuncio_venda where the numero matches
     DELETE FROM Anuncio_venda WHERE numero = @numero;
@@ -235,20 +235,18 @@ BEGIN
 
         IF @veiculo_type = 'automovel'
         BEGIN
-            SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano, segmento, km, preco, tipo, num_portas, num_lugares, cavalos, combustivel, estado, tipo_caixa, comentario
+            SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano, segmento, km, preco, tipo, num_portas, num_lugares, cavalos, combustivel, estado, tipo_caixa
 			FROM Compra 
 			JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
 			JOIN (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo) ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-			JOIN Avaliacao ON Compra.numero = Avaliacao.num_compra
 			WHERE Veiculo.codigo = @codigo_veiculo AND Compra.id_comprador = @id_comprador;
 		END
         ELSE IF @veiculo_type = 'motociclo'
         BEGIN
-            SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano, segmento, km, preco, tipo, cilindrada, combustivel, estado, tipo_caixa, comentario
+            SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano, segmento, km, preco, tipo, cilindrada, combustivel, estado, tipo_caixa
 			FROM Compra 
 			JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
 			JOIN (Veiculo JOIN Motociclo ON Veiculo.codigo=Motociclo.codigo) ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-			JOIN Avaliacao ON Compra.numero = Avaliacao.num_compra
 			WHERE Veiculo.codigo = @codigo_veiculo AND Compra.id_comprador = @id_comprador;
         END
 
@@ -257,7 +255,7 @@ BEGIN
 
     CLOSE veiculo_cursor;
     DEALLOCATE veiculo_cursor;
-END;    
+END;
 
 
 -- aval

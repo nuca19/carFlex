@@ -41,7 +41,6 @@ def validate_user(username, password):
 
 @app.route('/submitRegistration', methods=['POST'])
 def register_user():
-    id = random.randint(100, 999)
     nif = request.form['nif']
     nome = request.form['nome']
     endereco = request.form['endereco']
@@ -60,12 +59,12 @@ def register_user():
         cursor = conn.cursor()
 
         # Check if the generated id already exists
-        cursor.execute("SELECT id FROM Utilizador WHERE id=?", (id,))
-        result = cursor.fetchone()
-        while result is not None:
-            id = random.randint(100, 999)
-            cursor.execute("SELECT id FROM Utilizador WHERE id=?", (id,))
-            result = cursor.fetchone()
+        # cursor.execute("SELECT id FROM Utilizador WHERE id=?", (id,))
+        # result = cursor.fetchone()
+        # while result is not None:
+        #     id = random.randint(100, 999) 
+        #     cursor.execute("SELECT id FROM Utilizador WHERE id=?", (id,))
+        #     result = cursor.fetchone()
 
         # Check if the username already exists
         cursor.execute(
@@ -78,8 +77,8 @@ def register_user():
         if cursor.fetchone() is not None:
             return "NIF already exists", 400
 
-        cursor.execute("INSERT INTO Utilizador(id, nif, nome, endereco, username, pass_word) VALUES (?, ?, ?, ?, ?, ?)",
-                       (id, nif, nome, endereco, username, password))
+        cursor.execute("INSERT INTO Utilizador(nif, nome, endereco, username, pass_word) VALUES (?, ?, ?, ?, ?)",
+                       (nif, nome, endereco, username, password))
 
         conn.commit()
 
@@ -176,6 +175,8 @@ def submitUserInfo():
 @app.route('/anuncios_user')
 def anuncions_user():
     anuncios = Anuncios.list_user_anuncios(session['userID'])
+    if anuncios is None:
+        return jsonify([])
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     return jsonify(anuncios_dict)
 
@@ -183,6 +184,8 @@ def anuncions_user():
 @app.route('/compras_user')
 def compras_user():
     compras = Anuncios.list_user_compras(session['userID'])
+    if compras is None:
+        return jsonify([])
     compras_dict = [compra._asdict() for compra in compras]
     print(compras_dict)
     return jsonify(compras_dict)
@@ -191,6 +194,8 @@ def compras_user():
 @app.route('/compras_user_automovel')
 def compras_user_automovel():
     compras = Anuncios.list_user_compras_automovel(session['userID'])
+    if compras is None:
+        return jsonify([])
     compras_dict = [compra._asdict() for compra in compras]
     return jsonify(compras_dict)
 
@@ -198,6 +203,8 @@ def compras_user_automovel():
 @app.route('/compras_user_motociclo')
 def compras_user_motociclo():
     compras = Anuncios.list_user_compras_motociclo(session['userID'])
+    if compras is None:
+        return jsonify([])
     compras_dict = [compra._asdict() for compra in compras]
     return jsonify(compras_dict)
 

@@ -24,8 +24,8 @@ BEGIN
     END
     ELSE
     BEGIN
-        INSERT INTO Compra
-        SELECT * FROM inserted
+        INSERT INTO Compra(num_venda, data_compra, id_comprador)
+        SELECT num_venda, data_compra, id_comprador FROM inserted
     END
 END;
 
