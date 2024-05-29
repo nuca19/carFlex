@@ -151,6 +151,7 @@ button[aria-busy="true"] .htmx-indicator {
     padding: 10px;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
     background-color: #f9f9f9;
+    display: block;
 }
 
 #formAutomovel h2 {
@@ -531,4 +532,23 @@ button[aria-busy="true"] .htmx-indicator {
     justify-content: center;
     align-items: center;
     min-width: 254px;
+}
+
+#removeAnuncioForm button {
+    background-color: #da2e40;
+    color: white;
+}
+
+.veiculocard{
+    border: 1px solid #ccc;
+    margin: 10px;
+    padding: 10px;
+    min-width: 320px;
+    text-align: center;
+}
+
+
+.inh {
+    text-decoration: none;
+    color: inherit;
 }

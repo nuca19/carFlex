@@ -31,8 +31,8 @@
                             data.forEach(anuncio => {
                                 if (anuncio.tipo === 'automovel') {
                                   let anuncioDiv = `
-                                      <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                                          <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                      <a href="/anuncios/${anuncio.codigo_veiculo}" class="inh">
+                                          <div class="veiculocard">
                                           <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                                           <p>${anuncio.segmento}</p>
                                           <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
@@ -44,8 +44,8 @@
                                   contentDiv += anuncioDiv;
                                 } else if (anuncio.tipo === 'motociclo') {
                                   let anuncioDiv = `
-                                      <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                                          <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                      <a href="/anuncios/${anuncio.codigo_veiculo}" class="inh">
+                                          <div class="veiculocard">
                                           <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                                           <p>Segmento: ${anuncio.segmento}</p>
                                           <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
@@ -86,8 +86,8 @@
                             let cards = '<div style="display: flex; flex-wrap: wrap;">';
                             data.forEach(anuncio => {
                                 cards += `
-                                 <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                                          <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                 <a href="/anuncios/${anuncio.codigo_veiculo}" class="inh">
+                                          <div class="veiculocard">
                                           <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                                           <p>${anuncio.segmento}</p>
                                           <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
@@ -113,8 +113,8 @@
                     let cards = '<div style="display: flex; flex-wrap: wrap;">';
                     data.forEach(anuncio => {
                     cards += `
-                    <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                    <a href="/anuncios/${anuncio.codigo_veiculo}" class="inh">
+                        <div class="veiculocard">
                         <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                         <p>Segmento: ${anuncio.segmento}</p>
                         <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
@@ -156,8 +156,8 @@
                                 data.forEach(anuncio => {
                                     if (anuncio.tipo === 'automovel') {
                                       let anuncioDiv = `
-                                          <a href="/anuncios/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                                              <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                          <a href="/anuncios/${anuncio.codigo_veiculo}" class="inh">
+                                              <div class="veiculocard">
                                               <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                                               <p>${anuncio.segmento}</p>
                                               <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
@@ -169,8 +169,8 @@
                                       contentDiv += anuncioDiv;
                                     } else if (anuncio.tipo === 'motociclo') {
                                       let anuncioDiv = `
-                                          <a href="/compra/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                                              <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                                          <a href="/anuncios/${anuncio.codigo_veiculo}" class="inh">
+                                              <div class="veiculocard">
                                               <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                                               <p>Segmento: ${anuncio.segmento}</p>
                                               <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
@@ -209,8 +209,8 @@
                 let cards = '<div style="display: flex; flex-wrap: wrap;">';
                 data.forEach(anuncio => {
                     cards += `
-                    <a href="/compra/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                    <a href="/anuncios/${anuncio.codigo_veiculo}" class="inh">
+                        <div class="veiculocard">
                         <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                         <p>${anuncio.segmento}</p>
                         <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cavalos} cv</p>
@@ -233,8 +233,8 @@
                 let cards = '<div style="display: flex; flex-wrap: wrap;">';
                 data.forEach(anuncio => {
                     cards += `
-                    <a href="/compra/${anuncio.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-                        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 300px;">
+                    <a href="/compra/${anuncio.codigo_veiculo}" class="inh">
+                        <div class="veiculocard">
                         <h2>${anuncio.marca} ${anuncio.modelo}</h2>
                         <p>Segmento: ${anuncio.segmento}</p>
                         <p>${anuncio.ano} | ${anuncio.km} km | ${anuncio.cilindrada} cm3</p>
@@ -270,10 +270,7 @@
                     <input type="submit" value="Submit">
                 </form>
             `;
-        }
-
-
-          
+        }         
     </script>
 </head>
 <body>
@@ -294,6 +291,7 @@
         <button onclick="editUserInfo()">Edit</button>
     </div>
     <div id="error"></div>
+    
     <div id="Options">
         <div id="MeusAnuncios">
             <button onclick="fetchAnunciosUser(event)">Meus Anuncios</button>
@@ -306,6 +304,5 @@
             <div id="compras"></div>
         </div>
     </div>
-    
 </body>
 </html>

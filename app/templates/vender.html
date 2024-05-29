@@ -1,22 +1,27 @@
-<script src="https://unpkg.com/htmx.org@1.9.10"></script>
-<script>
-  document.getElementById('formAutomovel').style.display = 'block';
-
-function switchForms() {
-    var formAutomovel = document.getElementById('formAutomovel');
-    var formMotociclo = document.getElementById('formMotociclo');
-    var switchButton = document.getElementById('switchButton');
-    if (formAutomovel.style.display === 'none') {
-        formAutomovel.style.display = 'block';
-        formMotociclo.style.display = 'none';
-        switchButton.textContent = 'Mudar para Motociclo';
-    } else {
-        formAutomovel.style.display = 'none';
-        formMotociclo.style.display = 'block';
-        switchButton.textContent = 'Mudar para Automovel';
-    }
-}
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CarFlex - Vender</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script>
+        function switchForms() {
+            var formAutomovel = document.getElementById('formAutomovel');
+            var formMotociclo = document.getElementById('formMotociclo');
+            var switchButton = document.getElementById('switchButton');
+            if (formAutomovel.style.display === 'none') {
+                formAutomovel.style.display = 'block';
+                formMotociclo.style.display = 'none';
+                switchButton.textContent = 'Mudar para Motociclo';
+            } else {
+                formAutomovel.style.display = 'none';
+                formMotociclo.style.display = 'block';
+                switchButton.textContent = 'Mudar para Automovel';
+            }
+        }
+    </script>
+</head>
+<body>
 <link rel="stylesheet" href="../static/style.css">
 <div id="navbar">
   <a href="/">CarFlex</a>
@@ -170,3 +175,5 @@ function switchForms() {
   </div>
 </form>
 </div>
+</body>
+</html>

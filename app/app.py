@@ -48,41 +48,21 @@ def register_user():
     password = generate_password_hash(request.form['password'])
 
     # Check if nome is a string
-    if not isinstance(nome, str):
-        return "Name must be a string", 400
-
-    # Check if nif is 9 characters long
-    if len(nif) != 9:
-        return "NIF must be 9 characters long", 400
+    if not nome.isalpha():
+        return "Nome inválido", 400
 
     with create_connection() as conn:
         cursor = conn.cursor()
+        try:
+            cursor.execute("INSERT INTO Utilizador(nif, nome, endereco, username, pass_word) VALUES (?, ?, ?, ?, ?)",
+                        (nif, nome, endereco, username, password))
+            conn.commit()
+        except pyodbc.Error as ex:
+            sqlstate = ex.args[0]
+            if sqlstate == '23000':
+                return 'Tente um diferente username ou nif', 400
 
-        # Check if the generated id already exists
-        # cursor.execute("SELECT id FROM Utilizador WHERE id=?", (id,))
-        # result = cursor.fetchone()
-        # while result is not None:
-        #     id = random.randint(100, 999) 
-        #     cursor.execute("SELECT id FROM Utilizador WHERE id=?", (id,))
-        #     result = cursor.fetchone()
-
-        # Check if the username already exists
-        cursor.execute(
-            "SELECT username FROM Utilizador WHERE username=?", (username,))
-        if cursor.fetchone() is not None:
-            return "Username already exists", 400
-
-        # Check if the nif already exists
-        cursor.execute("SELECT nif FROM Utilizador WHERE nif=?", (nif,))
-        if cursor.fetchone() is not None:
-            return "NIF already exists", 400
-
-        cursor.execute("INSERT INTO Utilizador(nif, nome, endereco, username, pass_word) VALUES (?, ?, ?, ?, ?)",
-                       (nif, nome, endereco, username, password))
-
-        conn.commit()
-
-    return redirect('/')
+    return jsonify({'status': 200, 'message': 'Registration successful'}), 200
 
 
 @ app.route('/logout')
@@ -153,24 +133,24 @@ def perfil():
 
 @app.route('/submitUserInfo', methods=['POST'])
 def submitUserInfo():
-    if 'userID' in session:
-        id = session['userID']
-        nif = request.form['nif']
-        nome = request.form['nome']
-        endereco = request.form['endereco']
-        username = request.form['username']
+    id = session['userID']
+    nif = request.form['nif']
+    nome = request.form['nome']
+    endereco = request.form['endereco']
+    username = request.form['username']
 
-        with create_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("UPDATE Utilizador SET nif=?, nome=?, endereco=?, username=? WHERE id=?",
-                           (nif, nome, endereco, username, id))
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute("UPDATE Utilizador SET nif=?, nome=?, endereco=?, username=? WHERE id=?", (nif, nome, endereco, username, id))
             conn.commit()
+            return redirect('/perfil')
+        except pyodbc.Error as ex:
+            sqlstate = ex.args[0]
+            if sqlstate == '23000':
+                return 'Tente um diferente username ou nif', 400
 
-        return redirect('/perfil')
-    else:
-        # Redirect to the login page if the user is not authenticated
-        return redirect('/login')
-
+    return
 
 @app.route('/anuncios_user')
 def anuncions_user():
@@ -362,7 +342,7 @@ def checkifowner(num_anu):
     check = Anuncios.checkifowner(num_anu, user)
     if check == 1:
         return f"""
-            <form id="removeAnuncioForm" action="/removeAnuncio/{num_anu}" method="post">
+            <form id="removeAnuncioForm" class="center-form" action="/removeAnuncio/{num_anu}" method="post">
                 <button type="submit">Remover Anuncio</button>
             </form>
         """

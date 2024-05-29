@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="../static/style.css">
 <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 <script>
-      function fetchFilterAnuncios() {
+  function fetchFilterAnuncios() {
     const tipo = document.getElementById('tipo').value;
     const marca = document.getElementById('marca').value;
     const modelo = document.getElementById('modelo').value;
@@ -23,7 +23,10 @@
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
+      if (data.length === 0 ){
+            document.getElementById('avaliacoes').innerHTML = 'Sem resultados...';
+            return;
+      }
       let cards = '<div style="display: flex; flex-wrap: wrap;">';
       data.forEach(item => {
         let date = new Date(item.data_compra);
@@ -85,7 +88,10 @@
     fetch('/listAvaliacoes')
     .then(response => response.json())
     .then(data => {
-      console.log(data);
+      if (data.length === 0 ){
+            document.getElementById('avaliacoes').innerHTML = 'Sem resultados...';
+            return;
+          }
       let cards = '<div style="display: flex; flex-wrap: wrap;">';
       data.forEach(item => {
         let date = new Date(item.data_compra);

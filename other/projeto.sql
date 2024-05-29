@@ -2,7 +2,7 @@ GO
 
 CREATE TABLE Utilizador(
     id INT IDENTITY(100,1),
-    nif INT NOT NULL,
+    nif UNIQUE NOT NULL,
     nome VARCHAR(50) NOT NULL,
     endereco VARCHAR(50) NOT NULL,
     username VARCHAR(50) UNIQUE NOT NULL,

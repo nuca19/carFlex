@@ -29,6 +29,36 @@
                 <input type="submit" value="Register">
             </form>
         </div>
+        <div id="error"></div>
     </div>
+    <script>
+        window.onload = function() {
+            document.querySelector("form").addEventListener("submit", function(event){
+                event.preventDefault();
+    
+                fetch("/submitRegistration", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams(new FormData(event.target)).toString()
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw response;
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    window.location.href = "/";
+                })
+                .catch(err => {
+                    err.text().then(errorMessage => {
+                        document.getElementById("error").innerText = errorMessage;
+                    })
+                });
+            });
+        }
+        </script>
 </body>
 </html>
