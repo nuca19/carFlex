@@ -152,28 +152,41 @@ def submitUserInfo():
 
     return
 
+#user--
 @app.route('/anuncios_user')
 def anuncions_user():
-    anuncios = Anuncios.list_user_anuncios(session['userID'])
-    if anuncios is None:
+    all_anuncios = Anuncios.list_user_anuncios(session['userID'])
+    if all_anuncios is None:
         return jsonify([])
+    anuncios_dict = [anuncio._asdict() for anuncio in all_anuncios]
+    return jsonify(anuncios_dict)
+
+@app.route('/list_anuncios_automovel_User', methods=['GET'])
+def get_anuncios_automovel_User():
+    anuncios = Anuncios.list_user_anuncios(session['userID'], 'automovel')
+    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
+    return jsonify(anuncios_dict)
+
+
+@app.route('/list_anuncios_motociclo_User', methods=['GET'])
+def get_anuncios_motociclo_User():
+    anuncios = Anuncios.list_user_anuncios(session['userID'], 'motociclo')
     anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
     return jsonify(anuncios_dict)
 
 
 @app.route('/compras_user')
 def compras_user():
-    compras = Anuncios.list_user_compras(session['userID'])
-    if compras is None:
+    all_compras = Anuncios.list_user_compras(session['userID'])
+    if all_compras is None:
         return jsonify([])
-    compras_dict = [compra._asdict() for compra in compras]
-    print(compras_dict)
+    compras_dict = [compra._asdict() for compra in all_compras]
     return jsonify(compras_dict)
 
 
 @app.route('/compras_user_automovel')
 def compras_user_automovel():
-    compras = Anuncios.list_user_compras_automovel(session['userID'])
+    compras = Anuncios.list_user_compras(session['userID'], 'automovel')
     if compras is None:
         return jsonify([])
     compras_dict = [compra._asdict() for compra in compras]
@@ -182,18 +195,15 @@ def compras_user_automovel():
 
 @app.route('/compras_user_motociclo')
 def compras_user_motociclo():
-    compras = Anuncios.list_user_compras_motociclo(session['userID'])
+    compras = Anuncios.list_user_compras(session['userID'], 'motociclo')
+    print(compras)
     if compras is None:
         return jsonify([])
     compras_dict = [compra._asdict() for compra in compras]
     return jsonify(compras_dict)
 
 
-@ app.route('/sobre')
-def sobre():
-    return render_template('sobre.html')
-
-
+#anuncios geral--
 @app.route('/list_anuncios_automovel', methods=['GET'])
 def get_anuncios_automovel():
     anuncios = Anuncios.list_anuncios_automovel()
@@ -215,20 +225,6 @@ def get_all_anuncios():
     all_anuncios = anuncios_automovel + anuncios_motociclo
     all_anuncios_dict = [anuncio._asdict() for anuncio in all_anuncios]
     return jsonify(all_anuncios_dict)
-
-
-@app.route('/list_anuncios_automovel_User', methods=['GET'])
-def get_anuncios_automovel_User():
-    anuncios = Anuncios.list_anuncios_automovel_User(session['userID'])
-    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
-    return jsonify(anuncios_dict)
-
-
-@app.route('/list_anuncios_motociclo_User', methods=['GET'])
-def get_anuncios_motociclo_User():
-    anuncios = Anuncios.list_anuncios_motociclo_User(session['userID'])
-    anuncios_dict = [anuncio._asdict() for anuncio in anuncios]
-    return jsonify(anuncios_dict)
 
 
 @ app.route('/filter_anuncios', methods=['POST'])

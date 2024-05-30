@@ -115,85 +115,6 @@ class CompraMotocicloTotal(NamedTuple):
     comentario: str
 
 
-def list_user_anuncios(id_vendedor):
-    with create_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute(
-            """  EXEC anuncioveiculototalByUser @id_vendedor =  ?""", (id_vendedor,))
-        result = []
-        while True:
-            try:
-                rows = cursor.fetchall()
-            except pyodbc.ProgrammingError as e:
-                return None
-            if rows:
-                result.extend(rows)
-            if cursor.nextset():
-                continue
-            else:
-                break
-        return [AnuncioAutomovelTotal(*row) if row[8] == 'automovel' else AnuncioMotocicloTotal(*row) for row in result]
-
-
-def list_user_compras(id_comprador):
-    with create_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute("EXEC ComprasByUser @id_comprador = ?", (id_comprador,))
-        result = []
-        while True:
-            try:
-                rows = cursor.fetchall()
-            except pyodbc.ProgrammingError as e:
-                return None
-            if rows:
-                result.extend(rows)
-            if cursor.nextset():
-                continue
-            else:
-                break
-        return [AnuncioAutomovelTotal(*row) if row[8] == 'automovel' else AnuncioMotocicloTotal(*row) for row in result]
-
-
-def list_user_compras_automovel(id_comprador):
-    with create_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute(
-            """  EXEC ComprasByUser @id_comprador =  ?""", (id_comprador,))
-        result = []
-        while True:
-            try:
-                rows = cursor.fetchall()
-            except pyodbc.ProgrammingError as e:
-                return None
-            if rows:
-                result.extend(rows)
-            if cursor.nextset():
-                continue
-            else:
-                break
-        return [AnuncioAutomovelTotal(*row) for row in result if row[8] == 'automovel']
-
-
-def list_user_compras_motociclo(id_comprador):
-    with create_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute(
-            """  EXEC ComprasByUser @id_comprador =  ?""", (id_comprador,))
-        result = []
-        while True:
-            try:
-                rows = cursor.fetchall()
-            except pyodbc.ProgrammingError as e:
-                return None
-            if rows:
-                result.extend(rows)
-            if cursor.nextset():
-                continue
-            else:
-                break
-        return [AnuncioMotocicloTotal(*row) for row in result if row[8] == 'motociclo']
-
-
 def list_anuncios_automovel():
     with create_connection() as conn:
         cursor = conn.cursor()
@@ -208,83 +129,82 @@ def list_anuncios_motociclo():
         return [AnuncioMotocicloTotal(*row) for row in cursor.fetchall()]
 
 
-def list_anuncios_automovel_User(id_vendedor):
+def list_user_anuncios(id_vendedor, tipo=None):
     with create_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
             """  EXEC anuncioveiculototalByUser @id_vendedor =  ?""", (id_vendedor,))
         result = []
         while True:
-            rows = cursor.fetchall()
+            try:
+                rows = cursor.fetchall()
+            except pyodbc.ProgrammingError as e:
+                return None
             if rows:
                 result.extend(rows)
             if cursor.nextset():
                 continue
             else:
                 break
-        return [AnuncioAutomovelTotal(*row) for row in result if row[8] == 'automovel']
+        if tipo == 'automovel':
+            return [AnuncioAutomovelTotal(*row) for row in result if row[8] == 'automovel']
+        elif tipo == 'motociclo':
+            return [AnuncioMotocicloTotal(*row) for row in result if row[8] == 'motociclo']
+        else:
+            return [AnuncioAutomovelTotal(*row) if row[8] == 'automovel' else AnuncioMotocicloTotal(*row) for row in result]
 
-
-def list_anuncios_motociclo_User(id_vendedor):
+def list_user_compras(id_comprador, tipo=None):
     with create_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            """  EXEC anuncioveiculototalByUser @id_vendedor =  ?""", (id_vendedor,))
+            """  EXEC ComprasByUser @id_comprador =  ?""", (id_comprador,))
         result = []
         while True:
-            rows = cursor.fetchall()
+            try:
+                rows = cursor.fetchall()
+            except pyodbc.ProgrammingError as e:
+                return None
             if rows:
                 result.extend(rows)
             if cursor.nextset():
                 continue
             else:
                 break
-        return [AnuncioMotocicloTotal(*row) for row in result if row[8] == 'motociclo']
+        if tipo == 'automovel':
+            return [AnuncioAutomovelTotal(*row) for row in result if row[8] == 'automovel']
+        elif tipo == 'motociclo':
+            return [AnuncioMotocicloTotal(*row) for row in result if row[8] == 'motociclo']
+        else:
+            return [AnuncioAutomovelTotal(*row) if row[8] == 'automovel' else AnuncioMotocicloTotal(*row) for row in result]
+
 
 
 def createAnuncioAutomovel(automovel: Automovel, veiculo: Veiculo, preco, id_vendedor):
     with create_connection() as conn:
-        codigo = generate_codigo()
-        #check if codigo not in use TODO
+        while True: #generate codigo not in use
+            codigo = generate_codigo()
+            cursor.execute("SELECT * FROM Anuncio_venda WHERE codigo_veiculo = ?", (codigo,))
+            if cursor.fetchone() is None:
+                break
+
         cursor = conn.cursor()
-        cursor.execute(f"""
-                INSERT INTO Veiculo (codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa, tipo)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (codigo, *veiculo, 'automovel'))
-
-        cursor.execute(f"""
-                INSERT INTO Automovel (codigo, segmento, num_portas, num_lugares, cavalos)
-                VALUES (?, ?, ?, ?, ?)
-            """, (codigo, *automovel))
-
-        cursor.execute(f"""
-                INSERT INTO Anuncio_venda (data_venda, preco, codigo_veiculo, id_vendedor)
-                VALUES (GETDATE(), ?, ?, ?)
-            """, (preco, codigo, id_vendedor))
-
-        conn.commit()
+        params = (codigo, *veiculo, *automovel, preco, id_vendedor)
+        cursor.execute("EXEC CreateAnuncioAutomovel @codigo = ?, @ano = ?, @marca = ?, @modelo = ?, @km = ?, @combustivel = ?, @estado = ?, @tipo_caixa = ?, @segmento = ?, @num_portas = ?, @num_lugares = ?, @cavalos = ?, @preco = ?, @id_vendedor = ?", params)
         return
 
 
 def createAnuncioMotociclo(motociclo: Motociclo, veiculo: Veiculo, preco, id_vendedor):
     with create_connection() as conn:
-        codigo = generate_codigo()
         cursor = conn.cursor()
-        cursor.execute(f"""
-            INSERT INTO Veiculo (codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa, tipo)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (codigo, *veiculo, 'motociclo'))
-
-        cursor.execute(f"""
-            INSERT INTO Motociclo (codigo, segmento, cilindrada)
-            VALUES (?, ?, ?)
-        """, (codigo, *motociclo))
-
-        cursor.execute(f"""
-            INSERT INTO Anuncio_venda (data_venda, preco, codigo_veiculo, id_vendedor)
-            VALUES (GETDATE(), ?, ?, ?)
-        """, (preco, codigo, id_vendedor))
-        conn.commit()
+        while True: #generate codigo not in use
+            codigo = generate_codigo()
+            cursor.execute("SELECT * FROM Anuncio_venda WHERE codigo_veiculo = ?", (codigo,))
+            if cursor.fetchone() is None:
+                break
+            
+        cursor.execute("SELECT * FROM Anuncio_venda WHERE codigo_veiculo = ?", (codigo,))
+        params = (codigo, *veiculo, *motociclo, preco, id_vendedor)
+        cursor.execute("EXEC CreateAnuncioMotociclo @codigo = ?, @ano = ?, @marca = ?, @modelo = ?, @km = ?, @combustivel = ?, @estado = ?, @tipo_caixa = ?, @segmento = ?, @cilindrada = ?, @preco = ?, @id_vendedor = ?", params)
         return
 
 
@@ -374,7 +294,7 @@ def checkifowner(num_anu, user): #check if user on page is the owner of the anun
 def removeAnuncio(num_anu):
     with create_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute('''EXEC remove_anuncio ?''', (num_anu,))
+        cursor.execute('''DELETE FROM Anuncio_venda WHERE numero = ?''', (num_anu,))
         conn.commit()
         return
 
