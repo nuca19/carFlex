@@ -52,6 +52,7 @@ INSTEAD OF DELETE
 AS
 BEGIN
     DECLARE @codigo_veiculo VARCHAR(8);
+    DECLARE @type VARCHAR(50);
     SELECT @codigo_veiculo = codigo_veiculo FROM deleted;
     
     DELETE FROM Anuncio_venda WHERE codigo_veiculo = @codigo_veiculo;
