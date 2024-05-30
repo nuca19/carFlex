@@ -181,13 +181,13 @@ def list_user_compras(id_comprador, tipo=None):
 
 def createAnuncioAutomovel(automovel: Automovel, veiculo: Veiculo, preco, id_vendedor):
     with create_connection() as conn:
+        cursor = conn.cursor()
         while True: #generate codigo not in use
             codigo = generate_codigo()
             cursor.execute("SELECT * FROM Anuncio_venda WHERE codigo_veiculo = ?", (codigo,))
             if cursor.fetchone() is None:
                 break
 
-        cursor = conn.cursor()
         params = (codigo, *veiculo, *automovel, preco, id_vendedor)
         cursor.execute("EXEC CreateAnuncioAutomovel @codigo = ?, @ano = ?, @marca = ?, @modelo = ?, @km = ?, @combustivel = ?, @estado = ?, @tipo_caixa = ?, @segmento = ?, @num_portas = ?, @num_lugares = ?, @cavalos = ?, @preco = ?, @id_vendedor = ?", params)
         return
