@@ -1,43 +1,8 @@
---apagar anuncio completo
-CREATE PROCEDURE remove_anuncio @numero INT
-AS
-BEGIN
-    -- Declare a variable to store the type of the vehicle
-    DECLARE @type VARCHAR(50);
-    DECLARE @codigo_veiculo VARCHAR(8);
-
-    -- Get the codigo_veiculo from the Anuncio_venda
-    SELECT @codigo_veiculo = codigo_veiculo FROM Anuncio_venda WHERE numero = @numero;
-
-    -- Get the type of the vehicle
-    SELECT @type = tipo FROM Veiculo WHERE codigo = @codigo_veiculo;
-
-    -- Delete from Anuncio_venda where the numero matches
-    DELETE FROM Anuncio_venda WHERE numero = @numero;
-
-    -- If the type of the vehicle is 'Motociclo', delete from Motociclo
-    IF @type = 'Motociclo' 
-        DELETE FROM Motociclo WHERE codigo = @codigo_veiculo;
-    -- If the type of the vehicle is 'Automovel', delete from Automovel
-    ELSE IF @type = 'Automovel' 
-        DELETE FROM Automovel WHERE codigo = @codigo_veiculo;
-
-    -- Finally, delete from Veiculo where the codigo matches
-    DELETE FROM Veiculo WHERE codigo = @codigo_veiculo;
-END;
 
 
 DROP PROCEDURE ***
 
-CREATE PROCEDURE anuncios_nao_vendidos
-AS
-    BEGIN
-        SELECT Veiculo.codigo, numero, marca, modelo, ano, km, preco, tipo
-        FROM (SELECT * FROM Anuncio_venda WHERE numero NOT IN (SELECT num_venda FROM Compra))
-        AS anuncios_nao_vendidos JOIN Veiculo ON anuncios_nao_vendidos.codigo_veiculo = Veiculo.codigo;
-    END;
-
-
+-- get anuncios to show in the cards
 CREATE PROCEDURE anuncios_automovel
 AS
     BEGIN
@@ -57,7 +22,7 @@ AS
     END;
 
 
-
+--filter anuncios
 CREATE PROCEDURE filter_anuncios
     @tipo nvarchar(50) = NULL,
     @marca nvarchar(50) = NULL,
@@ -120,7 +85,7 @@ BEGIN
 END
 
 
-
+-- get full anuncio fot individual anuncio page (can show evaluation and buy info if purchased)
 CREATE PROCEDURE anuncioveiculototal (@codigo_veiculo VARCHAR(8))
 AS
 BEGIN
@@ -149,34 +114,8 @@ BEGIN
     END
 END;
 
-CREATE PROCEDURE compraveiculototal (@codigo_veiculo VARCHAR(8))
-AS
-BEGIN
-    DECLARE @veiculo_type VARCHAR(255);
-    SELECT @veiculo_type = tipo FROM Veiculo WHERE codigo = @codigo_veiculo;
 
-    IF @veiculo_type = 'automovel'
-    BEGIN
-        SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano, segmento, km, preco, tipo, num_portas, num_lugares, cavalos, combustivel, estado, tipo_caixa, comentario
-        FROM Compra 
-        JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
-        JOIN (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo) 
-        ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-        JOIN Avaliacao ON Compra.numero = Avaliacao.num_compra
-        WHERE Veiculo.codigo = @codigo_veiculo;
-    END
-    ELSE IF @veiculo_type = 'motociclo'
-    BEGIN
-        SELECT Veiculo.codigo, Compra.num_venda, marca, modelo, ano, segmento, km, preco, tipo, cilindrada, combustivel, estado, tipo_caixa, comentario
-        FROM Compra 
-        JOIN Anuncio_venda ON Compra.num_venda=Anuncio_venda.numero
-        JOIN (Veiculo JOIN Motociclo ON Veiculo.codigo=Motociclo.codigo) 
-        ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-        JOIN Avaliacao ON Compra.numero = Avaliacao.num_compra
-        WHERE Veiculo.codigo = @codigo_veiculo;
-    END
-END;
-
+-- get full anuncio by user
 CREATE PROCEDURE anuncioveiculototalByUser (@id_vendedor INT)
 AS
 BEGIN
@@ -217,6 +156,8 @@ BEGIN
     DEALLOCATE veiculo_cursor;
 END;
 
+
+-- get compras by user
 CREATE PROCEDURE ComprasByUser (@id_comprador INT)
 AS
 BEGIN
@@ -258,8 +199,7 @@ BEGIN
 END;
 
 
--- aval
-
+-- filter avaliacoes
 CREATE PROCEDURE filterAvaliacoes
     @tipo nvarchar(50) = NULL,
     @marca nvarchar(50) = NULL,
@@ -295,15 +235,58 @@ BEGIN
     EXEC sp_executesql @sql, N'@tipo nvarchar(50), @marca nvarchar(50), @modelo nvarchar(50)', @tipo, @marca, @modelo;
 END
 
-CREATE PROCEDURE removeAnuncio
-    @num_anu int
+
+-- create anuncio automovel
+CREATE PROCEDURE CreateAnuncioAutomovel
+    @codigo NVARCHAR(8),
+    @ano INT,
+    @marca NVARCHAR(50),
+    @modelo NVARCHAR(50),
+    @km INT,
+    @combustivel NVARCHAR(50),
+    @estado NVARCHAR(50),
+    @tipo_caixa NVARCHAR(50),
+    @segmento NVARCHAR(50),
+    @num_portas INT,
+    @num_lugares INT,
+    @cavalos INT,
+    @preco INT,
+    @id_vendedor INT
 AS
 BEGIN
-    IF EXISTS (SELECT 1 FROM Compra WHERE num_venda = @num_anu)
-    BEGIN
-        RAISERROR ('Cannot delete Anuncio_venda because it is associated with a Compra.', 16, 1);
-        RETURN;
-    END
+    INSERT INTO Veiculo (codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa, tipo)
+    VALUES (@codigo, @ano, @marca, @modelo, @km, @combustivel, @estado, @tipo_caixa, 'automovel')
 
-    DELETE FROM Anuncio_venda WHERE numero = @num_anu;
+    INSERT INTO Automovel (codigo, segmento, num_portas, num_lugares, cavalos)
+    VALUES (@codigo, @segmento, @num_portas, @num_lugares, @cavalos)
+
+    INSERT INTO Anuncio_venda (data_venda, preco, codigo_veiculo, id_vendedor)
+    VALUES (GETDATE(), @preco, @codigo, @id_vendedor)
+END
+
+
+-- create anuncio motociclo
+CREATE PROCEDURE CreateAnuncioMotociclo
+    @codigo NVARCHAR(8),
+    @ano INT,
+    @marca NVARCHAR(50),
+    @modelo NVARCHAR(50),
+    @km INT,
+    @combustivel NVARCHAR(50),
+    @estado NVARCHAR(50),
+    @tipo_caixa NVARCHAR(50),
+    @segmento NVARCHAR(50),
+    @cilindrada INT,
+    @preco INT,
+    @id_vendedor INT
+AS
+BEGIN
+    INSERT INTO Veiculo (codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa, tipo)
+    VALUES (@codigo, @ano, @marca, @modelo, @km, @combustivel, @estado, @tipo_caixa, 'motociclo')
+
+    INSERT INTO Motociclo (codigo, segmento, cilindrada)
+    VALUES (@codigo, @segmento, @cilindrada)
+
+    INSERT INTO Anuncio_venda (data_venda, preco, codigo_veiculo, id_vendedor)
+    VALUES (GETDATE(), @preco, @codigo, @id_vendedor)
 END
