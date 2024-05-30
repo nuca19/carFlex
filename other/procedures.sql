@@ -2,15 +2,7 @@
 
 DROP PROCEDURE ***
 
-CREATE PROCEDURE anuncios_nao_vendidos
-AS
-    BEGIN
-        SELECT Veiculo.codigo, numero, marca, modelo, ano, km, preco, tipo
-        FROM (SELECT * FROM Anuncio_venda WHERE numero NOT IN (SELECT num_venda FROM Compra))
-        AS anuncios_nao_vendidos JOIN Veiculo ON anuncios_nao_vendidos.codigo_veiculo = Veiculo.codigo;
-    END;
-
-
+-- get anuncios to show in the cards
 CREATE PROCEDURE anuncios_automovel
 AS
     BEGIN
@@ -30,7 +22,7 @@ AS
     END;
 
 
-
+--filter anuncios
 CREATE PROCEDURE filter_anuncios
     @tipo nvarchar(50) = NULL,
     @marca nvarchar(50) = NULL,
@@ -93,7 +85,7 @@ BEGIN
 END
 
 
-
+-- get full anuncio fot individual anuncio page (can show evaluation and buy info if purchased)
 CREATE PROCEDURE anuncioveiculototal (@codigo_veiculo VARCHAR(8))
 AS
 BEGIN
@@ -123,6 +115,7 @@ BEGIN
 END;
 
 
+-- get full anuncio by user
 CREATE PROCEDURE anuncioveiculototalByUser (@id_vendedor INT)
 AS
 BEGIN
@@ -163,6 +156,8 @@ BEGIN
     DEALLOCATE veiculo_cursor;
 END;
 
+
+-- get compras by user
 CREATE PROCEDURE ComprasByUser (@id_comprador INT)
 AS
 BEGIN
@@ -204,8 +199,7 @@ BEGIN
 END;
 
 
--- aval
-
+-- filter avaliacoes
 CREATE PROCEDURE filterAvaliacoes
     @tipo nvarchar(50) = NULL,
     @marca nvarchar(50) = NULL,
@@ -241,19 +235,8 @@ BEGIN
     EXEC sp_executesql @sql, N'@tipo nvarchar(50), @marca nvarchar(50), @modelo nvarchar(50)', @tipo, @marca, @modelo;
 END
 
-CREATE PROCEDURE removeAnuncio
-    @num_anu int
-AS
-BEGIN
-    IF EXISTS (SELECT 1 FROM Compra WHERE num_venda = @num_anu)
-    BEGIN
-        RAISERROR ('Cannot delete Anuncio_venda because it is associated with a Compra.', 16, 1);
-        RETURN;
-    END
 
-    DELETE FROM Anuncio_venda WHERE numero = @num_anu;
-END
-
+-- create anuncio automovel
 CREATE PROCEDURE CreateAnuncioAutomovel
     @codigo NVARCHAR(8),
     @ano INT,
@@ -281,6 +264,8 @@ BEGIN
     VALUES (GETDATE(), @preco, @codigo, @id_vendedor)
 END
 
+
+-- create anuncio motociclo
 CREATE PROCEDURE CreateAnuncioMotociclo
     @codigo NVARCHAR(8),
     @ano INT,
