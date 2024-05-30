@@ -5,7 +5,7 @@
 -- Insert into Veiculo
 INSERT INTO Veiculo(codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa, tipo)
 VALUES ('a3f5b2c1', 2020, 'Fiat', '500', 7000, 'Gasolina', 'Novo', 'Automatico', 'automovel'),
-       ('d4e6g7h8', 2018, 'Mercedes', 'Classe A', 20000, 'Gasolina', 'Usado', 'Manual', 'automovel');
+       ('d4e6g7h8', 2018, 'Mercedes', 'Classe A', 20000, 'Gasolina', 'Usado', 'Manual', 'automovel'),
        ('b4g6h7j8', 2019, 'BMW', '320i', 15000, 'Gasolina', 'Usado', 'Automatico', 'automovel'),
        ('c5h7i8j9', 2021, 'Audi', 'A3', 5000, 'Diesel', 'Novo', 'Manual', 'automovel'),
        ('m1n2o3p4', 2020, 'Honda', 'CBR600RR', 5000, 'Gasolina', 'Usado', 'Manual', 'motociclo'),
@@ -22,26 +22,30 @@ VALUES ('a3f5b2c1', 2020, 'Fiat', '500', 7000, 'Gasolina', 'Novo', 'Automatico',
        ('z1a2b3c5', 2021, 'KTM', 'RC 390', 2000, 'Gasolina', 'Usado', 'Manual', 'motociclo'),
        ('v1w2x3y6', 2022, 'Lamborghini', 'Huracan', 100, 'Gasolina', 'Novo', 'Automatico', 'automovel'),
        ('z1a2b3c6', 2021, 'Triumph', 'Street Triple', 2000, 'Gasolina', 'Usado', 'Manual', 'motociclo'),
-       ('v1w2x3y7', 2022, 'Bugatti', 'Chiron', 100, 'Gasolina', 'Novo', 'Automatico', 'automovel');
+       ('v1w2x3y7', 2022, 'Bugatti', 'Chiron', 100, 'Gasolina', 'Novo', 'Automatico', 'automovel'),
+       ('m1n2o3p5', 2022, 'BMW', 'S1000RR', 0, 'Gasolina', 'Novo', 'Manual', 'motociclo'),
+       ('m2n3o4p5', 2022, 'Ducati', 'Multistrada V4', 0, 'Gasolina', 'Novo', 'Manual', 'motociclo'),
+       ('m3n4o5p6', 2022, 'Kawasaki', 'Z H2', 0, 'Gasolina', 'Novo', 'Manual', 'motociclo'),
+       ('m4n5o6p7', 2022, 'Yamaha', 'MT-10', 0, 'Gasolina', 'Novo', 'Manual', 'motociclo'),
+       ('m5n6o7p8', 2022, 'Suzuki', 'Hayabusa', 0, 'Gasolina', 'Novo', 'Manual', 'motociclo');
+       
 
        
        
 
 -- Insert into Automovel codigo(8chars)
 INSERT INTO Automovel(codigo, segmento, num_portas, num_lugares, cavalos)
-VALUES ('a3f5b2c1', 'Sedan', 4, 5, 70),
-       ('d4e6g7h8', 'normal', 5, 7, 200),
-       ('b4g6h7j8', 'Familiares Médios/ Executivos Médios', 4, 5, 180),
-       ('c5h7i8j9', 'Utilitários', 5, 5, 150),
-       ('v1w2x3y4', 'Familiares Médios/ Executivos Médios', 4, 5, 283),
-       ('x1y2z3a4', 'Desportivo', 2, 2, 450),
-       ('f1g2h3i4', 'Desportivo', 2, 2, 455),
-       ('n1o2p3q4', 'Desportivo', 2, 2, 335),
-       ('j1k2l3m4', 'Sport', 1103),
-       ('r1s2t3u4', 'Touring', 1746),
-       ('v1w2x3y5', 'Desportivo', 2, 2, 450),
-       ('v1w2x3y6', 'Desportivo', 2, 2, 610),
-       ('v1w2x3y7', 'Desportivo', 2, 2, 1500);
+VALUES ('a3f5b2c1', 'carros_citadinos', 4, 5, 70),
+       ('d4e6g7h8', 'utilitarios', 5, 7, 200),
+       ('b4g6h7j8', 'familiares_medios_executivos_medios', 4, 5, 180),
+       ('c5h7i8j9', 'utilitarios', 5, 5, 150),
+       ('v1w2x3y4', 'familiares_medios_executivos_medios', 4, 5, 283),
+       ('x1y2z3a4', 'luxo', 2, 2, 450),
+       ('f1g2h3i4', 'luxo', 2, 2, 455),
+       ('n1o2p3q4', 'luxo', 2, 2, 335),
+       ('v1w2x3y5', 'luxo', 2, 2, 450),
+       ('v1w2x3y6', 'luxo', 2, 2, 610),
+       ('v1w2x3y7', 'luxo', 2, 2, 1500);
 
 
 
@@ -51,7 +55,14 @@ VALUES ('m1n2o3p4', 'Sport', 600),
        ('z1a2b3c4', 'Sport', 998),
        ('b1c2d3e4', 'Sport', 1000),
        ('z1a2b3c5', 'Sport', 373),
-       ('z1a2b3c6', 'Sport', 765);
+       ('j1k2l3m4', 'Sport', 1103),
+       ('r1s2t3u4', 'Grand_Turismo', 1746),
+       ('z1a2b3c6', 'Sport', 765),
+       ('m1n2o3p5', 'Sport', 1000),
+       ('m2n3o4p5', 'Touring', 1200),
+       ('m3n4o5p6', 'Sport', 1000),
+       ('m4n5o6p7', 'Sport', 1000),
+       ('m5n6o7p8', 'Sport', 1300);
 
 --create users id(100-999 4digits)
 INSERT INTO Utilizador(nif, nome, endereco, username, pass_word)
@@ -73,25 +84,30 @@ VALUES ( 123456789, 'User 1', 'Address 1', 'Joao', '1234'),
 
 --create anuncios (5digits)
 INSERT INTO Anuncio_venda( data_venda, preco, codigo_veiculo, id_vendedor)
-VALUES ('2022-01-01', 15000.00, 'a3f5b2c1', 103),
-       ( '2022-01-02', 20000.00, 'd4e6g7h8', 104),
-       ('2022-01-03', 25000.00, 'b4g6h7j8', 105),
-       ( '2022-01-04', 30000.00, 'c5h7i8j9', 106),
-       ('2022-02-01', 8000.00, 'm1n2o3p4', 107),
-       ('2022-02-02', 12000.00, 'q1r2s3t4', 108),
-       ('2022-02-03', 35000.00, 'v1w2x3y4', 109),
-       ('2022-02-04', 15000.00, 'z1a2b3c4', 104),
-       ('2022-03-01', 40000.00, 'x1y2z3a4', 110),
-       ('2022-03-02', 13000.00, 'b1c2d3e4', 111),
-       ('2022-03-03', 60000.00, 'f1g2h3i4', 111),
-       ('2022-03-04', 25000.00, 'j1k2l3m4', 103),
-       ('2022-03-05', 55000.00, 'n1o2p3q4', 104),
-       ('2022-03-06', 20000.00, 'r1s2t3u4', 110),
+VALUES ('2022-01-01', 15000.00, 'a3f5b2c1', 100),
+       ( '2022-01-02', 20000.00, 'd4e6g7h8', 103),
+       ('2022-01-03', 25000.00, 'b4g6h7j8', 103),
+       ( '2022-01-04', 30000.00, 'c5h7i8j9', 102),
+       ('2022-02-01', 8000.00, 'm1n2o3p4', 101),
+       ('2022-02-02', 12000.00, 'q1r2s3t4', 101),
+       ('2022-02-03', 35000.00, 'v1w2x3y4', 101),
+       ('2022-02-04', 15000.00, 'z1a2b3c4', 103),
+       ('2022-03-01', 40000.00, 'x1y2z3a4', 104),
+       ('2022-03-02', 13000.00, 'b1c2d3e4', 105),
+       ('2022-03-03', 60000.00, 'f1g2h3i4', 106),
+       ('2022-03-04', 25000.00, 'j1k2l3m4', 107),
+       ('2022-03-05', 55000.00, 'n1o2p3q4', 108),
+       ('2022-03-06', 20000.00, 'r1s2t3u4', 109),
        ('2022-04-01', 200000.00, 'v1w2x3y5', 112),
-       ('2022-04-02', 5500.00, 'z1a2b3c5', 113),
-       ('2022-04-03', 260000.00, 'v1w2x3y6', 114),
-       ('2022-04-04', 9500.00, 'z1a2b3c6', 115),
-       ('2022-04-05', 3000000.00, 'v1w2x3y7', 116);
+       ('2022-04-02', 5500.00, 'z1a2b3c5', 110),
+       ('2022-04-03', 260000.00, 'v1w2x3y6', 111),
+       ('2022-04-04', 9500.00, 'z1a2b3c6', 111),
+       ('2022-04-05', 3000000.00, 'v1w2x3y7', 112),
+       ('2022-04-06', 10000.00, 'm1n2o3p5', 103),
+       ('2022-04-07', 15000.00, 'm2n3o4p5', 105),
+       ('2022-04-08', 20000.00, 'm3n4o5p6', 106),
+       ('2022-04-09', 25000.00, 'm4n5o6p7', 110),
+       ('2022-04-10', 30000.00, 'm5n6o7p8', 111);
 
 
 
@@ -99,14 +115,14 @@ INSERT INTO Compra (num_venda, data_compra,  id_comprador)
 VALUES (10003, '2022-01-01', 110),
        (10008, '2022-01-02', 105),
        (10010, '2022-01-03', 106),
-       (10011, '2022-03-04', 115),
+       (10011, '2022-03-04', 112),
        (10018, '2022-04-05', 108);
 
 
 INSERT INTO Avaliacao (num_compra, avaliacao, comentario)
-VALUES (10000, 5, 'Excelente compra'),
-       (10001, 4, 'Bom negocio'),
-       (10018, 1, 'Pessimo negocio');
+VALUES (1000, 5, 'Excelente compra'),
+       (1001, 4, 'Bom negocio'),
+       (1004, 1, 'Pessimo negocio');
 
 
 
