@@ -34,7 +34,7 @@
 
         cards += `
           <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-            <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 320px;">
+            <div class="veiculocard">
               <h2>${item.avaliacao}/10</h2> <h4>${item.marca} ${item.modelo}</h4>
               <p>${item.comentario}</p>
                <p>${formattedDate}</p>
@@ -61,7 +61,7 @@
     var segmentos; // declare the segmentos variable
 
     if (selectedTipo === 'automovel') {
-        marcas = ['', 'Audi', 'BMW', 'Citroën', 'Fiat', 'Ford', 'Mercedes-Benz', 'Peugeot', 'Renault', 'Volkswagen'];
+        marcas = ['', 'Audi', 'BMW', 'Citroën', 'Fiat', 'Ford', 'Mercedes', 'Peugeot', 'Renault', 'Volkswagen'];
         marcasegDiv.style.display = 'block';
         
     } else if (selectedTipo === 'motociclo') {
@@ -99,7 +99,7 @@
 
         cards += `
           <a href="/anuncios/${item.codigo_veiculo}" style="text-decoration: none; color: inherit;">
-            <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; min-width: 320px;">
+            <div class="veiculocard">
               <h2>${item.avaliacao}/10</h2> <h4>${item.marca} ${item.modelo}</h4>
               <p>${item.comentario}</p>
                <p>${formattedDate}</p>
