@@ -120,9 +120,9 @@ VALUES (10003, '2022-01-01', 110),
 
 
 INSERT INTO Avaliacao (num_compra, avaliacao, comentario)
-VALUES (1000, 5, 'Excelente compra'),
-       (1001, 4, 'Bom negocio'),
-       (1004, 1, 'Pessimo negocio');
+VALUES (1000, 10, 'Excelente compra'),
+       (1001, 8, 'Bom negocio'),
+       (1004, 3, 'Pessimo negocio');
 
 
 
