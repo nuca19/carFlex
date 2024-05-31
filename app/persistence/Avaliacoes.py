@@ -51,3 +51,13 @@ def filterAvaliacoes(tipo, marca, modelo, sort):
         cursor = conn.cursor()
         cursor.execute('''EXEC filterAvaliacoes ?, ?, ?, ?''', (tipo, marca, modelo, sort))
         return [AvaliacaoCard(*row) for row in cursor.fetchall()]
+
+def precoMedioMarca(marca):
+    with create_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT dbo.udf_AveragePriceByBrand(?)
+        ''', (marca,))
+        result = cursor.fetchone()
+        print(result)
+        return result[0]

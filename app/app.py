@@ -329,6 +329,9 @@ def comprarAnuncio(numero):
             <label for="comentario">Comentário:</label>
             <input type="text" id="comentario" name="comentario" required>
             <button type="submit">Avaliar</button>
+            <script>
+                alert('Comprou este veiculo!');
+            </script>
         </form>
     """
 
@@ -343,7 +346,7 @@ def checkifowner(num_anu):
             </form>
         """
     else:
-        return
+        return ""
     
 @app.route('/removeAnuncio/<num_anu>', methods=['POST'])
 def removeAnuncio(num_anu):
@@ -355,18 +358,17 @@ def removeAnuncio(num_anu):
     return redirect('/anuncios')
     
 
-
-
-
 @app.route('/submitAvaliacao/<numero>', methods=['POST'])
 def submitAvaliacao(numero):
-    avaliacao = request.form['avaliacao']
-    comentario = request.form['comentario']
+    avaliacao = request.form.get('avaliacao')
+    comentario = request.form.get('comentario')
+    codigo_veiculo = request.form.get('codigo_veiculo')
     Anuncios.submitAvaliacao(numero, avaliacao, comentario)
-    return redirect('/perfil')
+    return "Avaliação submetida com sucesso!"
 
-@app.route('/checkforAvaliacao/<num_venda>', methods=['POST'])
-def checkforAvaliacao(num_venda):
+
+@app.route('/checkforAvaliacao/<num_venda>/<codigo_veiculo>', methods=['POST'])
+def checkforAvaliacao(num_venda, codigo_veiculo):
     user = session['userID']
     aval_status = Avaliacoes.checkforAvaliacao(num_venda, user)
     if aval_status == 0:
@@ -376,11 +378,12 @@ def checkforAvaliacao(num_venda):
                     <input type="number" id="avaliacao" name="avaliacao" required>
                     <label for="comentario">Comentário:</label>
                     <input type="text" id="comentario" name="comentario" required>
+                    <input type="hidden" id="codigo_veiculo" name="codigo_veiculo" value="{codigo_veiculo}">
                     <button type="submit">Avaliar</button>
                 </form>
             """
     else:
-        return
+        return ""
     
 
 @app.route('/listAvaliacoes', methods=['GET'])
@@ -402,6 +405,15 @@ def filterAvaliacoes():
     avaliacoes = Avaliacoes.filterAvaliacoes(tipo, marca, modelo, sort)
     avaliacoes_dict = [avaliacao._asdict() for avaliacao in avaliacoes]
     return jsonify(avaliacoes_dict)
+
+@app.route('/precoMedioMarca', methods=['GET'])
+def precoMedioMarca():
+    p1 = Avaliacoes.precoMedioMarca('Audi')
+    p2 = Avaliacoes.precoMedioMarca('BMW')
+    p3 = Avaliacoes.precoMedioMarca('Mercedes')
+    p4 = Avaliacoes.precoMedioMarca('Porsche')
+    return jsonify([p1, p2, p3, p4])
+
 
 if __name__ == '__main__':
     app.run(debug=True)

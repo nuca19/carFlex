@@ -113,6 +113,21 @@
   }
 
   fetchListAval();
+
+  function getAveragePrice() {
+    console.log('Fetching average price...');
+    fetch('/precoMedioMarca')
+        .then(response => response.json())
+        .then(data => {
+            let precomedioDiv = document.getElementById('precomedio');
+            precomedioDiv.innerHTML = `
+                Audi - ${data[0]}€<br>
+                BMW - ${data[1]}€<br>
+                Mercedes - ${data[2]}€<br>
+                Porsche - ${data[3]}€<br>
+            `;
+        });
+}
 </script>
 </head>
 <body>
@@ -168,6 +183,10 @@
       <input id="filtrarinput" type="submit" value="Filtrar">
       </div>
       </form>
+      <div style="margin-left: 100px; margin-top: 70px">
+        <button id="getAveragePrice" onclick="getAveragePrice()">Preços médios por Marca</button>
+        <div id="precomedio">
+      </div>
       </div>
       
     

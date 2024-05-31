@@ -552,3 +552,10 @@ button[aria-busy="true"] .htmx-indicator {
     text-decoration: none;
     color: inherit;
 }
+
+#getAveragePrice{
+    background-color:rgb(94, 34, 150);
+}
+#getAveragePrice:hover{
+    background-color:rgb(63, 22, 101);
+}

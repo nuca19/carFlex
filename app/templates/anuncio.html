@@ -3,7 +3,40 @@
 <head>
     <script src="https://unpkg.com/htmx.org"></script>
     <script>
+        // Create a MutationObserver instance
+        url = window.location.href;
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    var form = document.getElementById('avaliacaoForm');
+                    if (form) {
+                        // If the form is added to the DOM, add the event listener
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();  // Prevent the form from being submitted the default way
 
+                            var formData = new FormData(this);  // Create a FormData object from the form
+
+                            // Send a POST request with the form data
+                            fetch(this.action, {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(function() {
+                                // After the request is completed, refresh the page
+                                window.location.href = url;
+                            })
+                            .catch(function(error) {
+                                console.error('Error:', error);
+                            });
+
+                            // Disconnect the observer when the form is found
+                            observer.disconnect();
+                        });
+                    }
+                }
+            });
+        });
+        observer.observe(document, { childList: true, subtree: true });
     </script>
     <link rel="stylesheet" href="../static/style.css">
     <title>Anuncio</title>
@@ -38,7 +71,7 @@
 
                 <h2>Veiculo já vendido</h2> num_compra: {{anuncio.num_compra}}
                 {% if anuncio.avaliacao == None %}
-                    <div hx-post="/checkforAvaliacao/{{anuncio.numero}}" hx-trigger="load" hx-target="#aval2" hx-swap="innerHTML"></div>
+                    <div hx-post="/checkforAvaliacao/{{anuncio.numero}}/{{anuncio.codigo_veiculo}}" hx-trigger="load" hx-target="#aval2" hx-swap="innerHTML"></div>
                     <div id="aval2"></div>
                 {%else%}
                     <p>Avaliação: {{anuncio.avaliacao}} /10</p>
