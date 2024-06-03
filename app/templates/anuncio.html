@@ -4,12 +4,14 @@
     <script src="https://unpkg.com/htmx.org"></script>
     <script>
         // Create a MutationObserver instance
-        url = window.location.href;
+        var url = window.location.href;
+        var isEventListenerAdded = false;  // Flag to check if the event listener has been added
+
         var observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (mutation.type === 'childList') {
                     var form = document.getElementById('avaliacaoForm');
-                    if (form) {
+                    if (form && !isEventListenerAdded) {  // Check if the form exists and the event listener has not been added
                         // If the form is added to the DOM, add the event listener
                         form.addEventListener('submit', function(e) {
                             e.preventDefault();  // Prevent the form from being submitted the default way
@@ -28,10 +30,9 @@
                             .catch(function(error) {
                                 console.error('Error:', error);
                             });
-
-                            // Disconnect the observer when the form is found
-                            observer.disconnect();
                         });
+
+                        isEventListenerAdded = true;  // Set the flag to true after the event listener is added
                     }
                 }
             });
@@ -46,6 +47,7 @@
         <a href="/">CarFlex</a>
         <a href="/anuncios">Anuncios</a>
         <a href="/vender">Vender</a>
+        <a href="/avaliacoes">Avaliações</a>
         <a href="/perfil">Perfil</a>
         <a id="logout" href="/logout">Logout</a>
     </div>
@@ -53,18 +55,19 @@
     <div class="container2">
         <div id="veiculo-details">
             <h1>{{anuncio.marca}} {{ anuncio.modelo }}</h1>
-            <h2>{{anuncio.tipo}} {{anuncio.segmento}}</h2>
-            <p>Ano: {{anuncio.ano}}</p>
+            <div>{{anuncio.tipo}} | marca: {{anuncio.marca}} | modelo: {{ anuncio.modelo }}</div>
+            <h3> segmento: {{anuncio.segmento}}</h3>
+            <div>Ano: {{anuncio.ano}}</div>
             <p>Km: {{anuncio.km}} </p>
             {% if anuncio.tipo == "automovel" %}
-                <p>Cavalos: {{anuncio.cavalos}}</p>
+                <div>Cavalos: {{anuncio.cavalos}} cv</div>
                 <p>Lugares: {{anuncio.num_lugares}} | Portas: {{anuncio.num_portas}}</p>
             {% elif anuncio.tipo == "motociclo" %}
-                <p>Cilindrada: {{anuncio.cilindrada}}</p>
+                <div>Cilindrada: {{anuncio.cilindrada}} cm3</div>
             {% endif %}
             <p>{{anuncio.combustivel}} | {{anuncio.estado}} | {{anuncio.tipo_caixa}}</p>
-            <p>veiculo {{anuncio.numero}} #{{ anuncio.codigo_veiculo }}</p>
-            <h2>Preço: {{anuncio.preco}}</h2>
+            <p>anuncio{{anuncio.numero}} veiculo#{{ anuncio.codigo_veiculo }}</p>
+            <h2>Preço: {{anuncio.preco}}€</h2>
         </div>
         <div id="buy-info">
             {% if anuncio.num_compra is defined %}

@@ -362,7 +362,7 @@ def removeAnuncio(num_anu):
 def submitAvaliacao(numero):
     avaliacao = request.form.get('avaliacao')
     comentario = request.form.get('comentario')
-    codigo_veiculo = request.form.get('codigo_veiculo')
+    print("avaliar")
     Anuncios.submitAvaliacao(numero, avaliacao, comentario)
     return "Avaliação submetida com sucesso!"
 

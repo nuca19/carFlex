@@ -1,45 +1,51 @@
---ORDEM INTERESSA
-
-        --ORDEM INTERESSA
-
--- Insert into Veiculo
+--DB NEEDS TO BE CLEAR IF INSERTING
+--ORDER OF INSERTION IS IMPORTANT
 INSERT INTO Veiculo(codigo, ano, marca, modelo, km, combustivel, estado, tipo_caixa, tipo)
-VALUES ('a3f5b2c1', 2020, 'Fiat', '500', 7000, 'Gasolina', 'Novo', 'Automatico', 'automovel'),
-       ('d4e6g7h8', 2018, 'Mercedes', 'Classe A', 20000, 'Gasolina', 'Usado', 'Manual', 'automovel'),
-       ('b4g6h7j8', 2019, 'BMW', '320i', 15000, 'Gasolina', 'Usado', 'Automatico', 'automovel'),
-       ('c5h7i8j9', 2021, 'Audi', 'A3', 5000, 'Diesel', 'Novo', 'Manual', 'automovel'),
-       ('m1n2o3p4', 2020, 'Honda', 'CBR600RR', 5000, 'Gasolina', 'Usado', 'Manual', 'motociclo'),
-       ('q1r2s3t4', 2021, 'Yamaha', 'YZF-R1', 1000, 'Gasolina', 'Novo', 'Manual', 'motociclo'),
-       ('v1w2x3y4', 2022, 'Tesla', 'Model 3', 100, 'Eletrico', 'Novo', 'Automatico', 'automovel'),
-       ('z1a2b3c4', 2021, 'Kawasaki', 'Ninja ZX-10R', 2000, 'Gasolina', 'Usado', 'Manual', 'motociclo'),
-       ('x1y2z3a4', 2021, 'Ford', 'Mustang', 5000, 'Gasolina', 'Usado', 'Automatico', 'automovel'),
-       ('b1c2d3e4', 2020, 'Suzuki', 'GSX-R1000', 3000, 'Gasolina', 'Usado', 'Manual', 'motociclo'),
-       ('f1g2h3i4', 2022, 'Chevrolet', 'Camaro', 1000, 'Gasolina', 'Novo', 'Automatico', 'automovel'),
-       ('j1k2l3m4', 2021, 'Ducati', 'Panigale V4', 2000, 'Gasolina', 'Usado', 'Manual', 'motociclo'),
-       ('n1o2p3q4', 2021, 'Toyota', 'Supra', 5000, 'Gasolina', 'Usado', 'Automatico', 'automovel'),
-       ('r1s2t3u4', 2020, 'Harley-Davidson', 'Street Glide', 3000, 'Gasolina', 'Usado', 'Manual', 'motociclo'),
-       ('v1w2x3y5', 2022, 'Porsche', '911', 100, 'Gasolina', 'Novo', 'Automatico', 'automovel'),
-       ('z1a2b3c5', 2021, 'KTM', 'RC 390', 2000, 'Gasolina', 'Usado', 'Manual', 'motociclo'),
-       ('v1w2x3y6', 2022, 'Lamborghini', 'Huracan', 100, 'Gasolina', 'Novo', 'Automatico', 'automovel'),
-       ('z1a2b3c6', 2021, 'Triumph', 'Street Triple', 2000, 'Gasolina', 'Usado', 'Manual', 'motociclo'),
-       ('v1w2x3y7', 2022, 'Bugatti', 'Chiron', 100, 'Gasolina', 'Novo', 'Automatico', 'automovel'),
-       ('m1n2o3p5', 2022, 'BMW', 'S1000RR', 0, 'Gasolina', 'Novo', 'Manual', 'motociclo'),
-       ('m2n3o4p5', 2022, 'Ducati', 'Multistrada V4', 0, 'Gasolina', 'Novo', 'Manual', 'motociclo'),
-       ('m3n4o5p6', 2022, 'Kawasaki', 'Z H2', 0, 'Gasolina', 'Novo', 'Manual', 'motociclo'),
-       ('m4n5o6p7', 2022, 'Yamaha', 'MT-10', 0, 'Gasolina', 'Novo', 'Manual', 'motociclo'),
-       ('m5n6o7p8', 2022, 'Suzuki', 'Hayabusa', 0, 'Gasolina', 'Novo', 'Manual', 'motociclo');
-       
-
-       
+VALUES ('a3f5b2c1', 2020, 'Fiat', '500', 7000, 'gasolina', 'novo', 'automatico', 'automovel'),
+       ('d4e6g7h8', 2018, 'Mercedes', 'Classe A', 20000, 'gasolina', 'usado', 'manual', 'automovel'),
+       ('b4g6h7j8', 2019, 'BMW', '320i', 15000, 'gasolina', 'usado', 'automatico', 'automovel'),
+       ('c5h7i8j9', 2021, 'Audi', 'A3', 5000, 'Diesel', 'novo', 'manual', 'automovel'),
+       ('m1n2o3p4', 2020, 'Honda', 'CBR600RR', 5000, 'gasolina', 'usado', 'manual', 'motociclo'),
+       ('q1r2s3t4', 2021, 'Yamaha', 'YZF-R1', 1000, 'gasolina', 'novo', 'manual', 'motociclo'),
+       ('v1w2x3y4', 2022, 'Tesla', 'Model 3', 100, 'eletrico', 'novo', 'automatico', 'automovel'),
+       ('z1a2b3c4', 2021, 'Kawasaki', 'Ninja ZX-10R', 2000, 'gasolina', 'usado', 'manual', 'motociclo'),
+       ('x1y2z3a4', 2021, 'Ford', 'Mustang', 5000, 'gasolina', 'usado', 'automatico', 'automovel'),
+       ('b1c2d3e4', 2020, 'Suzuki', 'GSX-R1000', 3000, 'gasolina', 'usado', 'manual', 'motociclo'),
+       ('f1g2h3i4', 2022, 'Chevrolet', 'Camaro', 1000, 'gasolina', 'novo', 'automatico', 'automovel'),
+       ('j1k2l3m4', 2021, 'Ducati', 'Panigale V4', 2000, 'gasolina', 'usado', 'manual', 'motociclo'),
+       ('n1o2p3q4', 2021, 'Toyota', 'Supra', 5000, 'gasolina', 'usado', 'automatico', 'automovel'),
+       ('r1s2t3u4', 2020, 'Harley-Davidson', 'Street Glide', 3000, 'gasolina', 'usado', 'manual', 'motociclo'),
+       ('v1w2x3y5', 2022, 'Porsche', '911', 100, 'gasolina', 'novo', 'automatico', 'automovel'),
+       ('z1a2b3c5', 2021, 'KTM', 'RC 390', 2000, 'gasolina', 'usado', 'manual', 'motociclo'),
+       ('v1w2x3y6', 2022, 'Lamborghini', 'Huracan', 100, 'gasolina', 'novo', 'automatico', 'automovel'),
+       ('z1a2b3c6', 2021, 'Triumph', 'Street Triple', 2000, 'diesel', 'usado', 'manual', 'motociclo'),
+       ('v1w2x3y7', 2024, 'Bugatti', 'Chiron', 100, 'diesel', 'novo', 'automatico', 'automovel'),
+       ('m1n2o3p5', 2024, 'BMW', 'S1000RR', 0, 'diesel', 'novo', 'manual', 'motociclo'),
+       ('m2n3o4p5', 2022, 'Ducati', 'Multistrada V4', 0, 'diesel', 'novo', 'manual', 'motociclo'),
+       ('m3n4o5p6', 2024, 'Kawasaki', 'Z H2', 0, 'diesel', 'novo', 'manual', 'motociclo'),
+       ('m4n5o6p7', 2022, 'Yamaha', 'MT-10', 0, 'diesel', 'novo', 'manual', 'motociclo'),
+       ('m5n6o7p8', 2024, 'Suzuki', 'Hayabusa', 0, 'diesel', 'novo', 'manual', 'motociclo'),
+       ('jdlkalx0', 2019, 'Renault', 'Clio', 15000, 'diesel', 'usado', 'manual', 'automovel'),
+       ('h797sa8s', 2020, 'Peugeot', '208', 10000, 'diesel', 'usado', 'manual', 'automovel'),
+       ('s9a8dhaz', 2021, 'Jeep', 'Wrangler', 5000, 'diesel', 'usado', 'automatico', 'automovel'),
+       ('c1o2m3p4', 2022, 'Volkswagen', 'Golf', 100, 'disesel', 'novo', 'automatico', 'automovel'),
+       ('f1a2m3i4', 2022, 'Seat', 'Ibiza', 100, 'eletrico', 'novo', 'manual', 'automovel'),
+       ('moask781', 2022, 'Mercedes', 'Classe S', 100, 'eletrico', 'novo', 'automatico', 'automovel');
        
 
 -- Insert into Automovel codigo(8chars)
 INSERT INTO Automovel(codigo, segmento, num_portas, num_lugares, cavalos)
 VALUES ('a3f5b2c1', 'carros_citadinos', 4, 5, 70),
+       ('jdlkalx0' , 'carros_citadinos', 4, 5, 86),
+       ('h797sa8s', 'carros_citadinos', 4, 5, 90),
+       ('s9a8dhaz', 'utilitarios', 5, 5, 200),
        ('d4e6g7h8', 'utilitarios', 5, 7, 200),
-       ('b4g6h7j8', 'familiares_medios_executivos_medios', 4, 5, 180),
        ('c5h7i8j9', 'utilitarios', 5, 5, 150),
+       ('f1a2m3i4', 'familiares_compactos', 5, 5, 120),
+       ('c1o2m3p4', 'familiares_compactos', 5, 5, 130),
+       ('b4g6h7j8', 'familiares_medios_executivos_medios', 4, 5, 180),
        ('v1w2x3y4', 'familiares_medios_executivos_medios', 4, 5, 283),
+       ('moask781', 'familiares_grandes_executivos_grandes', 4, 5, 300), 
        ('x1y2z3a4', 'luxo', 2, 2, 450),
        ('f1g2h3i4', 'luxo', 2, 2, 455),
        ('n1o2p3q4', 'luxo', 2, 2, 335),
@@ -50,19 +56,20 @@ VALUES ('a3f5b2c1', 'carros_citadinos', 4, 5, 70),
 
 
 INSERT INTO Motociclo(codigo, segmento, cilindrada)
-VALUES ('m1n2o3p4', 'Sport', 600),
-       ('q1r2s3t4', 'Sport', 1000),
-       ('z1a2b3c4', 'Sport', 998),
-       ('b1c2d3e4', 'Sport', 1000),
-       ('z1a2b3c5', 'Sport', 373),
+VALUES ('m1n2o3p4', 'Grand_Turismo', 600),
+       ('q1r2s3t4', 'Grand_Turismo', 1000),
+       ('z1a2b3c4', 'Todo_terreno', 234),
+       ('b1c2d3e4', 'Todo_terreno', 373),
+       ('z1a2b3c5', 'Sport', 720),
        ('j1k2l3m4', 'Sport', 1103),
        ('r1s2t3u4', 'Grand_Turismo', 1746),
-       ('z1a2b3c6', 'Sport', 765),
-       ('m1n2o3p5', 'Sport', 1000),
+       ('z1a2b3c6', 'Cruiser', 450),
+       ('m1n2o3p5', 'Cruiser', 250),
        ('m2n3o4p5', 'Touring', 1200),
-       ('m3n4o5p6', 'Sport', 1000),
-       ('m4n5o6p7', 'Sport', 1000),
-       ('m5n6o7p8', 'Sport', 1300);
+       ('m3n4o5p6', 'Sport', 750),
+       ('m4n5o6p7', 'Quadriciclos', 500),
+       ('m5n6o7p8', 'Motos125', 125);
+
 
 --create users id(100-999 4digits)
 INSERT INTO Utilizador(nif, nome, endereco, username, pass_word)
@@ -84,60 +91,51 @@ VALUES ( 123456789, 'User 1', 'Address 1', 'Joao', '1234'),
 
 --create anuncios (5digits)
 INSERT INTO Anuncio_venda( data_venda, preco, codigo_veiculo, id_vendedor)
-VALUES ('2022-01-01', 15000.00, 'a3f5b2c1', 100),
-       ( '2022-01-02', 20000.00, 'd4e6g7h8', 103),
-       ('2022-01-03', 25000.00, 'b4g6h7j8', 103),
-       ( '2022-01-04', 30000.00, 'c5h7i8j9', 102),
-       ('2022-02-01', 8000.00, 'm1n2o3p4', 101),
-       ('2022-02-02', 12000.00, 'q1r2s3t4', 101),
-       ('2022-02-03', 35000.00, 'v1w2x3y4', 101),
-       ('2022-02-04', 15000.00, 'z1a2b3c4', 103),
-       ('2022-03-01', 40000.00, 'x1y2z3a4', 104),
-       ('2022-03-02', 13000.00, 'b1c2d3e4', 105),
-       ('2022-03-03', 60000.00, 'f1g2h3i4', 106),
-       ('2022-03-04', 25000.00, 'j1k2l3m4', 107),
-       ('2022-03-05', 55000.00, 'n1o2p3q4', 108),
-       ('2022-03-06', 20000.00, 'r1s2t3u4', 109),
-       ('2022-04-01', 200000.00, 'v1w2x3y5', 112),
-       ('2022-04-02', 5500.00, 'z1a2b3c5', 110),
-       ('2022-04-03', 260000.00, 'v1w2x3y6', 111),
-       ('2022-04-04', 9500.00, 'z1a2b3c6', 111),
-       ('2022-04-05', 3000000.00, 'v1w2x3y7', 112),
-       ('2022-04-06', 10000.00, 'm1n2o3p5', 103),
-       ('2022-04-07', 15000.00, 'm2n3o4p5', 105),
-       ('2022-04-08', 20000.00, 'm3n4o5p6', 106),
-       ('2022-04-09', 25000.00, 'm4n5o6p7', 110),
-       ('2022-04-10', 30000.00, 'm5n6o7p8', 111);
+VALUES ('2024-01-01', 15000.00, 'a3f5b2c1', 102),
+       ('2024-01-02', 20000.00, 'd4e6g7h8', 103),
+       ('2024-01-03', 25000.00, 'b4g6h7j8', 103),
+       ('2024-01-04', 30000.00, 'c5h7i8j9', 102),
+       ('2024-02-01', 8000.00, 'm1n2o3p4', 101),
+       ('2024-02-02', 12000.00, 'q1r2s3t4', 101),
+       ('2024-02-03', 35000.00, 'v1w2x3y4', 101),
+       ('2024-02-04', 15000.00, 'z1a2b3c4', 103),
+       ('2024-03-01', 40000.00, 'x1y2z3a4', 104),
+       ('2024-03-02', 13000.00, 'b1c2d3e4', 105),
+       ('2024-03-03', 60000.00, 'f1g2h3i4', 106),
+       ('2024-03-04', 25000.00, 'j1k2l3m4', 107),
+       ('2024-03-05', 55000.00, 'n1o2p3q4', 108),
+       ('2024-03-06', 20000.00, 'r1s2t3u4', 109),
+       ('2024-04-01', 200000.00, 'v1w2x3y5', 112),
+       ('2024-04-02', 5500.00, 'z1a2b3c5', 110),
+       ('2024-04-03', 260000.00, 'v1w2x3y6', 111),
+       ('2024-04-04', 9500.00, 'z1a2b3c6', 111),
+       ('2024-04-05', 3000000.00, 'v1w2x3y7', 112),
+       ('2024-04-06', 10000.00, 'm1n2o3p5', 103),
+       ('2024-04-07', 15000.00, 'm2n3o4p5', 105),
+       ('2024-04-08', 20000.00, 'm3n4o5p6', 106),
+       ('2024-04-09', 25000.00, 'm4n5o6p7', 110),
+       ('2024-04-10', 30000.00, 'm5n6o7p8', 111),
+       ('2024-04-11', 10000.00, 'jdlkalx0', 100),
+       ('2024-04-12', 15000.00, 'h797sa8s', 101),
+       ('2024-04-13', 20000.00, 's9a8dhaz', 102),
+       ('2024-04-14', 25000.00, 'c1o2m3p4', 103),
+       ('2024-04-15', 30000.00, 'f1a2m3i4', 104),
+       ('2024-04-16', 35000.00, 'moask781', 105);
+        
 
 
 
 INSERT INTO Compra (num_venda, data_compra,  id_comprador)
-VALUES (10003, '2022-01-01', 110),
-       (10008, '2022-01-02', 105),
-       (10010, '2022-01-03', 106),
-       (10011, '2022-03-04', 112),
-       (10018, '2022-04-05', 108);
+VALUES (10003, '2024-01-01', 110),
+       (10008, '2024-01-02', 105),
+       (10010, '2024-01-03', 106),
+       (10011, '2024-03-04', 112),
+       (10018, '2024-04-05', 108),
+       (10026, '2024-04-05', 108);
 
 
 INSERT INTO Avaliacao (num_compra, avaliacao, comentario)
 VALUES (1000, 10, 'Excelente compra'),
        (1001, 8, 'Bom negocio'),
-       (1004, 3, 'Pessimo negocio');
-
-
-
-
-
-
-
--- Delete from Automovel
-DELETE FROM Automovel WHERE codigo IN (3);
-
--- Get veiculos
-SELECT marca, modelo, cavalos
-FROM (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo)
-
--- Get all anuncios
-SELECT numero, modelo, cavalos, km, preco
-FROM Anuncio_venda JOIN (Veiculo JOIN Automovel ON Veiculo.codigo=Automovel.codigo) ON Anuncio_venda.codigo_veiculo=Veiculo.codigo
-
+       (1004, 3, 'Pessimo negocio'),
+       (1005, 7, 'Adorei o material');
