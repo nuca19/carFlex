@@ -1,3 +1,6 @@
+--OTHER USED VIEWS ARE IN persistence and app python files
+--...
+
 DROP TABLE IF EXISTS Avaliacao;
 DROP TABLE IF EXISTS Compra;
 DROP TABLE IF EXISTS Anuncio_venda;
@@ -13,9 +16,6 @@ DELETE FROM Motociclo;
 DELETE FROM Automovel;
 DELETE FROM Veiculo;
 DELETE FROM Utilizador;
-
---OTHER USED VIEWS ARE IN persistence and app python files
---...
 
 --These were used in the sql server for checking
 --Delete Anuncio

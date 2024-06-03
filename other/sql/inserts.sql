@@ -139,3 +139,5 @@ VALUES (1000, 10, 'Excelente compra'),
        (1001, 8, 'Bom negocio'),
        (1004, 3, 'Pessimo negocio'),
        (1005, 7, 'Adorei o material');
+
+

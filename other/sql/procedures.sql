@@ -1,5 +1,5 @@
 
-
+-- remove procedure
 DROP PROCEDURE ***
 
 -- get anuncios to show in the cards
