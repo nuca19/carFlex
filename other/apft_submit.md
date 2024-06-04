@@ -25,8 +25,12 @@ Please remove this section before submitting.
 A Carflex simplifica o processo de venda de veículos, permitindo que os utilizadores criem anúncios de venda para veículos, motociclos ou automoveis, e que também possam comprar estes anuncios podendo-os avaliar. Este projeto concentra-se na construção de uma base de dados robusta para gerir informações do utilizador, detalhes de veículo e anúncios de forma eficiente.
 Um ponto importante de foco é na procura por anuncios, aqui é usado um filtro customizável com os atributos de cada veiculo.
 
-## Análise de Requisitos / Requirements
+Projeto realizado em python Flask, javascript e html para mostrar informação.
+Base de Dados em SQL Server
 
+Execução de procedures em
+
+## ​Análise de Requisitos / Requirements
 Requisitos Funcionais:
 
 Contas e Sessões - Permitir que os utilizadores tenham a sua própria conta para vender os seus veículos.
@@ -57,16 +61,45 @@ Adicionou-se os atributos username e pass_word na tabela Utilizador, de modo a p
 
 As mesmas diferenças que no der.
 
-## SQL DDL - Data Definition Language
+## ​SQL DDL - Data Definition Language
+Criação de tabelas
 
-[SQL DDL File](sql/01_ddl.sql "SQLFileQuestion")
+[SQL DDL File](sql/01_ddl.sql "01_ddl")
 
 ## SQL DML - D
 
 ## Data Manipulation Language
 
-Uma secção por formulário.
-A section for each form.
+[SQL Inserts iniciais](sql/04_dml_inserts.sql "04_dml_inserts")
+
+[SQL Other querys](sql/05_dml_others.sql "05_dml_others")
+
+Outras DML Querys foram usadas no ficheiros python dos folders persistence, e na app principal do flask.
+Bem como a execução dos procedures e udf.
+
+O tratamento da informação é depois feito no python e mandado para o html atraves de routes do flask com javascript.
+
+[app.py](../app/app.py "app")
+
+ex:
+```sql
+"INSERT INTO Utilizador(nif, nome, endereco, username, pass_word) VALUES (?, ?, ?, ?, ?)"
+```
+
+[anuncios.py](../app/persistence/Anuncios.py "anuncios")
+
+ex:
+```sql
+EXEC anuncios_automovel;
+```
+
+[avaliacoes.py](../app/persistence/Avaliacoes.py "avaliacoes")
+
+ex:
+```sql
+SELECT dbo.udf_AveragePriceByBrand(?)
+```
+
 
 ### Formulario exemplo/Example Form
 
@@ -313,21 +346,15 @@ cursor.execute(f"""
 
 
 ```sql
--- Show data on the form
-SELECT * FROM MY_TABLE ....;
-
--- Insert new element
-INSERT INTO MY_TABLE ....;
 ```
 
 ...
 
 ## Normalização/Normalization
 
-Descreva os passos utilizados para minimizar a duplicação de dados / redução de espaço.
-Justifique as opções tomadas.
-Describe the steps used to minimize data duplication / space reduction.
-Justify the choices made.
+De modo a separar motociclo de automovel, sendo que ambos são veiculos e contêm atributos de veículos decidimos separa-los e utilizar uma relação de is-a, simplificando a forma de aceder ás tabelas e separação de dados.
+
+Foram também feitos alguns triggers de REMOVE para quando se remover uma tabela, as tabelas com relações serem também removidas e reduzir espaço
 
 ## Índices/Indexes
 
@@ -335,18 +362,29 @@ Não achamos necessário a criação de indíces, visto que a utilização das k
 
 ## SQL Programming: Stored Procedures, Triggers, UDF
 
-[SQL SPs and Functions File](sql/02_sp_functions.sql "SQLFileQuestion")
+Como referido anteriormente, estes querys de execução são chamadas nos ficheiros python do folder persistence
+
+[SQL Stored Procedures](sql/02_procedures.sql "SQLFileQuestion")
 
 [SQL Triggers File](sql/03_triggers.sql "SQLFileQuestion")
+
+[SQL UDFs](sql/06_udf.sql "SQLFileQuestion")
 
 ## Outras notas/Other notes
 
 ### Dados iniciais da dabase de dados/Database init data
 
-[Indexes File](sql/01_ddl.sql "SQLFileQuestion")
+[SQL DDL File](sql/01_ddl.sql "01_ddl") - criação de tabelas
+
+[SQL Inserts iniciais](sql/04_dml_inserts.sql "04_dml_inserts") - inserts iniciais
 
 ### Apresentação
 
-[Slides](slides.pdf "Sildes")
+[Slides](Carflex-APfinal.pdf "Sildes")
 
-[Video](https://elearning.ua.pt/pluginfile.php/55992/mod_label/intro/VideoTrabalho2013.mp4)
+[Video](carflexdemo.mp4)
+
+
+
+
+ 
