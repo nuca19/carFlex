@@ -5,33 +5,16 @@
 - Adriano Costa, MEC: 108150
 - Nuno Pinho, MEC: 108648
 
-This template is flexible.
-It is suggested to follow the structure, file links and images but add more content where necessary.
-
-The files should be organized with the following nomenclature:
-
-- sql\01_ddl.sql: mandatory for DDL
-- sql\02_sp_functions.sql: mandatory for Store Procedure, Functions,...
-- sql\03_triggers.sql: mandatory for triggers
-- sql\04_db_init.sql: scripts to init the database (i.e. inserts etc.)
-- sql\05_any_other_matter.sql: any other scripts.
-
-Por favor remova esta secção antes de submeter.
-
-Please remove this section before submitting.
-
 ## Introdução / Introduction
 
 A Carflex simplifica o processo de venda de veículos, permitindo que os utilizadores criem anúncios de venda para veículos, motociclos ou automoveis, e que também possam comprar estes anuncios podendo-os avaliar. Este projeto concentra-se na construção de uma base de dados robusta para gerir informações do utilizador, detalhes de veículo e anúncios de forma eficiente.
 Um ponto importante de foco é na procura por anuncios, aqui é usado um filtro customizável com os atributos de cada veiculo.
 
 Projeto realizado em python Flask, javascript e html para mostrar informação.
-Base de Dados em SQL Server
-
-Execução de procedures em
+Base de Dados em SQL Server.
 
 ## ​Análise de Requisitos / Requirements
-Requisitos Funcionais:
+- Requisitos Funcionais:
 
 Contas e Sessões - Permitir que os utilizadores tenham a sua própria conta para vender os seus veículos.
 
@@ -40,6 +23,15 @@ Criação e Compra de Anúncios - Cada utilizador pode criar o seu anúncio para
 Comentários e Avaliações - Após a compra, o comprador pode deixar comentários e avaliar a sua experiência de compra.
 
 Filtragem Avançada de Pesquisa - Permitir pesquisa avançada usando vários atributos de veículos.
+
+- Requisitos Não Funcionais:
+
+Conexão com a BD no SQL Server (no IEETA)
+
+Desempenho - A plataforma deve processar rapidamente as pesquisas e exibir os resultados. A criação e atualização de anúncios devem ocorrer sem atrasos significativos.
+
+Segurança - Segurança da conta dos utilizadores através da encriptação de passwords.
+
 
 ## DER - Diagrama Entidade Relacionamento/Entity Relationship Diagram
 
@@ -103,36 +95,56 @@ SELECT dbo.udf_AveragePriceByBrand(?)
 
 ### Formulario exemplo/Example Form
 
-Na realização desta secção do relatório apresentamos o screenshot de cada form assim como o código sql responsável pelo funcionamento do bloco, nos casos em que existem procedures apresentamos apenas o codigo sql e a funçao python que dá Excecute mesmo; e nos outros casos indicamos apenas a parte de sql relvante assim como a função  python a que o excerto pretence.
+Na realização desta secção do relatório apresentamos o screenshot de cada form assim como o código sql responsável pelo funcionamento do bloco, nos casos em que existem procedures apresentamos apenas o codigo sql e a funçao python que dá Excecute mesmo; e nos outros casos indicamos apenas a parte de sql relevante assim como a função python a que o excerto pretence.
 
+Todas as submissões de forms do HTML utilizam um POST e são tratadas pelo flask que recebe todos os argumentos referentes a esse POST.
+```python
+if request.method == 'POST':
+    username = request.form['username']
+    password = request.form['password']
+```
+
+De seguida, estes argumentos passam por funções que contêm as devidas querys de modo a interagir com a Base de Dados.
+<br><br>
+
+LOGIN FORM
 
 ![Exemplo Screenshot!](screenshots/Loginform.jpg "Login Form")
 
-funçao validate_user em app.py
+Validação do input para entrar na conta. 
+
+Através da query na funçao validate_user em app.py:
 
 ```py
 
  cursor.execute(
             'SELECT id, pass_word FROM Utilizador WHERE username = ?', (username,))
 
-```  
+``` 
+<br>
 
+REGISTER FORM
 
 ![Exemplo Screenshot!](screenshots/Registerform.jpg "Register Form")
 
-função register_user em app.py
+De modo a criar novos users, é usada a função register_user na app.py, erros ,como por exemplo de nif ou username já existentes, são tratados e mostrados.
 
+-Query utilizada na função:
 ```py
 
 cursor.execute("INSERT INTO Utilizador(nif, nome, endereco, username, pass_word) VALUES (?, ?, ?, ?, ?)",
                            (nif, nome, endereco, username, password))
 
 ```
+<br>
 
-![Exemplo Screenshot!](screenshots/VenderAutomovelForm.jpg "Vender Automóvel Form")
+CRIACAO DE Anuncio_venda PARA Automovel FORM
 
-função createAnuncioAutomovel() em Anuncios.py
+<img src="screenshots/VenderAutomovelForm.jpg" alt="Vender Automóvel Form" width="700"/>
 
+É necessário preencher todos os atributos.
+
+-Procedure utilizada na função createAnuncioAutomovel() em Anuncios.py:
 
 ```sql
 CREATE PROCEDURE CreateAnuncioAutomovel
@@ -162,10 +174,12 @@ BEGIN
     VALUES (GETDATE(), @preco, @codigo, @id_vendedor)
 END
 ```
+<br>
+CRIACAO DE Anuncio_venda PARA Motociclo FORM
 
-![Exemplo Screenshot!](screenshots/VenderMotocicloForm.jpg "Vender Motociclo Form")
+<img src="screenshots/VenderMotocicloForm.jpg" alt="Vender Motociclo Form" width="700"/>
 
-função createAnuncioMotociclo() em Anuncios.py
+-Procedure utilizada na funçao createAnuncioMotociclo() em Anuncios.py:
 
 ```sql
 CREATE PROCEDURE CreateAnuncioMotociclo
@@ -193,23 +207,33 @@ BEGIN
     VALUES (GETDATE(), @preco, @codigo, @id_vendedor)
 END
 ```
+<br>
 
-![Exemplo Screenshot!](screenshots/EditProfileform.jpg "Edit Profile Form")
+ALTERAR USER INFO FORM
 
-funçao submitUserInfo() em app.py
+<img src="screenshots/EditProfileform.jpg" alt="Edit Profile Form" width="800"/>
+
+Aqui também existem os checks para evitar nifs e usernames repetidos, se for repetido, uma mensagem de erro aparecerá.
+
+-Query utilizada na funçao submitUserInfo() em app.py:
 
 ```py
 
 cursor.execute("UPDATE Utilizador SET nif=?, nome=?, endereco=?, username=? WHERE id=?",
                            (nif, nome, endereco, username, id))
 ```
+<br>
 
-![Exemplo Screenshot!](screenshots/FiltroAutomovelForm.jpg "Filtro Automóvel Form")
+FILTRO de Anuncios
 
+<img src="screenshots/FiltroAutomovelForm.jpg" alt="Filtro Automóvel Form" width="700"/>
 
-![Exemplo Screenshot!](screenshots/FiltroMotocicloForm.jpg "Filtro Motociclo Form")
+<img src="screenshots/FiltroMotocicloForm.jpg" alt="Filtro Motociclo Form" width="700"/>
 
-função filter_anuncios() em Anuncios.py
+Existem dois tipos de veiculos, automovel e motociclo, portanto o filtro altera-se dependendo do mesmo
+
+-Procedure utilizada na função filter_anuncios() em Anuncios.py:
+
 
 ```sql
 
@@ -279,10 +303,13 @@ Explicação:
 Este procedure foi desenvolvido para filtrar os anuncios de Automóveis e Motociclos de acordo com os seus vários parâmetros.
 O procedure aceita vários parâmetros que são inicialmente todos de valor NULL, inicialmente ocorre uma verificação do @tipo que indicará
 o tipo de veículo que o utilizador procura e daí há um select que adiciona novas rows de atributos presentes nesse tipo. Em termos de resultados, este procedure só retorna anúncios que não estejam na tabela "Compra", ou seja que ainda não foram vendidos e qualquer atributo que esteja com valor NULL é ignorado , o que não obirga o utilizador a preencher todos os campos. Adicionamos uma explicação nas querys mais elaboradas.
+<br><br>
 
+FILTRO Avaliacoes
 
-![Exemplo Screenshot!](screenshots/FiltroAvaliacaoForm.jpg "Filtro Avaliação Form")
+<img src="screenshots/FiltroAvaliacoesForm.jpg" alt="Filtro Avaliação Form" width="700"/>
 
+-Procedure usada na função filterAvaliacoes() em Avaliacoes.py:
 ```sql
 
 CREATE PROCEDURE filterAvaliacoes
@@ -327,8 +354,12 @@ Este procedure funciona como o anterior no sentido em que se nenhum valor for da
 
 A query é construída dinamicamente e executada com sp_executesql para aplicar corretamente os filtros e a ordenação. Assim, é possível recuperar avaliações detalhadas conforme os critérios especificados.
 
-![Exemplo Screenshot!](screenshots/AvaliarCompraForm.jpg "Avaliar Compra Form")
+<br>
+SUBMIT Avaliacao FORM
 
+<img src="screenshots/AvaliarCompraForm.jpg" alt="Avaliar Compra Form" width="700"/>
+
+-Querys usadas na fução submitAvaliacao() em Anuncios.py:
 ```py
 cursor.execute(f"""
             SELECT numero FROM Compra WHERE num_venda = ?
@@ -339,16 +370,6 @@ cursor.execute(f"""
             VALUES (?, ?, ?)
         """, (num_compra, avaliacao, comentario)) # fazer a avaliação
 ```
-
-
-
-
-
-
-```sql
-```
-
-...
 
 ## Normalização/Normalization
 
@@ -362,13 +383,19 @@ Não achamos necessário a criação de indíces, visto que a utilização das k
 
 ## SQL Programming: Stored Procedures, Triggers, UDF
 
-Como referido anteriormente, estes querys de execução são chamadas nos ficheiros python do folder persistence
+Como referido anteriormente, os querys de execução são chamadas nos ficheiros python do folder persistence
 
 [SQL Stored Procedures](sql/02_procedures.sql "SQLFileQuestion")
+- Maior parte das procedures ja forma explicadas nos forms anteriores, as que faltam seriam as de busca por informação (SELECTS) geral ou para o utilizador.
+
 
 [SQL Triggers File](sql/03_triggers.sql "SQLFileQuestion")
+- Foram feitos alguns triggers de REMOVE para quando se remover uma tabela, as tabelas com relações serem também removidas e reduzir espaço.
+- Foi criado um trigger para impedir que um utilizador compre o seu próprio anúncio e impedir que um utilizador compre um anúncio já vendido.
+
 
 [SQL UDFs](sql/06_udf.sql "SQLFileQuestion")
+- Foi criado um udf para ver média de preços, mas decidimos focar nas Stored Procedures já que podiamos tratar da informação no flask.
 
 ## Outras notas/Other notes
 

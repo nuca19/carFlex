@@ -1,7 +1,3 @@
-
--- remove procedure
-DROP PROCEDURE ***
-
 -- get anuncios to show in the cards
 CREATE PROCEDURE anuncios_automovel
 AS
@@ -290,3 +286,6 @@ BEGIN
     INSERT INTO Anuncio_venda (data_venda, preco, codigo_veiculo, id_vendedor)
     VALUES (GETDATE(), @preco, @codigo, @id_vendedor)
 END
+
+-- remove procedure
+DROP PROCEDURE ***
